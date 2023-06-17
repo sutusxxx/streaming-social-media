@@ -1,1 +1,77 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+    background: #1c1c1c;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.form-container {
+    display: block;
+    max-width: 300px;
+    margin: auto;
+
+    background: #ffffff;
+    padding: 48px;
+    border-radius: 16px;
+}
+
+.form-container mat-form-field {
+    width: 100%;
+}
+
+.input-wrapper {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.input-wrapper>mat-form-field {
+    width: 100%;
+}
+
+/* 
+.primary-btn {}
+
+.primary-btn:hover {}
+
+.secondary-btn {}
+
+.secondary-btn:hover {} */
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.marginT-10 {
+    margin-top: 10px;
+}
+
+.marginT-20 {
+    margin-top: 20px;
+}
+
+.marginT-30 {
+    margin-top: 30px;
+}
+
+.marginB-10 {
+    margin-bottom: 10px;
+}
+
+.marginB-20 {
+    margin-bottom: 20px;
+}
+
+.marginB-30 {
+    margin-bottom: 30px;
+}

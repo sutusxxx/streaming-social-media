@@ -1,0 +1,40 @@
+<div class="form-container mat-elevation-z5 marginT-30">
+    <h1>Registration</h1>
+    <form #form="ngForm" [formGroup]="registrationForm" (ngSubmit)="registration()">
+        <mat-form-field>
+            <input matInput placeholder="Name" formControlName="name">
+            <mat-error *ngIf="name?.errors?.['required']">
+                Name is required
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Email address" formControlName="email">
+            <mat-error *ngIf="email?.errors?.['required']">
+                Email is required
+            </mat-error>
+            <mat-error *ngIf="email?.errors?.['email']">
+                Email format is not valid
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Password" formControlName="password" type="password">
+            <mat-error *ngIf="password?.errors?.['required']">
+                Password is required
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Confirm password" formControlName="confirmPassword" type="password">
+            <mat-error *ngIf="confirmPassword?.errors?.['required']">
+                Confirm password is required
+            </mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="form?.submitted && registrationForm?.errors?.['passwordsMismatch']">
+            The password and the confirm password is not the same
+        </mat-error>
+        <div class="center marginT-10">
+            <button class="primary-btn" mat-raised-button color="primary" type="submit">
+                Sign Up
+            </button>
+        </div>
+    </form>
+</div>
