@@ -33,7 +33,7 @@ export class RegistrationComponent implements OnInit {
 
     const { name, email, password } = this.registrationForm.value;
     this.authService.registration(email, password).pipe(
-      switchMap(({ user: { uid } }) => this.userService.createUser({ uid, email, displayName: name }))
+      switchMap(({ user: { uid } }) => this.userService.createUser({ uid, email, displayName: name.toLowerCase() }))
     )
       .subscribe(() => {
         this.router.navigate(['/home']);

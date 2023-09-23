@@ -25,38 +25,42 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { HomeComponent } from './components/home/home.component';
+import { SearchComponent } from './components/search/search.component';
+import { AngularFireModule } from '@angular/fire/compat';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    RegistrationComponent,
-    DatePipe,
-    HomeComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatMenuModule,
-    MatListModule,
-    MatDividerModule,
-    MatSnackBarModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase()),
-    provideFirestore(() => getFirestore()),
-    provideMessaging(() => getMessaging()),
-  ],
-  providers: [DatePipe],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		LoginComponent,
+		RegistrationComponent,
+		DatePipe,
+		HomeComponent,
+		SearchComponent
+	],
+	imports: [
+		AngularFireModule,
+		BrowserModule,
+		AppRoutingModule,
+		BrowserAnimationsModule,
+		ReactiveFormsModule,
+		FormsModule,
+		MatToolbarModule,
+		MatIconModule,
+		MatButtonModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatAutocompleteModule,
+		MatMenuModule,
+		MatListModule,
+		MatDividerModule,
+		MatSnackBarModule,
+		provideFirebaseApp(() => initializeApp(environment.firebase)),
+		provideAuth(() => getAuth()),
+		provideDatabase(() => getDatabase()),
+		provideFirestore(() => getFirestore()),
+		provideMessaging(() => getMessaging()),
+	],
+	providers: [DatePipe],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }

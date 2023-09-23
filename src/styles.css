@@ -1,9 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
-
 html,
 body {
     height: 100%;
-    background: #1c1c1c;
+    background: #dcdcdc;
 }
 
 body {
@@ -33,15 +31,6 @@ body {
 .input-wrapper>mat-form-field {
     width: 100%;
 }
-
-/* 
-.primary-btn {}
-
-.primary-btn:hover {}
-
-.secondary-btn {}
-
-.secondary-btn:hover {} */
 
 .center {
     display: flex;

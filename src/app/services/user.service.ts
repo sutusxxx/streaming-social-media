@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, of, switchMap } from 'rxjs';
 import { User } from '../models';
-import { Firestore, collection, collectionData, deleteDoc, doc, docData, query, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, collection, collectionData, deleteDoc, doc, docData, query, setDoc, updateDoc } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -15,17 +15,17 @@ export class UserService {
     ) { }
 
     createUser(user: User): Observable<void> {
-        const ref = doc(this.firestore, 'users', user?.uid);
+        const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', user?.uid);
         return from(setDoc(ref, user));
     }
 
     saveUser(user: User): Observable<void> {
-        const ref = doc(this.firestore, 'users', user?.uid);
+        const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', user?.uid);
         return from(updateDoc(ref, { ...user }));
     }
 
     deleteProfile(userId: string): Observable<void> {
-        const ref = doc(this.firestore, 'users', userId);
+        const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', userId);
         return from(deleteDoc(ref));
     }
 
@@ -42,7 +42,7 @@ export class UserService {
     }
 
     get users$(): Observable<User[]> {
-        const ref = collection(this.firestore, 'users');
+        const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
         return collectionData(query(ref)) as Observable<User[]>;
     }
 }

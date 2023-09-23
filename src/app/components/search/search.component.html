@@ -1,0 +1,4 @@
+<input type="text" (keyup)="search($event)">
+<ul *ngFor="let user of users">
+    <li>{{ user.displayName }}</li>
+</ul>
