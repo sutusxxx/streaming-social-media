@@ -1,0 +1,23 @@
+mat-toolbar {
+    justify-content: space-between;
+}
+
+.mat-toolbar {
+    background: #1c1c1c;
+    color: rgba(255, 255, 255, 0.87);
+}
+
+.content {
+    padding: 32px;
+}
+
+.title {
+    flex: auto;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.title:hover {
+    font-weight: bold;
+}

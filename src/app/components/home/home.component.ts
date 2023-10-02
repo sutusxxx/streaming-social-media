@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '@services/user.service';
+import { Observable } from 'rxjs';
+import { User } from 'src/app/models';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+	selector: 'app-home',
+	templateUrl: './home.component.html',
+	styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+	currentUser: Observable<User | null> = this.userService.currentUser$;
 
-  constructor() { }
+	constructor(private readonly userService: UserService) { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

@@ -1,0 +1,6 @@
+.search-bar>input {
+    background-color: white;
+    margin: 0 10px;
+    font-size: large;
+    height: 30px;
+}

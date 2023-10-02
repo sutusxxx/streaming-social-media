@@ -6,7 +6,81 @@ body {
 
 body {
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: Verdana, Arial, sans-serif;
+}
+
+.flex {
+    display: flex;
+}
+
+.column-10 {
+    width: 10%;
+}
+
+.column-20 {
+    width: 20%;
+}
+
+.column-30 {
+    width: 30%;
+}
+
+.column-40 {
+    width: 40%;
+}
+
+.column-50 {
+    width: 50%;
+}
+
+.button-black {
+    color: white;
+    background-color: black;
+    transition: 0.5s;
+}
+
+.button-black:hover {
+    color: white;
+    background-color: rgb(65, 65, 65);
+}
+
+.button-blue {
+    color: white;
+    background-color: blue;
+    transition: 0.5s;
+}
+
+.button-blue:hover {
+    color: white;
+    background-color: rgb(1, 1, 214);
+}
+
+.counter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+}
+
+.counter {
+    text-align: center;
+}
+
+.counter-number {
+    cursor: pointer;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.counter-number-small {
+    cursor: pointer;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.counter-label {
+    font-size: 16px;
 }
 
 .form-container {
@@ -35,6 +109,10 @@ body {
 .center {
     display: flex;
     justify-content: center;
+}
+
+.small-caps {
+    font-variant: small-caps;
 }
 
 .text-center {

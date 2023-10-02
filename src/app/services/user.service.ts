@@ -29,6 +29,11 @@ export class UserService {
         return from(deleteDoc(ref));
     }
 
+    getUserById(userId: string): Observable<User> {
+        const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', userId);
+        return docData(ref) as Observable<User>;
+    }
+
     get currentUser$(): Observable<User | null> {
         return this.authService.currentUser$.pipe(
             switchMap(user => {

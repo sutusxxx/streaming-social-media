@@ -1,0 +1,41 @@
+<div class="form-container mat-elevation-z5 text-center marginT-30" *ngIf="user$ | async as user">
+    <h1>{{ user.displayName }}</h1>
+    <div class="profile-image">
+        <img width="120" height="120" [src]="user.photoURL ?? 'assets/images/user-placeholder.jpg'">
+        <button *ngIf="isCurrentUser" mat-mini-fab (click)="inputField.click()">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <input #inputField type="file" hidden (change)="uploadImage($event, user)">
+    </div>
+    <div class="counter-container marginT-10">
+        <div class="counter">
+            <span class="counter-number" (click)="showFollowerDialog(user, 'follower')">{{ followerCount }}</span>
+            <div class="counter-label">Followers</div>
+        </div>
+        <div class="counter">
+            <span class="counter-number-small">{{ postCount }}</span>
+            <div class="counter-label">Posts</div>
+        </div>
+        <div class="counter">
+            <span class="counter-number" (click)="showFollowerDialog(user, 'following')">{{ followingCount }}</span>
+            <div class="counter-label">Following</div>
+        </div>
+    </div>
+    <div *ngIf="!isCurrentUser" class="follow-button">
+        <ng-container *ngIf="isFollowing ; then unfollowButton else followButton">
+        </ng-container>
+    </div>
+    <div class="marginT-20">
+        <textarea class="description" type="text" maxlength="60" [(ngModel)]="user.description"
+            [disabled]="!isCurrentUser" (blur)="updateDescription($event, user)">
+        </textarea>
+    </div>
+
+
+    <ng-template #followButton>
+        <button mat-button class="button-black" (click)="toggleFollow(user.uid)">Follow</button>
+    </ng-template>
+    <ng-template #unfollowButton>
+        <button mat-button class="button-blue" (click)="toggleFollow(user.uid)">Unfollow</button>
+    </ng-template>
+</div>

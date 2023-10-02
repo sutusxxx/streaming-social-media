@@ -12,15 +12,6 @@ export class AppComponent {
 	user$ = this.userService.currentUser$;
 
 	constructor(
-		public readonly authService: AuthService,
-		private readonly userService: UserService,
-		private readonly router: Router
+		private readonly userService: UserService
 	) { }
-
-	logout() {
-		this.authService.logout()
-			.subscribe(() => {
-				this.router.navigate(['login']);
-			});
-	}
 }

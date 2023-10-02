@@ -9,6 +9,7 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideMessaging, getMessaging } from '@angular/fire/messaging';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 import { LoginComponent } from '@components/auth/login/login.component';
 import { RegistrationComponent } from '@components/auth/registration/registration.component';
 import { DatePipe } from './pipes/date.pipe';
@@ -27,6 +28,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { HomeComponent } from './components/home/home.component';
 import { SearchComponent } from './components/search/search.component';
 import { AngularFireModule } from '@angular/fire/compat';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 @NgModule({
 	declarations: [
@@ -35,7 +38,9 @@ import { AngularFireModule } from '@angular/fire/compat';
 		RegistrationComponent,
 		DatePipe,
 		HomeComponent,
-		SearchComponent
+		SearchComponent,
+		UserProfileComponent,
+  ToolbarComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -56,6 +61,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 		MatSnackBarModule,
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
+		provideStorage(() => getStorage()),
 		provideDatabase(() => getDatabase()),
 		provideFirestore(() => getFirestore()),
 		provideMessaging(() => getMessaging()),

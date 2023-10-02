@@ -1,0 +1,23 @@
+<mat-toolbar>
+    <span class="title" href="/home">Social Media App</span>
+    <app-search></app-search>
+    <ng-container *ngIf="user; else loginButton">
+        <button mat-button>
+            <button mat-button [matMenuTriggerFor]="userMenu">
+                <mat-icon>account_circle</mat-icon>
+                {{ user.displayName }}
+                <mat-icon>expand_more</mat-icon>
+            </button>
+        </button>
+    </ng-container>
+    <ng-template #loginButton>
+        <button mat-button routerLink="login">
+            <mat-icon>login</mat-icon>
+            Login
+        </button>
+    </ng-template>
+</mat-toolbar>
+<mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="navigateToUserProfile()">Profile</button>
+    <button mat-menu-item (click)="logout()">Logout</button>
+</mat-menu>
