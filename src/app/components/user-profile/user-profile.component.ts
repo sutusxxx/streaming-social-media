@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { UserService } from '@services/user.service';
-import { Observable, catchError, concatMap } from 'rxjs';
+import { Observable, Subscription, catchError, concatMap, map } from 'rxjs';
 import { User } from 'src/app/models';
 
 @Component({
@@ -14,7 +14,7 @@ import { User } from 'src/app/models';
 })
 export class UserProfileComponent implements OnInit {
 	user$!: Observable<User | null>;
-	currentUserId: string | null = null;
+	currentUserId: string = '';
 
 	isCurrentUser: boolean = false;
 	isFollowing: boolean = false;
@@ -24,8 +24,8 @@ export class UserProfileComponent implements OnInit {
 
 	postCount: number = 0;
 
-	followers: any;
-	following: any;
+	followers: Subscription | null = null;
+	following: Subscription | null = null;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -36,19 +36,36 @@ export class UserProfileComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.route.queryParams.subscribe(params => {
-			const userId = params['id'];
-			this.user$ = this.userService.getUserById(userId);
-			this.authService.currentUser$.subscribe(user => {
-				if (!user) return;
+		this.route.queryParams
+			.pipe(map(params => params['id']))
+			.subscribe(userId => {
+				this.resetFollowers();
+				this.setUserData(userId);
+				this.addFollowersAndFollowingListeners(userId);
+			});
+	}
 
-				this.isCurrentUser = user.uid === userId;
-				this.currentUserId = user.uid;
+	setUserData(userId: string): void {
+		this.user$ = this.userService.getUserById(userId);
+		this.authService.currentUser$.subscribe(user => {
+			if (!user) return;
 
-				this.followService.getFollowing(this.currentUserId, userId);
-				this.followService.getFollowers(userId);
-			})
+			this.isCurrentUser = user.uid === userId;
+			this.currentUserId = user.uid;
 		});
+	}
+
+	addFollowersAndFollowingListeners(userId: string): void {
+		this.followers = this.followService.getFollowers(userId)
+			.subscribe(followers => {
+				this.followerCount = followers.length;
+				this.isFollowing = followers.includes(this.currentUserId);
+			});
+
+		this.following = this.followService.getFollowing(userId)
+			.subscribe(following => {
+				this.followingCount = following.length;
+			});
 	}
 
 	uploadImage(event: any, user: User): void {
@@ -75,6 +92,15 @@ export class UserProfileComponent implements OnInit {
 
 		if (!this.currentUserId) return;
 
-		this.followService.follow(this.currentUserId, userId);
+		if (this.isFollowing) this.followService.follow(this.currentUserId, userId);
+		else this.followService.unfollow(this.currentUserId, userId);
+	}
+
+	resetFollowers(): void {
+		this.followers?.unsubscribe();
+		this.following?.unsubscribe();
+
+		this.followerCount = 0;
+		this.followingCount = 0;
 	}
 }
