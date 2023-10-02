@@ -4,7 +4,7 @@ import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { UserService } from '@services/user.service';
-import { Observable, concatMap } from 'rxjs';
+import { Observable, catchError, concatMap } from 'rxjs';
 import { User } from 'src/app/models';
 
 @Component({
@@ -45,11 +45,8 @@ export class UserProfileComponent implements OnInit {
 				this.isCurrentUser = user.uid === userId;
 				this.currentUserId = user.uid;
 
-				this.following = this.followService.getFollowing(this.currentUserId, userId)
-					.subscribe(following => console.log(following));
-
-				this.followers = this.followService.getFollowers(userId)
-					.subscribe(followers => console.log(followers));
+				this.followService.getFollowing(this.currentUserId, userId);
+				this.followService.getFollowers(userId);
 			})
 		});
 	}
@@ -78,6 +75,6 @@ export class UserProfileComponent implements OnInit {
 
 		if (!this.currentUserId) return;
 
-		this.followService.follow(this.currentUserId, userId).subscribe()
+		this.followService.follow(this.currentUserId, userId);
 	}
 }
