@@ -4,7 +4,7 @@ import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { UserService } from '@services/user.service';
-import { Observable, Subscription, catchError, concatMap, map } from 'rxjs';
+import { Observable, Subscription, concatMap, map } from 'rxjs';
 import { User } from 'src/app/models';
 
 @Component({
@@ -39,7 +39,7 @@ export class UserProfileComponent implements OnInit {
 		this.route.queryParams
 			.pipe(map(params => params['id']))
 			.subscribe(userId => {
-				this.resetFollowers();
+				this.resetUserData();
 				this.setUserData(userId);
 				this.addFollowersAndFollowingListeners(userId);
 			});
@@ -96,7 +96,7 @@ export class UserProfileComponent implements OnInit {
 		else this.followService.unfollow(this.currentUserId, userId);
 	}
 
-	resetFollowers(): void {
+	resetUserData(): void {
 		this.followers?.unsubscribe();
 		this.following?.unsubscribe();
 

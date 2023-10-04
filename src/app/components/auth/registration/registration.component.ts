@@ -13,10 +13,14 @@ import { passwordValidator } from 'src/app/validators/password-validator';
 })
 export class RegistrationComponent implements OnInit {
   registrationForm = new FormGroup({
-    name: new FormControl('', Validators.required),
+    displayName: new FormControl('', Validators.required),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required),
-    confirmPassword: new FormControl('', Validators.required)
+    confirmPassword: new FormControl('', Validators.required),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
+    gender: new FormControl('', Validators.required),
+    age: new FormControl('', Validators.required)
   }, { validators: passwordValidator() });
 
   constructor(
@@ -31,7 +35,7 @@ export class RegistrationComponent implements OnInit {
   registration(): void {
     if (!this.registrationForm.valid) return;
 
-    const { name, email, password } = this.registrationForm.value;
+    const { name, email, password, } = this.registrationForm.value;
     this.authService.registration(email, password).pipe(
       switchMap(({ user: { uid } }) => this.userService.createUser({ uid, email, displayName: name.toLowerCase() }))
     )
@@ -40,8 +44,8 @@ export class RegistrationComponent implements OnInit {
       });
   }
 
-  get name() {
-    return this.registrationForm.get('name');
+  get displayName() {
+    return this.registrationForm.get('displayName');
   }
 
   get email() {
@@ -56,4 +60,19 @@ export class RegistrationComponent implements OnInit {
     return this.registrationForm.get('confirmPassword');
   }
 
+  get firstName() {
+    return this.registrationForm.get('firstName');
+  }
+
+  get lastName() {
+    return this.registrationForm.get('lastName');
+  }
+
+  get age() {
+    return this.registrationForm.get('age');
+  }
+
+  get gender() {
+    return this.registrationForm.get('gender');
+  }
 }

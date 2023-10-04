@@ -7,5 +7,7 @@ export interface IChat {
     lastMessageDate?: Date & Timestamp;
     userIds: string[];
     users: IUser[];
+
+    chatPic?: string;
     chatName?: string;
 }

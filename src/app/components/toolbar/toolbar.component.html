@@ -1,5 +1,7 @@
 <mat-toolbar>
-    <span class="title" href="/home">Social Media App</span>
+    <span class="title" [routerLink]="[PATH.HOME]">Social Media App</span>
+    <span class="column-50"></span>
+    <span class="column-30"></span>
     <app-search></app-search>
     <ng-container *ngIf="user; else loginButton">
         <button mat-button>
@@ -18,6 +20,7 @@
     </ng-template>
 </mat-toolbar>
 <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="navigateToMessages()">Messages</button>
     <button mat-menu-item (click)="navigateToUserProfile()">Profile</button>
     <button mat-menu-item (click)="logout()">Logout</button>
 </mat-menu>

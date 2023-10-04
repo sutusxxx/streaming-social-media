@@ -30,6 +30,7 @@ import { SearchComponent } from './components/search/search.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { MessengerComponent } from './components/messenger/messenger.component';
 
 @NgModule({
 	declarations: [
@@ -40,7 +41,8 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 		HomeComponent,
 		SearchComponent,
 		UserProfileComponent,
-  ToolbarComponent
+		ToolbarComponent,
+  MessengerComponent
 	],
 	imports: [
 		AngularFireModule,

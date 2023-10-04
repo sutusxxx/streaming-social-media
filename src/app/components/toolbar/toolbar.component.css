@@ -17,7 +17,3 @@ mat-toolbar {
     text-decoration: none;
     cursor: pointer;
 }
-
-.title:hover {
-    font-weight: bold;
-}
