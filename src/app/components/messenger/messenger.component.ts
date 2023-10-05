@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MessengerService } from '@services/messenger.service';
 import { UserService } from '@services/user.service';
-import { combineLatest, map, startWith } from 'rxjs';
+import { combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
 import { User } from 'src/app/models';
 
 @Component({
@@ -11,7 +12,12 @@ import { User } from 'src/app/models';
 	styleUrls: ['./messenger.component.css']
 })
 export class MessengerComponent implements OnInit {
+	@ViewChild('endOfChat')
+	endOfChat!: ElementRef;
+
 	searchControl = new FormControl('');
+	chatListControl = new FormControl();
+	messageControl = new FormControl('');
 
 	currentUser$ = this.userService.currentUser$;
 	users$ = combineLatest([
@@ -25,6 +31,21 @@ export class MessengerComponent implements OnInit {
 	);
 	chats$ = this.messengerService.chats$;
 
+	selectedChat$ = combineLatest([
+		this.chatListControl.valueChanges,
+		this.chats$
+	]).pipe(
+		map(([value, chats]) => chats.find(c => c.id === value[0]))
+	);
+
+	messages$ = this.chatListControl.valueChanges.pipe(
+		map(value => value[0]),
+		switchMap(chatId => this.messengerService.getChatMessages$(chatId)),
+		tap(this.scrollToBottom)
+	);
+
+	readonly PATH = PATH;
+
 	constructor(
 		private readonly userService: UserService,
 		private readonly messengerService: MessengerService
@@ -34,9 +55,37 @@ export class MessengerComponent implements OnInit {
 	}
 
 	createChat(user: User): void {
-		this.messengerService.createChat(user).subscribe(
-			next => console.log(next),
-			error => console.log(error)
+		this.messengerService.isExistingChat(user.uid).pipe(
+			switchMap(chatId => {
+				if (chatId) return of(chatId);
+				else return this.messengerService.createChat(user);
+			})
+		).subscribe(chatId => {
+			this.chatListControl.setValue([chatId]);
+		});
+	}
+
+	sendMessage(): void {
+		const message = this.messageControl.value;
+		const selectedChatId = this.chatListControl.value[0];
+
+		if (!message || !selectedChatId) return;
+
+		this.messengerService.addChatMessage(selectedChatId, message).subscribe(
+			this.scrollToBottom
 		);
+
+		this.messageControl.setValue('');
+	}
+
+	scrollToBottom(): void {
+		setTimeout(() => {
+			if (!this.endOfChat) return;
+			this.endOfChat.nativeElement.scrollIntoView({ behavior: 'smooth' });
+		}, 100)
+	}
+
+	navigateToUserProfile(selectedChat: any): void {
+
 	}
 }

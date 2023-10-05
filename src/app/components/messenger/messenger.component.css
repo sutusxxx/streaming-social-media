@@ -6,7 +6,7 @@
 .chat-list {
     width: 30%;
     margin: 16px;
-    background: #c5cae9;
+    background: #e1e1e1;
     border-radius: 16px;
 }
 
@@ -14,6 +14,8 @@
     width: 70%;
     margin: 16px;
     border-radius: 16px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.92);
 }
 
 .search-input {
@@ -32,4 +34,77 @@
 .chat-date {
     font-size: 0.7rem;
     color: rgba(0, 0, 0, 0.7);
+}
+
+.messages-header {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.messages-header>img {
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 16px;
+    height: 35px;
+}
+
+.messages-header>h2 {
+    margin: 0;
+}
+
+.chat-area {
+    height: calc(100vh - 270px);
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.chat-area> :first-child {
+    margin-top: auto;
+}
+
+.input-area>mat-form-field {
+    width: 100%;
+}
+
+.input-area {
+    padding-top: 16px;
+    padding-bottom: 8px;
+}
+
+.chat-bubble-container {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.chat-bubble-container.sender {
+    justify-content: flex-end;
+}
+
+.chat-bubble-container.sender>.chat-bubble {
+    color: white;
+    background: #1c1c1c;
+}
+
+.chat-bubble {
+    background: #9fd6f8;
+    padding-top: 8px;
+    padding-bottom: 18px;
+    padding-left: 8px;
+    padding-right: 100px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    width: fit-content;
+    position: relative;
+}
+
+.chat-bubble>.chat-date {
+    position: absolute;
+    bottom: 2px;
+    right: 8px;
+}
+
+.chat-bubble-container.sender>.chat-bubble>.chat-date {
+    color: white;
 }
