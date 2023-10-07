@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '@services/user.service';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models';
+
+import { Component, OnInit } from '@angular/core';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-home',
@@ -14,6 +15,7 @@ export class HomeComponent implements OnInit {
 	constructor(private readonly userService: UserService) { }
 
 	ngOnInit(): void {
+
 	}
 
 }

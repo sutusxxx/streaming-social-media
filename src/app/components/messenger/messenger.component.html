@@ -5,8 +5,9 @@
                 <input matInput placeholder="Search for users" [formControl]="searchControl" [matAutocomplete]="users">
             </mat-form-field>
             <mat-autocomplete #users="matAutocomplete">
-                <mat-option *ngFor="let user of users$ | async" (click)="createChat(user)">{{ user?.displayName
-                    }}</mat-option>
+                <mat-option *ngFor="let user of users$ | async" (click)="createChat(user)">
+                    {{ user?.displayName }}
+                </mat-option>
             </mat-autocomplete>
         </div>
         <mat-selection-list [multiple]="false" [formControl]="chatListControl">

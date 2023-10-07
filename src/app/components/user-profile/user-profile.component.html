@@ -30,6 +30,10 @@
             [disabled]="!isCurrentUser" (blur)="updateDescription($event, user)">
         </textarea>
     </div>
+    <div *ngIf="isCurrentUser" class="marginT-30">
+        <button class="primary-btn small-caps" mat-raised-button color="primary" [routerLink]="[PATH.BROADCAST]">start a
+            stream</button>
+    </div>
 
 
     <ng-template #followButton>

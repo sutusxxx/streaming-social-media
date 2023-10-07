@@ -33,6 +33,10 @@ body {
     width: 50%;
 }
 
+.dark {
+    background:rgb(65, 65, 65);
+}
+
 .button-black {
     color: white;
     background-color: black;

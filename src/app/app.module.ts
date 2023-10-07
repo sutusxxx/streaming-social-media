@@ -31,6 +31,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { MessengerComponent } from './components/messenger/messenger.component';
+import { StreamingComponent } from './components/streaming/streaming.component';
 
 @NgModule({
 	declarations: [
@@ -42,7 +43,8 @@ import { MessengerComponent } from './components/messenger/messenger.component';
 		SearchComponent,
 		UserProfileComponent,
 		ToolbarComponent,
-  MessengerComponent
+  MessengerComponent,
+  StreamingComponent
 	],
 	imports: [
 		AngularFireModule,

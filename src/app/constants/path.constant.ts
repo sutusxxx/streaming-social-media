@@ -1,4 +1,5 @@
 export const PATH = {
+    BROADCAST: '/broadcast',
     HOME: '/home',
     LOGIN: '/login',
     MESSAGES: '/messages',

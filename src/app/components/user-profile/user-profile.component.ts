@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { concatMap, map, Observable, Subscription } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
+import { User } from 'src/app/models';
+
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { UserService } from '@services/user.service';
-import { Observable, Subscription, concatMap, map } from 'rxjs';
-import { User } from 'src/app/models';
 
 @Component({
 	selector: 'app-user-profile',
@@ -26,6 +28,8 @@ export class UserProfileComponent implements OnInit {
 
 	followers: Subscription | null = null;
 	following: Subscription | null = null;
+
+	readonly PATH = PATH;
 
 	constructor(
 		private readonly route: ActivatedRoute,
