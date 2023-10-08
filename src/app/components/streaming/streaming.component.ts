@@ -1,38 +1,29 @@
 import SimplePeer from 'simple-peer';
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { StreamService } from '@services/stream.service';
+import { UserService } from '@services/user.service';
+import { concatMap, take } from 'rxjs';
 
 @Component({
 	selector: 'app-streaming',
 	templateUrl: './streaming.component.html',
 	styleUrls: ['./streaming.component.css']
 })
-export class StreamingComponent implements OnInit {
+export class StreamingComponent implements OnInit, OnDestroy {
 	@ViewChild('videoElement') videoElement!: ElementRef;
 
 	mediaRecorder!: MediaRecorder;
 	isRecording: boolean = false;
 
-	localStream!: MediaStream;
-	remoteStream!: MediaStream;
-
-	constructor(private readonly streamService: StreamService) { }
+	constructor(
+		private readonly streamService: StreamService,
+		private readonly userService: UserService
+	) { }
 
 	async ngOnInit(): Promise<void> {
-		this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-		this.remoteStream = new MediaStream();
-
-		this.localStream.getTracks().forEach(track => {
-			this.streamService.peerConnection.addTrack(track, this.localStream);
-		});
-
-		this.streamService.peerConnection.ontrack = event => {
-			event.streams[0].getTracks().forEach(track => {
-				this.remoteStream.addTrack(track);
-			});
-		}
-		this.videoElement.nativeElement.srcObject = this.localStream;
+		await this.streamService.initStreamer();
+		this.videoElement.nativeElement.srcObject = this.streamService.localStream;
 		// this.mediaRecorder = new MediaRecorder(this.localStream);
 		// const chunks: BlobPart[] = [];
 
@@ -43,19 +34,40 @@ export class StreamingComponent implements OnInit {
 		// 	}
 		// };
 		// this.mediaRecorder.onstop = () => {
-		// 	const recordedBlob = new Blob(chunks, { type: 'video/webm' });
+		// const recordedBlob = new Blob(chunks, { type: 'video/webm' });
 		// }
 	}
 
-	async startRecording(): Promise<void> {
-		await this.streamService.createOffer('test')
-			.then(() => {
-				this.isRecording = true;
-			});
+	startRecording(): void {
+		this.userService.currentUser$.pipe(
+			take(1),
+			concatMap(async currentUser => {
+				if (!currentUser) return;
+				await this.streamService.createStream(currentUser.uid)
+					.then(() => {
+						this.isRecording = true;
+					})
+					.catch(error => console.log(error));
+			})
+		).subscribe();
 	}
 
 	stopRecording(): void {
 		// this.mediaRecorder.stop();
-		this.isRecording = false;
+		this.userService.currentUser$.pipe(
+			take(1),
+			concatMap(async currentUser => {
+				if (!currentUser) return;
+				await this.streamService.removeStream(currentUser.uid)
+					.then(() => {
+						this.isRecording = false;
+					})
+					.catch(error => console.log(error));
+			})
+		).subscribe();
+	}
+
+	ngOnDestroy(): void {
+		this.streamService.peerConnection.close();
 	}
 }

@@ -32,6 +32,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { MessengerComponent } from './components/messenger/messenger.component';
 import { StreamingComponent } from './components/streaming/streaming.component';
+import { ViewComponent } from './components/view/view.component';
 
 @NgModule({
 	declarations: [
@@ -44,7 +45,8 @@ import { StreamingComponent } from './components/streaming/streaming.component';
 		UserProfileComponent,
 		ToolbarComponent,
   MessengerComponent,
-  StreamingComponent
+  StreamingComponent,
+  ViewComponent
 	],
 	imports: [
 		AngularFireModule,
