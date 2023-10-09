@@ -38,7 +38,7 @@ export class StreamingComponent implements OnInit, OnDestroy {
 		// }
 	}
 
-	startRecording(): void {
+	start(): void {
 		this.userService.currentUser$.pipe(
 			take(1),
 			concatMap(async currentUser => {
@@ -52,7 +52,7 @@ export class StreamingComponent implements OnInit, OnDestroy {
 		).subscribe();
 	}
 
-	stopRecording(): void {
+	stop(): void {
 		// this.mediaRecorder.stop();
 		this.userService.currentUser$.pipe(
 			take(1),

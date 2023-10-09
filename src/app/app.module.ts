@@ -33,6 +33,9 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { MessengerComponent } from './components/messenger/messenger.component';
 import { StreamingComponent } from './components/streaming/streaming.component';
 import { ViewComponent } from './components/view/view.component';
+import { FollowerDialogComponent } from './components/follower-dialog/follower-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
 	declarations: [
@@ -44,9 +47,10 @@ import { ViewComponent } from './components/view/view.component';
 		SearchComponent,
 		UserProfileComponent,
 		ToolbarComponent,
-  MessengerComponent,
-  StreamingComponent,
-  ViewComponent
+		MessengerComponent,
+		StreamingComponent,
+		ViewComponent,
+		FollowerDialogComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -65,6 +69,8 @@ import { ViewComponent } from './components/view/view.component';
 		MatListModule,
 		MatDividerModule,
 		MatSnackBarModule,
+		MatDialogModule,
+		MatTabsModule,
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
 		provideStorage(() => getStorage()),

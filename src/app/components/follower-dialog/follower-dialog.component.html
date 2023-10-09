@@ -1,0 +1,20 @@
+<div mat-dialog-content>
+    <mat-tab-group [selectedIndex]="data.activeTab" animationDuration="0">
+        <mat-tab label="Followers">
+            <mat-nav-list>
+                <a mat-list-item *ngFor="let follower of data.details.followers"
+                    (click)="navigateToUserProfile(follower.uid)" mat-dialog-close>
+                    <span>{{ follower.displayName }}</span>
+                </a>
+            </mat-nav-list>
+        </mat-tab>
+        <mat-tab label="Following">
+            <mat-nav-list>
+                <a mat-list-item *ngFor="let following of data.details.following"
+                    (click)="navigateToUserProfile(following.uid)" mat-dialog-close>
+                    <span>{{ following.displayName }}</span>
+                </a>
+            </mat-nav-list>
+        </mat-tab>
+    </mat-tab-group>
+</div>

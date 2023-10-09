@@ -1,26 +1,50 @@
 import { Injectable } from '@angular/core';
 import { CollectionReference, DocumentData, Firestore, collection, collectionData, deleteDoc, doc, docData, setDoc } from '@angular/fire/firestore';
 import { DocumentReference, deleteField, query, runTransaction, updateDoc, writeBatch } from 'firebase/firestore';
-import { Observable, from, map } from 'rxjs';
+import { Observable, combineLatest, from, map } from 'rxjs';
+import { IFollowDetails } from '../interfaces';
+import { UserService } from './user.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class FollowService {
 
-	constructor(private readonly firestore: Firestore) { }
+	constructor(
+		private readonly firestore: Firestore,
+		private readonly userService: UserService
+	) { }
 
 	getFollowers(userId: string) {
-		console.log(userId);
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `followers/${userId}`);
 		return (docData(ref) as Observable<any>)
-			.pipe(map(values => Object.keys(values)));
+			.pipe(map(values => {
+				if (!values) return [];
+				return Object.keys(values)
+			}));
 	}
 
 	getFollowing(userId: string) {
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `following/${userId}`);
 		return (docData(ref) as Observable<any>)
-			.pipe(map(values => Object.keys(values)));
+			.pipe(map(values => {
+				if (!values) return [];
+				return Object.keys(values)
+			}));
+	}
+
+	getDetails(followerIds: string[], followingIds: string[]): Observable<IFollowDetails> {
+		return combineLatest([
+			this.userService.getMultipleUsersById(followerIds),
+			this.userService.getMultipleUsersById(followingIds)
+		]).pipe(
+			map(([followers, following]) => {
+				return {
+					followers,
+					following
+				};
+			})
+		);
 	}
 
 	async follow(currentUserId: string, targetUserId: string) {

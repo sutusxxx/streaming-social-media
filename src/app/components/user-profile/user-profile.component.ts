@@ -1,4 +1,4 @@
-import { concatMap, map, Observable, Subscription } from 'rxjs';
+import { combineLatest, concatMap, map, Observable, Subscription } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { User } from 'src/app/models';
 
@@ -8,6 +8,9 @@ import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { UserService } from '@services/user.service';
+import { IFollowDetails } from 'src/app/interfaces';
+import { MatDialog } from '@angular/material/dialog';
+import { FollowerDialogComponent } from '@components/follower-dialog/follower-dialog.component';
 
 @Component({
 	selector: 'app-user-profile',
@@ -36,7 +39,8 @@ export class UserProfileComponent implements OnInit {
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
 		private readonly followService: FollowService,
-		private readonly imageUploadService: ImageUploadService
+		private readonly imageUploadService: ImageUploadService,
+		public dialog: MatDialog
 	) { }
 
 	ngOnInit(): void {
@@ -87,8 +91,17 @@ export class UserProfileComponent implements OnInit {
 		this.userService.saveUser(userToUpdate).subscribe();
 	}
 
-	showFollowerDialog(user: User, activeTab: string): void {
-		// TODO: implement followers.
+	showFollowerDialog(user: User, activeTab: number): void {
+		combineLatest([
+			this.followService.getFollowers(user.uid),
+			this.followService.getFollowing(user.uid)
+		]).pipe(
+			concatMap(([followerIds, followingIds]) =>
+				this.followService.getDetails(followerIds, followingIds)
+			)
+		).subscribe(details => {
+			this.dialog.open(FollowerDialogComponent, { data: { details, activeTab }, height: '600px' });
+		}, error => console.log(error));
 	}
 
 	toggleFollow(userId: string): void {

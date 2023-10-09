@@ -1,8 +1,8 @@
 <div class="video-container">
     <div class="column-30">
-        <button class="primary-btn" mat-raised-button color="primary" #recordButton (click)="startRecording()"
+        <button class="primary-btn" mat-raised-button color="primary" #recordButton (click)="start()"
             *ngIf="!isRecording">Start Recording</button>
-        <button class="primary-btn" mat-raised-button color="primary" #recordButton (click)="stopRecording()"
+        <button class="primary-btn" mat-raised-button color="primary" #recordButton (click)="stop()"
             *ngIf="isRecording">Stop Recording</button>
     </div>
     <div class="column-50">

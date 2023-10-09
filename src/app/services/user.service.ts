@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, of, switchMap } from 'rxjs';
 import { User } from '../models';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, collection, collectionData, deleteDoc, doc, docData, query, setDoc, updateDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, Firestore, collection, collectionData, deleteDoc, doc, docData, documentId, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -32,6 +32,13 @@ export class UserService {
     getUserById(userId: string): Observable<User> {
         const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', userId);
         return docData(ref) as Observable<User>;
+    }
+
+    getMultipleUsersById(userIds: string[]): Observable<User[]> {
+        if (!userIds || !userIds.length) return of([]);
+
+        const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
+        return collectionData(query(ref, where(documentId(), 'in', userIds))) as Observable<User[]>;
     }
 
     get currentUser$(): Observable<User | null> {
