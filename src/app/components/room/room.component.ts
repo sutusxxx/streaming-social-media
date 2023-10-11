@@ -1,24 +1,56 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { StreamService } from '@services/stream.service';
+import { UserService } from '@services/user.service';
+import { Observable, tap } from 'rxjs';
 
 @Component({
 	selector: 'app-room',
 	templateUrl: './room.component.html',
 	styleUrls: ['./room.component.css']
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, OnDestroy {
 	@ViewChild('videoElement') videoElement!: ElementRef;
+	@ViewChild('endOfChat') endOfChat!: ElementRef;
 
-	@Input() isHost: boolean = true;
+	isHost: boolean = true;
+	roomId: string = '';
+
 	isRecording: boolean = false;
 
-	constructor(private readonly streamService: StreamService) { }
+	messageControl = new FormControl('');
+
+	currentUser$ = this.userService.currentUser$;
+	messages$!: Observable<any>;
+
+	constructor(
+		private readonly streamService: StreamService,
+		private readonly route: ActivatedRoute,
+		private readonly userService: UserService
+	) { }
 
 	ngOnInit(): void {
-		this.streamService.registerPeerConnectionListeners();
+		this.route.queryParams.subscribe(params => {
+			this.isHost = params['host'];
+			this.roomId = params['userId'];
+			this.messages$ = this.streamService.getChat(this.roomId).pipe(
+				tap(this.scrollToBottom)
+			);
+			this.streamService.registerPeerConnectionListeners();
+			this.initStream();
+		});
 	}
 
-	async create(): Promise<void> {
+	initStream(): void {
+		if (this.isHost) {
+			this.create();
+		} else {
+			this.join();
+		}
+	}
+
+	create(): void {
 		this.streamService.createRoom().subscribe(
 			() => {
 				console.log('Room Created...');
@@ -36,5 +68,28 @@ export class RoomComponent implements OnInit {
 			},
 			error => console.log('Failed To Join:', error)
 		);
+	}
+
+	end(): void {
+		// TODO: implement streaming end..
+	}
+
+	sendMessage(): void {
+		const message = this.messageControl.value;
+		this.streamService.addMessage(this.roomId, message).subscribe(
+			() => this.scrollToBottom()
+		);
+		this.messageControl.setValue('');
+	}
+
+	scrollToBottom(): void {
+		setTimeout(() => {
+			if (!this.endOfChat) return;
+			this.endOfChat.nativeElement.scrollIntoView({ behavior: 'smooth' });
+		}, 100)
+	}
+
+	ngOnDestroy(): void {
+		this.end();
 	}
 }

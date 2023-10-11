@@ -4,15 +4,19 @@ import {
 	DocumentData,
 	DocumentReference,
 	onSnapshot,
+	orderBy,
+	query,
 	setDoc,
+	Timestamp,
 	updateDoc
 } from 'firebase/firestore';
-import { concatMap, Observable, take } from 'rxjs';
+import { concatMap, EMPTY, Observable, take } from 'rxjs';
 import { servers } from 'src/app/configuration/server';
 
 import { Injectable } from '@angular/core';
-import { addDoc, docData, Firestore } from '@angular/fire/firestore';
+import { addDoc, collectionData, docData, Firestore } from '@angular/fire/firestore';
 import { UserService } from '@services/user.service';
+import { User } from '../models';
 
 @Injectable({
 	providedIn: 'root'
@@ -95,6 +99,28 @@ export class StreamService {
 				}
 			});
 		});
+	}
+
+	getChat(roomId: string): Observable<any[]> {
+		const ref = collection(this.firestore, 'rooms', roomId, 'chat');
+		const queryAll = query(ref, orderBy('date', 'asc'));
+		return collectionData(queryAll) as Observable<any[]>;
+	}
+
+	addMessage(roomId: string, message: string): Observable<any> {
+		const ref = collection(this.firestore, 'rooms', roomId, 'chat');
+		const date = Timestamp.fromDate(new Date());
+		return this.userService.currentUser$.pipe(
+			take(1),
+			concatMap(user => {
+				return addDoc(ref, {
+					text: message,
+					senderId: user?.uid,
+					senderName: user?.displayName,
+					date: date
+				});
+			})
+		);
 	}
 
 	private async createSDPAnswer(offer: any, roomRef: DocumentReference<DocumentData>): Promise<void> {

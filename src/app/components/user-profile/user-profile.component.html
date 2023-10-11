@@ -31,8 +31,9 @@
         </textarea>
     </div>
     <div *ngIf="isCurrentUser" class="marginT-30">
-        <button class="primary-btn small-caps" mat-raised-button color="primary" [routerLink]="[PATH.BROADCAST]">start a
-            stream</button>
+        <button class="primary-btn" mat-raised-button color="primary" (click)="startLiveStream()">
+            GO LIVE
+        </button>
     </div>
 
 

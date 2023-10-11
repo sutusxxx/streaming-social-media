@@ -41,7 +41,7 @@ export class MessengerComponent implements OnInit {
 	messages$ = this.chatListControl.valueChanges.pipe(
 		map(value => value[0]),
 		switchMap(chatId => this.messengerService.getChatMessages$(chatId)),
-		tap(this.scrollToBottom)
+		tap(() => this.scrollToBottom())
 	);
 
 	readonly PATH = PATH;
@@ -72,7 +72,7 @@ export class MessengerComponent implements OnInit {
 		if (!message || !selectedChatId) return;
 
 		this.messengerService.addChatMessage(selectedChatId, message).subscribe(
-			this.scrollToBottom
+			() => this.scrollToBottom()
 		);
 
 		this.messageControl.setValue('');

@@ -1,20 +1,43 @@
 <div class="video-container">
     <div class="column-30">
-        <ng-container *ngIf="isHost; then recordButton else joinButton">
-        </ng-container>
-        <ng-template #recordButton>
-            <button class="primary-btn" mat-raised-button color="primary" #recordButton (click)="create()"
-                *ngIf="!isRecording">Start Recording</button>
-        </ng-template>
-        <ng-template #joinButton>
-            <button class="primary-btn" mat-raised-button color="primary" (click)="join()">join</button>
-        </ng-template>
     </div>
     <div class="column-50">
         <video #videoElement autoplay></video>
     </div>
     <div class="column-10"></div>
-    <div class="chat-bar">
-        <!-- Your chat bar content goes here -->
+    <div class="chat-bar mat-elevation-z5">
+        <div class="messages-header">
+            <h2>Chat</h2>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="chat-area">
+            <ng-container *ngIf="currentUser$ | async as currentUser">
+                <div *ngFor="let message of messages$ | async">
+                    <div *ngIf="message.senderId === currentUser.uid" class="user-name">
+                        {{ message.senderName }}
+                    </div>
+
+                    <div [ngClass]="{ 'sender': message.senderId !== currentUser.uid }" class="chat-bubble-container">
+                        <div class="chat-bubble">
+                            <span>
+                                {{ message.text }}
+                            </span>
+                            <span class="chat-date">
+                                {{ message.date | date }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div #endOfChat></div>
+            </ng-container>
+        </div>
+        <div class="input-area">
+            <mat-form-field appearance="outline">
+                <input matInput placeholder="Aa" [formControl]="messageControl" (keydown.enter)="sendMessage()">
+                <button mat-icon-button matSuffix (click)="sendMessage()">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
     </div>
 </div>

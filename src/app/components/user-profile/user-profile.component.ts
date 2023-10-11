@@ -4,7 +4,7 @@ import { User } from 'src/app/models';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FollowerDialogComponent } from '@components/follower-dialog/follower-dialog.component';
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
@@ -39,6 +39,7 @@ export class UserProfileComponent implements OnInit {
 		private readonly userService: UserService,
 		private readonly followService: FollowService,
 		private readonly imageUploadService: ImageUploadService,
+		private readonly router: Router,
 		public dialog: MatDialog
 	) { }
 
@@ -118,5 +119,9 @@ export class UserProfileComponent implements OnInit {
 
 		this.followerCount = 0;
 		this.followingCount = 0;
+	}
+
+	startLiveStream(): void {
+		this.router.navigate([PATH.BROADCAST], { queryParams: { userId: this.currentUserId, host: true } });
 	}
 }
