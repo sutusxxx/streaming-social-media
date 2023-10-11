@@ -3,14 +3,13 @@ import { PATH } from 'src/app/constants/path.constant';
 import { User } from 'src/app/models';
 
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { FollowerDialogComponent } from '@components/follower-dialog/follower-dialog.component';
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { UserService } from '@services/user.service';
-import { IFollowDetails } from 'src/app/interfaces';
-import { MatDialog } from '@angular/material/dialog';
-import { FollowerDialogComponent } from '@components/follower-dialog/follower-dialog.component';
 
 @Component({
 	selector: 'app-user-profile',

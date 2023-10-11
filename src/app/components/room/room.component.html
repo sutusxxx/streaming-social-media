@@ -1,0 +1,20 @@
+<div class="video-container">
+    <div class="column-30">
+        <ng-container *ngIf="isHost; then recordButton else joinButton">
+        </ng-container>
+        <ng-template #recordButton>
+            <button class="primary-btn" mat-raised-button color="primary" #recordButton (click)="create()"
+                *ngIf="!isRecording">Start Recording</button>
+        </ng-template>
+        <ng-template #joinButton>
+            <button class="primary-btn" mat-raised-button color="primary" (click)="join()">join</button>
+        </ng-template>
+    </div>
+    <div class="column-50">
+        <video #videoElement autoplay></video>
+    </div>
+    <div class="column-10"></div>
+    <div class="chat-bar">
+        <!-- Your chat bar content goes here -->
+    </div>
+</div>
