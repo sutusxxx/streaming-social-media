@@ -1,9 +1,10 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StreamService } from '@services/stream.service';
 import { UserService } from '@services/user.service';
 import { Observable, tap } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
 
 @Component({
 	selector: 'app-room',
@@ -27,7 +28,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 	constructor(
 		private readonly streamService: StreamService,
 		private readonly route: ActivatedRoute,
-		private readonly userService: UserService
+		private readonly userService: UserService,
+		private readonly router: Router
 	) { }
 
 	ngOnInit(): void {
@@ -71,7 +73,15 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	end(): void {
-		// TODO: implement streaming end..
+		if (this.isHost) {
+			console.log('Removing Room from database...');
+			this.streamService.deleteRoom(this.roomId).subscribe(() => {
+				console.log('Room deleted with id=', this.roomId);
+				this.router.navigate([PATH.PROFILE], { queryParams: { id: this.roomId } });
+			});
+		} else {
+			console.log('Leave room.')
+		}
 	}
 
 	sendMessage(): void {

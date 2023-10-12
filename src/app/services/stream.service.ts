@@ -10,11 +10,11 @@ import {
 	Timestamp,
 	updateDoc
 } from 'firebase/firestore';
-import { concatMap, EMPTY, Observable, take } from 'rxjs';
+import { combineLatest, concatMap, EMPTY, from, Observable, take } from 'rxjs';
 import { servers } from 'src/app/configuration/server';
 
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, docData, Firestore } from '@angular/fire/firestore';
+import { addDoc, collectionData, deleteDoc, docData, Firestore } from '@angular/fire/firestore';
 import { UserService } from '@services/user.service';
 import { User } from '../models';
 
@@ -99,6 +99,11 @@ export class StreamService {
 				}
 			});
 		});
+	}
+
+	deleteRoom(roomId: string): Observable<void> {
+		const roomRef = doc(this.firestore, 'rooms', roomId);
+		return from(deleteDoc(roomRef));
 	}
 
 	getChat(roomId: string): Observable<any[]> {
