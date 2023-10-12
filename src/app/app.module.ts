@@ -35,6 +35,7 @@ import { SearchComponent } from './components/search/search.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { DatePipe } from './pipes/date.pipe';
+import { StreamListComponent } from './components/stream-list/stream-list.component';
 
 @NgModule({
 	declarations: [
@@ -48,7 +49,8 @@ import { DatePipe } from './pipes/date.pipe';
 		ToolbarComponent,
 		MessengerComponent,
 		FollowerDialogComponent,
-		RoomComponent
+		RoomComponent,
+  StreamListComponent
 	],
 	imports: [
 		AngularFireModule,
