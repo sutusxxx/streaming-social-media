@@ -1,5 +1,5 @@
 <mat-form-field>
-    <input matInput type="text" placeholder="Search" [matAutocomplete]="auto" (keyup)="search($event)">
+    <input matInput placeholder="Search" [matAutocomplete]="auto" (keydown.enter)="search($event)">
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let user of users | async" [value]="user.displayName" (click)="selectUser(user.uid)">
