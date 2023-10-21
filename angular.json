@@ -156,5 +156,8 @@
       }
     }
   },
-  "defaultProject": "social-media-app"
+  "defaultProject": "social-media-app",
+  "cli": {
+    "analytics": false
+  }
 }
