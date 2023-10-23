@@ -36,6 +36,9 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { DatePipe } from './pipes/date.pipe';
 import { StreamListComponent } from './components/stream-list/stream-list.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
 	declarations: [
@@ -50,7 +53,7 @@ import { StreamListComponent } from './components/stream-list/stream-list.compon
 		MessengerComponent,
 		FollowerDialogComponent,
 		RoomComponent,
-  StreamListComponent
+		StreamListComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -71,6 +74,9 @@ import { StreamListComponent } from './components/stream-list/stream-list.compon
 		MatSnackBarModule,
 		MatDialogModule,
 		MatTabsModule,
+		MatSelectModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
 		provideStorage(() => getStorage()),

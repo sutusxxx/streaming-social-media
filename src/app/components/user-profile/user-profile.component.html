@@ -31,9 +31,14 @@
         </textarea>
     </div>
     <div *ngIf="isCurrentUser" class="marginT-30">
-        <button class="primary-btn" mat-raised-button color="primary" (click)="startLiveStream()">
-            GO LIVE
-        </button>
+        <div class="button-container">
+            <button class="primary-btn" mat-button (click)="startLiveStream()">
+                GO LIVE
+            </button>
+            <button class="primary-btn" mat-button>
+                ADD POST
+            </button>
+        </div>
     </div>
 
 

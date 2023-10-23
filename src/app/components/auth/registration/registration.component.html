@@ -17,16 +17,19 @@
             </mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="First name" formControlName="firstName">
-            <mat-error *ngIf="firstName?.errors?.['required']">
-                Required field
-            </mat-error>
+            <mat-label>Choose your gender</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let gender of genders" [value]="gender">
+                    {{ gender }}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Last name" formControlName="lastName">
-            <mat-error *ngIf="lastName?.errors?.['required']">
-                Required field
-            </mat-error>
+            <mat-label>Date of Birth</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]=picker></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
             <input matInput placeholder="Password" formControlName="password" type="password">
@@ -47,6 +50,9 @@
             <button class="primary-btn" mat-raised-button color="primary" type="submit">
                 Sign Up
             </button>
+        </div>
+        <div class="center marginT-10">
+            <a class="link" [routerLink]="[PATH.LOGIN]">Back to login</a>
         </div>
     </form>
 </div>

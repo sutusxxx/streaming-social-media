@@ -24,3 +24,8 @@
 .follow-button {
     margin: 10px;
 }
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}

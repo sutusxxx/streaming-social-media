@@ -2,7 +2,7 @@
     <span class="title" [routerLink]="[PATH.HOME]">Social Media App</span>
     <span class="column-50"></span>
     <span class="column-30"></span>
-    <app-search></app-search>
+    <app-search *ngIf="user"></app-search>
     <ng-container *ngIf="user; else loginButton">
         <button mat-button>
             <button mat-button [matMenuTriggerFor]="userMenu">

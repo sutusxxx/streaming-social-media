@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { passwordValidator } from 'src/app/validators/password-validator';
@@ -17,11 +18,16 @@ export class RegistrationComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required),
     confirmPassword: new FormControl('', Validators.required),
-    firstName: new FormControl('', Validators.required),
-    lastName: new FormControl('', Validators.required),
-    gender: new FormControl('', Validators.required),
-    age: new FormControl('', Validators.required)
+    gender: new FormControl(''),
+    dateOfBirth: new FormControl('')
   }, { validators: passwordValidator() });
+
+  genders: string[] = [
+    'Male',
+    'Femaile'
+  ];
+
+  PATH = PATH;
 
   constructor(
     private readonly authService: AuthService,
@@ -60,16 +66,8 @@ export class RegistrationComponent implements OnInit {
     return this.registrationForm.get('confirmPassword');
   }
 
-  get firstName() {
-    return this.registrationForm.get('firstName');
-  }
-
-  get lastName() {
-    return this.registrationForm.get('lastName');
-  }
-
-  get age() {
-    return this.registrationForm.get('age');
+  get dateOfBirth() {
+    return this.registrationForm.get('dateOfBirth');
   }
 
   get gender() {

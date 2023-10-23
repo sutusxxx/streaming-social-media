@@ -34,7 +34,7 @@ body {
 }
 
 .dark {
-    background:rgb(65, 65, 65);
+    background: rgb(65, 65, 65);
 }
 
 .button-black {
@@ -143,6 +143,15 @@ body {
     margin-bottom: 20px;
 }
 
+.w100 {
+    width: 100%;
+}
+
 .marginB-30 {
     margin-bottom: 30px;
+}
+
+.primary-btn {
+    background: #2837bd;
+    color: #fff;
 }

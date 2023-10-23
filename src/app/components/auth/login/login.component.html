@@ -1,6 +1,9 @@
 <div class="form-container mat-elevation-z5 marginT-30">
-    <h1>Login</h1>
+    <h1>Welcome!</h1>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div *ngIf="loginForm.errors?.['userNotFound']" class="error">
+            Login failed!
+        </div>
         <mat-form-field>
             <input matInput placeholder="Email address" formControlName="email" type="email" autocomplete="off">
             <mat-error *ngIf="email?.errors?.['required']">
@@ -17,8 +20,18 @@
             </mat-error>
         </mat-form-field>
         <div class="center marginT-10">
-            <button class="primary-btn" mat-raised-button color="primary" type="submit">
+            <button class="primary-btn w100" mat-button type="submit">
                 Login
+            </button>
+        </div>
+        <div class="center marginT-10">
+            <button class="w100" mat-button (click)="signInWithGoogle()">
+                <img class="icon" src="assets/images/google-icon.png"> Sign In with Google
+            </button>
+        </div>
+        <div class="center marginT-10">
+            <button class="w100" mat-button (click)="signInWithFacebook()">
+                <img class="icon" src="assets/images/facebook-icon.png"> Sign In with Facebook
             </button>
         </div>
 

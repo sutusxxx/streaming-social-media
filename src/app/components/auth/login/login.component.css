@@ -5,3 +5,12 @@
 .link:hover {
     color: blue;
 }
+
+.icon {
+    width: 20px;
+}
+
+.error {
+    margin: 10px;
+    color: red;
+}

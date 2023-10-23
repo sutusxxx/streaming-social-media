@@ -3,6 +3,7 @@ import { Observable, from, of, switchMap } from 'rxjs';
 import { User } from '../models';
 import { CollectionReference, DocumentData, DocumentReference, Firestore, collection, collectionData, deleteDoc, doc, docData, documentId, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
+import { IUser } from '../interfaces';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class UserService {
         private authService: AuthService
     ) { }
 
-    createUser(user: User): Observable<void> {
+    createUser(user: IUser): Observable<void> {
         const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', user?.uid);
         return from(setDoc(ref, user));
     }
@@ -48,6 +49,7 @@ export class UserService {
                     return of(null);
                 }
                 const ref = doc(this.firestore, 'users', user.uid);
+
                 return docData(ref) as Observable<User>
             })
         );

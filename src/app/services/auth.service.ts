@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, UserCredential, UserInfo, authState, createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, updateEmail, updateProfile } from '@angular/fire/auth';
+import { Auth, GoogleAuthProvider, FacebookAuthProvider, UserCredential, UserInfo, authState, createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, updateEmail, updateProfile, signInWithPopup } from '@angular/fire/auth';
 import { Observable, concatMap, from, of, switchMap } from 'rxjs';
 
 @Injectable({
@@ -12,6 +12,14 @@ export class AuthService {
 
     login(email: string, password: string): Observable<UserCredential> {
         return from(signInWithEmailAndPassword(this.auth, email, password));
+    }
+
+    signInWithGoogle(): Observable<UserCredential> {
+        return from(signInWithPopup(this.auth, new GoogleAuthProvider));
+    }
+
+    signInWithFacebook(): Observable<UserCredential> {
+        return from(signInWithPopup(this.auth, new FacebookAuthProvider));
     }
 
     updateProfileData(profileData: Partial<UserInfo>): Observable<any> {
