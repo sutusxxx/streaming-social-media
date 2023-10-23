@@ -1,0 +1,15 @@
+.action-item {
+    margin-left: .5em;
+    cursor: pointer;
+}
+
+.post-content {
+    height: 400px;
+    width: 400px;
+    margin: auto;
+    object-fit: cover;
+}
+
+.post-description {
+    margin: 0.5em !important;
+}

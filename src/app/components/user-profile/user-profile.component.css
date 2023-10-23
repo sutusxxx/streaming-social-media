@@ -29,3 +29,15 @@
     display: flex;
     justify-content: space-between;
 }
+
+.post-container {
+    margin: auto;
+}
+
+.post-image {
+    height: 400px;
+    width: 400px;
+    margin: 0.5em;
+    object-fit: cover;
+    cursor: pointer;
+}

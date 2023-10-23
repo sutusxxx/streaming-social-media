@@ -15,7 +15,7 @@ export class FollowService {
 		private readonly userService: UserService
 	) { }
 
-	getFollowers(userId: string) {
+	getFollowers(userId: string): Observable<string[]> {
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `followers/${userId}`);
 		return (docData(ref) as Observable<any>)
 			.pipe(map(values => {
@@ -24,7 +24,7 @@ export class FollowService {
 			}));
 	}
 
-	getFollowing(userId: string) {
+	getFollowing(userId: string): Observable<string[]> {
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `following/${userId}`);
 		return (docData(ref) as Observable<any>)
 			.pipe(map(values => {

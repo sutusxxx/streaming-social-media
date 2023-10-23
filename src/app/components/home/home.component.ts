@@ -1,8 +1,9 @@
-import { Observable } from 'rxjs';
+import { Observable, concatMap, of } from 'rxjs';
 import { User } from 'src/app/models';
 
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '@services/user.service';
+import { FollowService } from '@services/follow.service';
 
 @Component({
 	selector: 'app-home',
@@ -12,7 +13,9 @@ import { UserService } from '@services/user.service';
 export class HomeComponent implements OnInit {
 	currentUser: Observable<User | null> = this.userService.currentUser$;
 
-	constructor(private readonly userService: UserService) { }
+	constructor(
+		private readonly userService: UserService
+	) { }
 
 	ngOnInit(): void {
 

@@ -12,7 +12,7 @@ export class SearchService {
     }
 
     search(term: string): Observable<User[]> {
-        const trimmedText: string = term.trim().toLowerCase();
+        const trimmedText: string = term.trim();
         if (!trimmedText) return of([]);
 
         const ref = collection(this.firestore, 'users');

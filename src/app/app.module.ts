@@ -39,6 +39,11 @@ import { StreamListComponent } from './components/stream-list/stream-list.compon
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FeedComponent } from './components/feed/feed.component';
+import { CreatePostDialogComponent } from './components/create-post-dialog/create-post-dialog.component';
+import { MatCardModule } from '@angular/material/card';
+import { PostComponent } from './components/post/post.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
 	declarations: [
@@ -53,7 +58,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 		MessengerComponent,
 		FollowerDialogComponent,
 		RoomComponent,
-		StreamListComponent
+		StreamListComponent,
+		FeedComponent,
+		CreatePostDialogComponent,
+		PostComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -77,6 +85,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 		MatSelectModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
+		MatCardModule,
+		MatGridListModule,
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
 		provideStorage(() => getStorage()),

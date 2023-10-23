@@ -1,4 +1,4 @@
-import { combineLatest, concatMap, map, Observable, Subscription } from 'rxjs';
+import { combineLatest, concatMap, map, Observable, of, Subscription } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { User } from 'src/app/models';
 
@@ -10,6 +10,8 @@ import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { UserService } from '@services/user.service';
+import { IPost } from 'src/app/interfaces/post.interface';
+import { PostService } from '@services/post.service';
 
 @Component({
 	selector: 'app-user-profile',
@@ -26,7 +28,8 @@ export class UserProfileComponent implements OnInit {
 	followerCount: number = 0;
 	followingCount: number = 0;
 
-	postCount: number = 0;
+	postCount: Observable<number> = of(0);
+	posts: Observable<IPost[]> = of([]);
 
 	followers: Subscription | null = null;
 	following: Subscription | null = null;
@@ -39,6 +42,7 @@ export class UserProfileComponent implements OnInit {
 		private readonly userService: UserService,
 		private readonly followService: FollowService,
 		private readonly imageUploadService: ImageUploadService,
+		private readonly postService: PostService,
 		private readonly router: Router,
 		public dialog: MatDialog
 	) { }
@@ -55,12 +59,22 @@ export class UserProfileComponent implements OnInit {
 
 	setUserData(userId: string): void {
 		this.user$ = this.userService.getUserById(userId);
-		this.authService.currentUser$.subscribe(user => {
-			if (!user) return;
+		this.authService.currentUser$
+			.pipe(concatMap(user => {
+				if (!user) return of(null);
 
-			this.isCurrentUser = user.uid === userId;
-			this.currentUserId = user.uid;
-		});
+				this.posts = this.postService.getPosts([user.uid]);
+				this.postCount = this.posts.pipe(map((posts) => posts.length));
+
+				return of(user);
+			}))
+			.subscribe(user => {
+				if (!user) return;
+
+
+				this.isCurrentUser = user.uid === userId;
+				this.currentUserId = user.uid;
+			});
 	}
 
 	addFollowersAndFollowingListeners(userId: string): void {

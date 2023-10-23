@@ -1,0 +1,4 @@
+<div class="post-container">
+    <app-post *ngFor="let post of posts" [data]="post"></app-post>
+</div>
+<button (click)="addPost()" mat-fab color="warn" class="post-btn"><mat-icon>add</mat-icon></button>
