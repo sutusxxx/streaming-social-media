@@ -41,14 +41,7 @@ export class CreatePostDialogComponent implements OnInit {
 	add(): void {
 		if (!this.selectedImage) return;
 
-		this.user$.pipe(
-			take(1),
-			concatMap(user => {
-				if (!user || !this.selectedImage) throw Error('Something went wrong!');
-
-				return this.postService.createPost(user, this.selectedImage, this.description)
-			})
-		).subscribe(() => {
+		this.postService.createPost(this.selectedImage, this.description).subscribe(() => {
 			this.dialog.close();
 		});
 	}

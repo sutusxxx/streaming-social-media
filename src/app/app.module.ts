@@ -44,6 +44,7 @@ import { CreatePostDialogComponent } from './components/create-post-dialog/creat
 import { MatCardModule } from '@angular/material/card';
 import { PostComponent } from './components/post/post.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { CommentComponent } from './components/comment/comment.component';
 
 @NgModule({
 	declarations: [
@@ -61,7 +62,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 		StreamListComponent,
 		FeedComponent,
 		CreatePostDialogComponent,
-		PostComponent
+		PostComponent,
+  CommentComponent
 	],
 	imports: [
 		AngularFireModule,

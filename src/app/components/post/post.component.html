@@ -1,5 +1,6 @@
 <mat-card *ngIf="data">
     <mat-card-header>
+        <img mat-card-avatar [src]="data.user.photoURL">
         <mat-card-title>{{ data.user.displayName }}</mat-card-title>
         <mat-card-subtitle>{{ data.timestamp | date }}</mat-card-subtitle>
     </mat-card-header>
@@ -8,7 +9,9 @@
         {{ data.description }}
     </mat-card-content>
     <mat-card-actions>
-        <mat-icon class="action-item">favorite_border</mat-icon>
-        <mat-icon class="action-item">chat_bubble_outline</mat-icon>
+        <mat-icon class="action-item favorite" [ngClass]="{ red: liked }"
+            (click)="toggleLike($event, data.id)">favorite</mat-icon>
+        {{ data.likes?.length ? data.likes?.length : 0 }}
+        <mat-icon class="action-item" (click)="addComment()">chat_bubble_outline</mat-icon>
     </mat-card-actions>
 </mat-card>

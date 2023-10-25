@@ -1,6 +1,15 @@
 .action-item {
     margin-left: .5em;
     cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+.favorite:hover {
+    color: red;
+}
+
+.red {
+    color: red;
 }
 
 .post-content {
