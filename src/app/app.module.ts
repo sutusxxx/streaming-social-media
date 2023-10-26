@@ -45,6 +45,7 @@ import { MatCardModule } from '@angular/material/card';
 import { PostComponent } from './components/post/post.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CommentComponent } from './components/comment/comment.component';
+import { ForgotPasswordDialogComponent } from './components/forgot-password-dialog/forgot-password-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -63,7 +64,8 @@ import { CommentComponent } from './components/comment/comment.component';
 		FeedComponent,
 		CreatePostDialogComponent,
 		PostComponent,
-  CommentComponent
+  CommentComponent,
+  ForgotPasswordDialogComponent
 	],
 	imports: [
 		AngularFireModule,

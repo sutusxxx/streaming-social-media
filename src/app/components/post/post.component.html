@@ -4,7 +4,7 @@
         <mat-card-title>{{ data.user.displayName }}</mat-card-title>
         <mat-card-subtitle>{{ data.timestamp | date }}</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image class="post-content" [src]="data.url">
+    <img mat-card-image class="post-content" [src]="data.url" alt="assets/images/user-placeholder.jpg">
     <mat-card-content class="post-description">
         {{ data.description }}
     </mat-card-content>

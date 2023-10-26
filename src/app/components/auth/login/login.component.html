@@ -1,5 +1,8 @@
 <div class="form-container mat-elevation-z5 marginT-30">
-    <h1>Welcome!</h1>
+    <div *ngIf="isForgotPasswordEmailSent" class="info">
+        Password reset e-mail sent to {{ forgotPasswordEmail }}
+    </div>
+    <div class="title">Welcome!</div>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
         <div *ngIf="loginForm.errors?.['userNotFound']" class="error">
             Login failed!
@@ -24,6 +27,8 @@
                 Login
             </button>
         </div>
+        <span class="center marginT-5"><a class="link" (click)="openForgotPasswordDialog()">Forgot
+                password</a></span>
         <div class="center marginT-10">
             <button class="w100" mat-button (click)="signInWithGoogle()">
                 <img class="icon" src="assets/images/google-icon.png"> Sign In with Google

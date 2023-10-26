@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ForgotPasswordDialogComponent } from '@components/forgot-password-dialog/forgot-password-dialog.component';
 import { UserService } from '@services/user.service';
-import { catchError, concatMap, of, throwError } from 'rxjs';
+import { catchError, concatMap, of } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
-import { User } from 'src/app/models';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -19,9 +20,13 @@ export class LoginComponent implements OnInit {
 		password: new FormControl('', Validators.required)
 	});
 
+	isForgotPasswordEmailSent: boolean = false;
+	forgotPasswordEmail?: string;
+
 	readonly PATH = PATH;
 
 	constructor(
+		public dialog: MatDialog,
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
 		private readonly router: Router
@@ -40,10 +45,9 @@ export class LoginComponent implements OnInit {
 				this.loginForm.setErrors({ 'userNotFound': true });
 				return of(error);
 			})
-		)
-			.subscribe(() => {
-				this.router.navigate(['home']);
-			});
+		).subscribe(() => {
+			this.router.navigate(['home']);
+		});
 	}
 
 	signInWithGoogle(): void {
@@ -54,10 +58,9 @@ export class LoginComponent implements OnInit {
 
 				return this.userService.createUser({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL ?? '' });
 			})
-		)
-			.subscribe(() => {
-				this.router.navigate(['home']);
-			});
+		).subscribe(() => {
+			this.router.navigate(['home']);
+		});
 	}
 
 	signInWithFacebook(): void {
@@ -68,10 +71,17 @@ export class LoginComponent implements OnInit {
 
 				return this.userService.createUser({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL ?? '' });
 			})
-		)
-			.subscribe(() => {
-				this.router.navigate(['home']);
-			});
+		).subscribe(() => {
+			this.router.navigate(['home']);
+		});
+	}
+
+	openForgotPasswordDialog(): void {
+		const dialogRef = this.dialog.open(ForgotPasswordDialogComponent);
+		dialogRef.afterClosed().subscribe(email => {
+			this.forgotPasswordEmail = email;
+			this.isForgotPasswordEmailSent = true;
+		});
 	}
 
 	get email() {

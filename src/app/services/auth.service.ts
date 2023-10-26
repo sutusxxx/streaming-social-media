@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, GoogleAuthProvider, FacebookAuthProvider, UserCredential, UserInfo, authState, createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, updateEmail, updateProfile, signInWithPopup } from '@angular/fire/auth';
+import { Auth, GoogleAuthProvider, FacebookAuthProvider, UserCredential, UserInfo, authState, createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, updateEmail, updateProfile, signInWithPopup, sendPasswordResetEmail } from '@angular/fire/auth';
 import { Observable, concatMap, from, of, switchMap } from 'rxjs';
 
 @Injectable({
@@ -34,6 +34,10 @@ export class AuthService {
                 return updateProfile(user, profileData);
             })
         );
+    }
+
+    resetPasswordByEmail(email: string): Observable<any> {
+        return from(sendPasswordResetEmail(this.auth, email));
     }
 
     logout(): Observable<void> {

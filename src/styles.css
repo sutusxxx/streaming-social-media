@@ -9,6 +9,11 @@ body {
     font-family: Verdana, Arial, sans-serif;
 }
 
+.title {
+    margin: 16px 6px;
+    font-size: 32px;
+}
+
 .flex {
     display: flex;
 }
@@ -152,6 +157,17 @@ body {
 }
 
 .primary-btn {
-    background: #2837bd;
+    background: #2541d1;
     color: #fff;
+}
+
+.error {
+    margin: 10px;
+    color: red;
+}
+
+.info {
+    margin: 10px;
+    font-weight: lighter;
+    font-size: small;
 }
