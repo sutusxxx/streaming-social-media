@@ -1,8 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { filter, map } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
+
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
-import { PATH } from 'src/app/constants/path.constant';
-import { User } from 'src/app/models';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-toolbar',
@@ -10,11 +12,21 @@ import { User } from 'src/app/models';
 	styleUrls: ['./toolbar.component.css']
 })
 export class ToolbarComponent implements OnInit {
-	@Input() user: User | null = null;
+	currentUser$ = this.userService.currentUser$;
+	unreadNotificationCounter$ = this.userService.notifications$.pipe(
+		map(notifications => notifications
+			.filter(notification => !notification.read)
+			.length
+		)
+	);
 
 	readonly PATH = PATH;
 
-	constructor(public readonly authService: AuthService, private readonly router: Router) { }
+	constructor(
+		private readonly authService: AuthService,
+		private readonly userService: UserService,
+		private readonly router: Router
+	) { }
 
 	ngOnInit(): void {
 	}
@@ -27,11 +39,15 @@ export class ToolbarComponent implements OnInit {
 			});
 	}
 
+	showNotifications(): void {
+		this.userService.notifications$.subscribe(notifications => console.log(notifications))
+	}
+
 	navigateToMessages(): void {
 		this.router.navigate([PATH.MESSAGES]);
 	}
 
-	navigateToUserProfile(): void {
-		this.router.navigate([PATH.PROFILE], { queryParams: { id: this.user?.uid } });
+	navigateToUserProfile(userId: string): void {
+		this.router.navigate([PATH.PROFILE], { queryParams: { id: userId } });
 	}
 }

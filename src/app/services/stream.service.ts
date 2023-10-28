@@ -10,13 +10,12 @@ import {
 	Timestamp,
 	updateDoc
 } from 'firebase/firestore';
-import { combineLatest, concatMap, EMPTY, from, Observable, take } from 'rxjs';
+import { catchError, concatMap, from, Observable, take, throwError } from 'rxjs';
 import { servers } from 'src/app/configuration/server';
 
 import { Injectable } from '@angular/core';
 import { addDoc, collectionData, deleteDoc, docData, Firestore } from '@angular/fire/firestore';
 import { UserService } from '@services/user.service';
-import { User } from '../models';
 
 @Injectable({
 	providedIn: 'root'
@@ -55,6 +54,7 @@ export class StreamService {
 	createRoom(): Observable<void> {
 		return this.userService.currentUser$.pipe(
 			take(1),
+			catchError(error => throwError(() => console.log('Room Creation Failed:', error))),
 			concatMap(async currentUser => {
 				if (!currentUser) throw new Error('Not Authenticated!');
 				await this.initStream();
@@ -62,6 +62,7 @@ export class StreamService {
 				this.addLocalTracks();
 				this.addRoomListener(currentUser.uid);
 				this.collectIceCandidates(currentUser.uid);
+				console.log('Room Created...');
 			})
 		);
 	}
@@ -70,12 +71,14 @@ export class StreamService {
 		const roomRef = doc(this.firestore, 'rooms', roomId);
 		return docData(roomRef).pipe(
 			take(1),
+			catchError(error => throwError(() => console.log('Failed To Join:', error))),
 			concatMap(async room => {
 				if (!room) throw new Error('Room Not Found!');
 				this.addRemoteTracks();
 				const offer = room['offer'];
 				await this.createSDPAnswer(offer, roomRef);
 				this.collectIceCandidates(roomId);
+				console.log('Room Joined...');
 			})
 		);
 	}

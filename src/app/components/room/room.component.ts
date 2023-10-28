@@ -1,10 +1,12 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { combineLatest, concatMap, EMPTY, forkJoin, Observable, of, tap, throwError } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
+
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FollowService } from '@services/follow.service';
 import { StreamService } from '@services/stream.service';
 import { UserService } from '@services/user.service';
-import { Observable, tap } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
 
 @Component({
 	selector: 'app-room',
@@ -29,6 +31,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 		private readonly streamService: StreamService,
 		private readonly route: ActivatedRoute,
 		private readonly userService: UserService,
+		private readonly followService: FollowService,
 		private readonly router: Router
 	) { }
 
@@ -53,22 +56,21 @@ export class RoomComponent implements OnInit, OnDestroy {
 	}
 
 	create(): void {
-		this.streamService.createRoom().subscribe(
-			() => {
-				console.log('Room Created...');
-				this.videoElement.nativeElement.srcObject = this.streamService.localStream;
-			},
-			error => console.log('Room Creation Failed:', error)
-		);
+		this.streamService.createRoom()
+			.pipe(
+				concatMap(() => this.sendLiveStartedNotificationToFollowers())
+			).subscribe(
+				() => {
+					this.videoElement.nativeElement.srcObject = this.streamService.localStream;
+				}
+			);
 	}
 
 	join(): void {
-		this.streamService.joinRoomById('oCcaMJYioBhm5XoRqPzZXdpeta72').subscribe(
+		this.streamService.joinRoomById(this.roomId).subscribe(
 			() => {
-				console.log('Room Joined...');
 				this.videoElement.nativeElement.srcObject = this.streamService.remoteStream;
-			},
-			error => console.log('Failed To Join:', error)
+			}
 		);
 	}
 
@@ -98,6 +100,21 @@ export class RoomComponent implements OnInit, OnDestroy {
 			this.endOfChat.nativeElement.scrollIntoView({ behavior: 'smooth' });
 		}, 100)
 	}
+
+	private sendLiveStartedNotificationToFollowers(): Observable<any> {
+		return this.currentUser$.pipe(
+			concatMap(user => {
+				if (!user) return throwError(() => 'Not Authenticated');
+				return combineLatest([of(user), this.followService.getFollowers(user.uid)]);
+			}),
+			concatMap(([user, followers]) => {
+				if (!followers || !followers.length) return EMPTY;
+				const notificationMessage = `${user.displayName} is LIVE!`
+				return forkJoin(followers.map(followerId => this.userService.notifyUser(followerId, notificationMessage)))
+			})
+		)
+	}
+
 
 	ngOnDestroy(): void {
 		this.end();

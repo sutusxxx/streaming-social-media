@@ -1,7 +1,16 @@
+import { deleteField, DocumentReference } from 'firebase/firestore';
+import { catchError, combineLatest, from, map, Observable, throwError } from 'rxjs';
+
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, Firestore, collection, collectionData, deleteDoc, doc, docData, setDoc } from '@angular/fire/firestore';
-import { DocumentReference, deleteField, query, runTransaction, updateDoc, writeBatch } from 'firebase/firestore';
-import { Observable, combineLatest, from, map } from 'rxjs';
+import {
+	doc,
+	docData,
+	DocumentData,
+	Firestore,
+	runTransaction,
+	setDoc
+} from '@angular/fire/firestore';
+
 import { IFollowDetails } from '../interfaces';
 import { UserService } from './user.service';
 
@@ -47,32 +56,29 @@ export class FollowService {
 		);
 	}
 
-	async follow(currentUserId: string, targetUserId: string) {
-		try {
-			const batch = writeBatch(this.firestore);
+	follow(currentUserId: string, targetUserId: string) {
+		return from(runTransaction(this.firestore, async transaction => {
 			const followerRef: DocumentReference<DocumentData> = doc(this.firestore, 'followers', targetUserId);
-			batch.set(followerRef, { [currentUserId]: true }, { merge: true });
+			transaction.set(followerRef, { [currentUserId]: true }, { merge: true })
 
 			const followingRef: DocumentReference<DocumentData> = doc(this.firestore, 'following', currentUserId);
-			batch.set(followingRef, { [targetUserId]: true }, { merge: true });
-			await batch.commit();
-		} catch (error) {
-			console.log(error);
-		}
+			transaction.set(followingRef, { [targetUserId]: true }, { merge: true });
+		})).pipe(
+			catchError(error => throwError(() => console.log(error)))
+		);
 	}
 
-	async unfollow(currentUserId: string, targetUserId: string) {
-		try {
-			const batch = writeBatch(this.firestore);
+	unfollow(currentUserId: string, targetUserId: string) {
+		return from(runTransaction(this.firestore, async transaction => {
 			const followerRef: DocumentReference<DocumentData> = doc(this.firestore, 'followers', targetUserId);
-			batch.update(followerRef, { [currentUserId]: deleteField() });
+			transaction.update(followerRef, { [currentUserId]: deleteField() });
 
 			const followingRef: DocumentReference<DocumentData> = doc(this.firestore, 'following', currentUserId);
-			batch.update(followingRef, { [targetUserId]: deleteField() });
-			await batch.commit();
-		} catch (error) {
-			console.log(error);
-		}
+			transaction.update(followingRef, { [targetUserId]: deleteField() });
+		})).pipe(
+			catchError(error => throwError(() => console.log(error)))
+		);
+
 	}
 
 	private saveFollowing(followerId: string, followedId: string): Promise<any> {

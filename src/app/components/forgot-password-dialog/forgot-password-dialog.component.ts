@@ -1,7 +1,9 @@
+import { catchError, throwError } from 'rxjs';
+
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '@services/auth.service';
-import { catchError, of, throwError } from 'rxjs';
 
 @Component({
 	selector: 'app-forgot-password-dialog',
@@ -9,7 +11,7 @@ import { catchError, of, throwError } from 'rxjs';
 	styleUrls: ['./forgot-password-dialog.component.css']
 })
 export class ForgotPasswordDialogComponent implements OnInit {
-	email?: string;
+	emailForm: FormControl = new FormControl('', Validators.email);
 
 	userNotFoundError: boolean = false;
 
@@ -22,13 +24,14 @@ export class ForgotPasswordDialogComponent implements OnInit {
 	}
 
 	sendEmail(): void {
-		if (!this.email) return;
+		if (!this.emailForm.value) return;
 
-		this.authService.resetPasswordByEmail(this.email).pipe(
+		const email = this.emailForm.value;
+		this.authService.resetPasswordByEmail(email).pipe(
 			catchError(error => {
 				this.userNotFoundError = true;
 				return throwError(() => new Error('User Not Found!'))
 			})
-		).subscribe(() => this.dialogRef.close(this.email));
+		).subscribe(() => this.dialogRef.close(email));
 	}
 }

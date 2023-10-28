@@ -1,9 +1,30 @@
+import { from, Observable, of, switchMap } from 'rxjs';
+import { INotification } from 'src/app/interfaces/notification.interface';
+
 import { Injectable } from '@angular/core';
-import { Observable, from, of, switchMap } from 'rxjs';
-import { User } from '../models';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, collection, collectionData, deleteDoc, doc, docData, documentId, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
-import { AuthService } from './auth.service';
+import {
+    addDoc,
+    collection,
+    collectionData,
+    CollectionReference,
+    deleteDoc,
+    doc,
+    docData,
+    DocumentData,
+    documentId,
+    DocumentReference,
+    Firestore,
+    orderBy,
+    query,
+    setDoc,
+    Timestamp,
+    updateDoc,
+    where
+} from '@angular/fire/firestore';
+
 import { IUser } from '../interfaces';
+import { User } from '../models';
+import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -40,6 +61,26 @@ export class UserService {
 
         const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
         return collectionData(query(ref, where(documentId(), 'in', userIds))) as Observable<User[]>;
+    }
+
+    notifyUser(userId: string, text: string): Observable<any> {
+        const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users', userId, 'notifications');
+        return from(addDoc(ref, {
+            message: text,
+            read: false,
+            date: Timestamp.fromDate(new Date())
+        }))
+    }
+
+    get notifications$(): Observable<INotification[]> {
+        return this.currentUser$.pipe(
+            switchMap(user => {
+                if (!user) return of([]);
+                const ref = collection(this.firestore, 'users', user.uid, 'notifications')
+                const queryAll = query(ref, orderBy('date', 'asc'));
+                return collectionData(queryAll) as Observable<INotification[]>;
+            })
+        )
     }
 
     get currentUser$(): Observable<User | null> {

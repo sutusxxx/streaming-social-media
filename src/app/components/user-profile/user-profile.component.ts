@@ -1,5 +1,6 @@
-import { combineLatest, concatMap, map, Observable, of, Subscription } from 'rxjs';
+import { combineLatest, concatMap, map, Observable, of, Subscription, throwError } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
+import { IPost } from 'src/app/interfaces/post.interface';
 import { User } from 'src/app/models';
 
 import { Component, OnInit } from '@angular/core';
@@ -9,9 +10,8 @@ import { FollowerDialogComponent } from '@components/follower-dialog/follower-di
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
-import { UserService } from '@services/user.service';
-import { IPost } from 'src/app/interfaces/post.interface';
 import { PostService } from '@services/post.service';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-user-profile',
@@ -123,8 +123,20 @@ export class UserProfileComponent implements OnInit {
 
 		if (!this.currentUserId) return;
 
-		if (this.isFollowing) this.followService.follow(this.currentUserId, userId);
-		else this.followService.unfollow(this.currentUserId, userId);
+		if (this.isFollowing) this.followService.follow(this.currentUserId, userId).pipe(
+			concatMap(() => this.sendFollowNotification(userId))
+		).subscribe();
+		else this.followService.unfollow(this.currentUserId, userId).subscribe();
+	}
+
+	sendFollowNotification(userId: string): Observable<any> {
+		return this.userService.currentUser$.pipe(
+			concatMap(user => {
+				if (!user) return throwError(() => 'Not Authenticated!');
+				const notificationMessage = `${user.displayName} started following you!`;
+				return this.userService.notifyUser(userId, notificationMessage);
+			})
+		);
 	}
 
 	resetUserData(): void {

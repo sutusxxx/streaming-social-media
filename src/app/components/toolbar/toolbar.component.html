@@ -2,15 +2,21 @@
     <span class="main-title" [routerLink]="[PATH.HOME]">Social Media App</span>
     <span class="column-50"></span>
     <span class="column-30"></span>
-    <app-search *ngIf="user"></app-search>
-    <ng-container *ngIf="user; else loginButton">
+    <app-search *ngIf="currentUser$ | async"></app-search>
+    <ng-container *ngIf="currentUser$ | async as user; else loginButton">
         <button mat-button>
             <button mat-button [matMenuTriggerFor]="userMenu">
-                <mat-icon>account_circle</mat-icon>
+                <mat-icon [matBadge]="unreadNotificationCounter$ | async">account_circle</mat-icon>
                 {{ user.displayName }}
                 <mat-icon>expand_more</mat-icon>
             </button>
         </button>
+        <mat-menu #userMenu="matMenu">
+            <button mat-menu-item (click)="showNotifications()">Notifications</button>
+            <button mat-menu-item (click)="navigateToMessages()">Messages</button>
+            <button mat-menu-item (click)="navigateToUserProfile(user.uid)">Profile</button>
+            <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
     </ng-container>
     <ng-template #loginButton>
         <button mat-button routerLink="login">
@@ -19,8 +25,3 @@
         </button>
     </ng-template>
 </mat-toolbar>
-<mat-menu #userMenu="matMenu">
-    <button mat-menu-item (click)="navigateToMessages()">Messages</button>
-    <button mat-menu-item (click)="navigateToUserProfile()">Profile</button>
-    <button mat-menu-item (click)="logout()">Logout</button>
-</mat-menu>
