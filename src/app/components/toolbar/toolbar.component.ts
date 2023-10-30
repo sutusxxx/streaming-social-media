@@ -13,7 +13,8 @@ import { UserService } from '@services/user.service';
 })
 export class ToolbarComponent implements OnInit {
 	currentUser$ = this.userService.currentUser$;
-	unreadNotificationCounter$ = this.userService.notifications$.pipe(
+	notifications$ = this.userService.notifications$;
+	unreadNotificationCounter$ = this.notifications$.pipe(
 		map(notifications => notifications
 			.filter(notification => !notification.read)
 			.length
@@ -31,7 +32,6 @@ export class ToolbarComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-
 	logout() {
 		this.authService.logout()
 			.subscribe(() => {
@@ -39,8 +39,8 @@ export class ToolbarComponent implements OnInit {
 			});
 	}
 
-	showNotifications(): void {
-		this.userService.notifications$.subscribe(notifications => console.log(notifications))
+	setUnreadNotifications(): void {
+		console.log('karcsi')
 	}
 
 	navigateToMessages(): void {

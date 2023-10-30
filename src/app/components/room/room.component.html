@@ -2,7 +2,8 @@
     <div class="column-30">
     </div>
     <div class="column-50">
-        <video #videoElement autoplay></video>
+        <video #localVideoElement muted autoplay playsinline></video>
+        <video #remoteVideoElement autoplay playsinline></video>
     </div>
     <div class="column-10"></div>
     <div class="chat-bar mat-elevation-z5">
@@ -13,11 +14,11 @@
         <div class="chat-area">
             <ng-container *ngIf="currentUser$ | async as currentUser">
                 <div *ngFor="let message of messages$ | async">
-                    <div *ngIf="message.senderId === currentUser.uid" class="user-name">
+                    <div *ngIf="message.senderId !== currentUser.uid" class="user-name">
                         {{ message.senderName }}
                     </div>
 
-                    <div [ngClass]="{ 'sender': message.senderId !== currentUser.uid }" class="chat-bubble-container">
+                    <div [ngClass]="{ 'sender': message.senderId === currentUser.uid }" class="chat-bubble-container">
                         <div class="chat-bubble">
                             <span>
                                 {{ message.text }}

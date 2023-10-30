@@ -1,4 +1,7 @@
+import { PATH } from 'src/app/constants/path.constant';
+
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stream-list',
@@ -7,9 +10,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StreamListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
+
+  joinStream(userId: string): void {
+    this.router.navigate([PATH.BROADCAST], { queryParams: { userId } });
+  }
 }

@@ -1,8 +1,9 @@
+import { PATH } from 'src/app/constants/path.constant';
+
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostService } from '@services/post.service';
-import { PATH } from 'src/app/constants/path.constant';
 
 @Component({
 	selector: 'app-comment',

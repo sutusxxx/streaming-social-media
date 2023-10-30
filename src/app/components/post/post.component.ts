@@ -1,10 +1,11 @@
+import { concatMap, map, Observable, take, throwError } from 'rxjs';
+import { IPost } from 'src/app/interfaces/post.interface';
+
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CommentComponent } from '@components/comment/comment.component';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
-import { concatMap, map, take } from 'rxjs';
-import { IPost } from 'src/app/interfaces/post.interface';
 
 @Component({
 	selector: 'app-post',
@@ -40,10 +41,23 @@ export class PostComponent implements OnInit {
 		event.stopPropagation();
 
 		if (!this.liked) {
-			this.postService.likePost(postId).subscribe();
+			this.postService.likePost(postId).pipe(
+				concatMap(() => this.sendPostLikedNotification())
+			).subscribe();
 		} else {
 			this.postService.dislikePost(postId).subscribe();
 		}
 		this.liked = !this.liked;
+	}
+
+	sendPostLikedNotification(): Observable<void> {
+		return this.userService.currentUser$.pipe(
+			concatMap(user => {
+				if (!user) return throwError(() => console.log('Not Authenticated'));
+
+				const notificationMessage = `${user.displayName} liked your post.`;
+				return this.userService.notifyUser(this.data.userId, notificationMessage);
+			})
+		);
 	}
 }

@@ -47,6 +47,7 @@ import { StreamListComponent } from './components/stream-list/stream-list.compon
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { DatePipe } from './pipes/date.pipe';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 
 @NgModule({
 	declarations: [
@@ -66,7 +67,8 @@ import { DatePipe } from './pipes/date.pipe';
 		CreatePostDialogComponent,
 		PostComponent,
 		CommentComponent,
-		ForgotPasswordDialogComponent
+		ForgotPasswordDialogComponent,
+  NotificationsComponent
 	],
 	imports: [
 		AngularFireModule,

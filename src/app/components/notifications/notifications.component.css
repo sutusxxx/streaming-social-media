@@ -1,0 +1,10 @@
+.notification-list {
+    width: 250px;
+}
+
+.list-item {
+    margin: 5px;
+    overflow: hidden;
+    word-wrap: break-word;
+    font-size: 18px;
+}

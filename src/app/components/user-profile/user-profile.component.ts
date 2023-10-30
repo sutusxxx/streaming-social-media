@@ -148,6 +148,6 @@ export class UserProfileComponent implements OnInit {
 	}
 
 	startLiveStream(): void {
-		this.router.navigate([PATH.BROADCAST], { queryParams: { userId: this.currentUserId, host: true } });
+		this.router.navigate([PATH.BROADCAST]);
 	}
 }

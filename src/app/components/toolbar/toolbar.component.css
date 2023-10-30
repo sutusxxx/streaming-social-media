@@ -17,3 +17,8 @@ mat-toolbar {
     text-decoration: none;
     cursor: pointer;
 }
+
+.notification-icon {
+    cursor: pointer;
+    margin-left: 0.5em;
+}
