@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { combineLatest, concatMap, of } from 'rxjs';
+import { IPost } from 'src/app/interfaces/post.interface';
+
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePostDialogComponent } from '@components/create-post-dialog/create-post-dialog.component';
 import { FollowService } from '@services/follow.service';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
-import { concatMap, map } from 'rxjs';
-import { IPost } from 'src/app/interfaces/post.interface';
 
 @Component({
 	selector: 'app-feed',
@@ -34,10 +35,10 @@ export class FeedComponent implements OnInit {
 		this.userService.currentUser$.pipe(
 			concatMap(user => {
 				if (!user) throw Error('Not Authenticated!');
-				return this.followService.getFollowing(user.uid);
+				return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
 			}),
-			concatMap(userIds =>
-				this.postService.getPosts(userIds.concat('oCcaMJYioBhm5XoRqPzZXdpeta72'))
+			concatMap(([currentUserId, userIds]) =>
+				this.postService.getPosts(userIds.concat(currentUserId))
 			)
 		).subscribe(posts => {
 			this.posts = posts;
