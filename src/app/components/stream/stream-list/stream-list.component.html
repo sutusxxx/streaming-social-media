@@ -1,0 +1,12 @@
+<div class="live-list">
+    <div class="live-container" *ngFor=" let room of rooms$ | async">
+        <img class="index" src="assets/images/live-video-placeholder.png" (click)="joinStream(room.id)">
+        <mat-card class="live-description">
+            <mat-card-header>
+                <img mat-card-avatar [src]="room.host.photoURL">
+                <mat-card-title>{{ room.host.name }}</mat-card-title>
+                <mat-card-subtitle>{{ room.host.date | date }}</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
+    </div>
+</div>

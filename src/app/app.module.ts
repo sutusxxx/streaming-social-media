@@ -40,14 +40,16 @@ import { FollowerDialogComponent } from './components/follower-dialog/follower-d
 import { ForgotPasswordDialogComponent } from './components/forgot-password-dialog/forgot-password-dialog.component';
 import { HomeComponent } from './components/home/home.component';
 import { MessengerComponent } from './components/messenger/messenger.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 import { PostComponent } from './components/post/post.component';
-import { RoomComponent } from './components/room/room.component';
 import { SearchComponent } from './components/search/search.component';
-import { StreamListComponent } from './components/stream-list/stream-list.component';
+import { RoomComponent } from './components/stream/room/room.component';
+import { StreamListComponent } from './components/stream/stream-list/stream-list.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { DatePipe } from './pipes/date.pipe';
-import { NotificationsComponent } from './components/notifications/notifications.component';
+import { ViewRoomComponent } from './components/stream/view-room/view-room.component';
+import { LiveChatComponent } from './components/stream/live-chat/live-chat.component';
 
 @NgModule({
 	declarations: [
@@ -68,7 +70,9 @@ import { NotificationsComponent } from './components/notifications/notifications
 		PostComponent,
 		CommentComponent,
 		ForgotPasswordDialogComponent,
-  NotificationsComponent
+		NotificationsComponent,
+  ViewRoomComponent,
+  LiveChatComponent
 	],
 	imports: [
 		AngularFireModule,

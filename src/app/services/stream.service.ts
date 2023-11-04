@@ -1,5 +1,6 @@
 import {
 	collection,
+	CollectionReference,
 	doc,
 	DocumentData,
 	DocumentReference,
@@ -16,16 +17,24 @@ import {
 	concatMap,
 	EMPTY,
 	forkJoin,
-	from,
 	Observable,
 	of,
 	take,
 	throwError
 } from 'rxjs';
 import { servers } from 'src/app/configuration/server';
+import { IRoom } from 'src/app/interfaces/room.interface';
+import { User } from 'src/app/models';
 
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, deleteDoc, docData, Firestore } from '@angular/fire/firestore';
+import {
+	addDoc,
+	collectionData,
+	deleteDoc,
+	docData,
+	Firestore,
+	getDocs
+} from '@angular/fire/firestore';
 import { FollowService } from '@services/follow.service';
 import { UserService } from '@services/user.service';
 
@@ -33,10 +42,12 @@ import { UserService } from '@services/user.service';
 	providedIn: 'root'
 })
 export class StreamService {
-	private pc!: RTCPeerConnection;
+	private pc: RTCPeerConnection | null = null;
 
-	private streamerStream!: MediaStream;
-	private viewStream!: MediaStream;
+	private streamerStream: MediaStream | null = null;
+	private viewStream: MediaStream | null = null;
+
+	private roomId: string | null = null;
 
 	constructor(
 		private readonly firestore: Firestore,
@@ -64,37 +75,42 @@ export class StreamService {
 		});
 	}
 
-	initStream(roomId: string): Observable<MediaStream> {
+	getRooms(): Observable<IRoom[]> {
+		const ref: CollectionReference<DocumentData> = collection(this.firestore, 'rooms');
+		return collectionData(query(ref), { idField: 'id' }) as Observable<IRoom[]>;
+	}
+
+	initPeerConnection(): void {
 		this.pc = new RTCPeerConnection(servers);
 		this.registerPeerConnectionListeners();
-		return this.userService.currentUser$.pipe(
-			take(1),
-			concatMap(currentUser => {
-				if (!currentUser) throw new Error('Not Authenticated!');
+	}
 
-				if (roomId === currentUser.uid) return this.createRoom(roomId);
-				return this.joinRoomById(roomId);
+	createRoom(): Observable<MediaStream | null> {
+		return this.userService.currentUser$.pipe(
+			catchError(error => throwError(() => console.log('Room Creation Failed:', error))),
+			concatMap(async currentUser => {
+				if (!currentUser) return null;
+
+				this.streamerStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+				this.addLocalTracks();
+
+				this.roomId = await this.addRoom(currentUser);
+
+				this.addIceCandidateEventListener('offerCandidates', this.roomId);
+
+				await this.saveRoomData(this.roomId);
+				this.addRoomListener(this.roomId);
+
+				this.listenCandidates('answerCandidate', this.roomId);
+
+				console.log('Room Created...');
+
+				return this.localStream;
 			})
 		);
 	}
 
-	createRoom(roomId: string): Observable<MediaStream> {
-		return from(this.initStreamer()).pipe(
-			catchError(error => throwError(() => console.log('Room Creation Failed:', error))),
-			concatMap(async () => {
-				this.addLocalTracks();
-				this.addIceCandidateEventListener('offerCandidates', roomId);
-				await this.saveRoom(roomId);
-				this.addRoomListener(roomId);
-				this.listenCandidates('answerCandidate', roomId);
-				console.log('Room Created...');
-				return this.streamerStream;
-			}),
-
-		);
-	}
-
-	joinRoomById(roomId: string): Observable<MediaStream> {
+	joinRoomById(roomId: string): Observable<MediaStream | null> {
 		this.viewStream = new MediaStream();
 		const roomRef = doc(this.firestore, 'rooms', roomId);
 		return docData(roomRef).pipe(
@@ -108,6 +124,7 @@ export class StreamService {
 				await this.createSDPAnswer(offer, roomRef);
 				this.listenCandidates('offerCandidates', roomId);
 				console.log('Room Joined...');
+				this.roomId = roomId;
 				return this.viewStream;
 			})
 		);
@@ -116,7 +133,7 @@ export class StreamService {
 	addIceCandidateEventListener(collectionName: string, roomId: string): void {
 		const candidateRef = collection(this.firestore, 'rooms', roomId, collectionName);
 
-		this.pc.addEventListener('icecandidate', event => {
+		this.peerConnection.addEventListener('icecandidate', event => {
 			if (!event.candidate) return;
 			console.log('Save Candidate:', event.candidate);
 			addDoc(candidateRef, event.candidate.toJSON());
@@ -130,7 +147,7 @@ export class StreamService {
 				if (change.type === 'added') {
 					const candidate = new RTCIceCandidate(change.doc.data());
 					console.log('Add ICE Candidate:', candidate);
-					this.pc.addIceCandidate(candidate);
+					this.peerConnection.addIceCandidate(candidate);
 				}
 			});
 		});
@@ -139,7 +156,7 @@ export class StreamService {
 	collectIceCandidatesLocal(roomId: string): void {
 		const localCandidateRef = collection(this.firestore, 'rooms', roomId, 'offerCandidates');
 
-		this.pc.addEventListener('icecandidate', event => {
+		this.peerConnection.addEventListener('icecandidate', event => {
 			if (!event.candidate) return;
 			console.log('Save Candidate:', event.candidate);
 			addDoc(localCandidateRef, event.candidate.toJSON());
@@ -151,7 +168,7 @@ export class StreamService {
 				if (change.type === 'added') {
 					const candidate = new RTCIceCandidate(change.doc.data());
 					console.log('Add ICE Candidate:', candidate);
-					this.pc.addIceCandidate(candidate);
+					this.peerConnection.addIceCandidate(candidate);
 				}
 			});
 		});
@@ -160,7 +177,7 @@ export class StreamService {
 	collectIceCandidatesRemote(roomId: string): void {
 		const answerCandidates = collection(this.firestore, 'rooms', roomId, 'answerCandidates');
 
-		this.pc.addEventListener('icecandidate', event => {
+		this.peerConnection.addEventListener('icecandidate', event => {
 			if (!event.candidate) return;
 			console.log('Save Candidate:', event.candidate);
 			addDoc(answerCandidates, event.candidate.toJSON());
@@ -172,13 +189,13 @@ export class StreamService {
 				if (change.type === 'added') {
 					const candidate = new RTCIceCandidate(change.doc.data());
 					console.log('Add ICE Candidate:', candidate);
-					this.pc.addIceCandidate(candidate);
+					this.peerConnection.addIceCandidate(candidate);
 				}
 			});
 		});
 	}
 
-	stopStream(roomId?: string): void {
+	async stopStream(isHost: boolean): Promise<void> {
 		console.log('Exiting room...');
 
 		this.stopLocalTracks();
@@ -189,37 +206,49 @@ export class StreamService {
 
 		if (this.pc) this.pc.close();
 
-		if (roomId) {
-			this.deleteRoom(roomId)
+
+		if (isHost) {
+			await this.deleteRoom();
 		}
 	}
 
-	deleteRoom(roomId: string): Observable<void> {
+	async deleteRoom(): Promise<void> {
+		if (!this.room) return;
 
-		// TODO: delete candidates and chat collections
+		const roomId = this.room;
+		const answerCandidateSnapshot = await getDocs(collection(this.firestore, 'rooms', roomId, 'answerCandidates'));
+		answerCandidateSnapshot.forEach(async docData => {
+			const ref = doc(this.firestore, 'rooms', roomId, 'answerCandidates', docData.id);
+			await deleteDoc(ref);
+		});
+
+		const offerCandidateSnapshot = await getDocs(collection(this.firestore, 'rooms', roomId, 'offerCandidates'));
+		offerCandidateSnapshot.forEach(async docData => {
+			const ref = doc(this.firestore, 'rooms', roomId, 'offerCandidates', docData.id);
+			await deleteDoc(ref);
+		});
+
+		const chatSnapshot = await getDocs(collection(this.firestore, 'rooms', roomId, 'chat'));
+		chatSnapshot.forEach(async docData => {
+			const ref = doc(this.firestore, 'rooms', roomId, 'chat', docData.id);
+			await deleteDoc(ref);
+		});
+
+		console.log(`Removing Room with ID: "${roomId}" from database...`);
 		const roomRef = doc(this.firestore, 'rooms', roomId);
-		const answerCandidatesRef = collection(this.firestore, 'rooms', roomId, 'answerCandidates');
-		const offerCandidatesRef = collection(this.firestore, 'rooms', roomId, 'offerCandidates');
-		const chatRef = collection(this.firestore, 'rooms', roomId, 'chat');
-
-		collectionData(query(answerCandidatesRef), { idField: 'id' })
-			.pipe(take(1))
-			.subscribe(docs => {
-				docs.forEach(doc => deleteDoc(doc['id']))
-			})
-
-		console.log('Removing Room from database...');
-		return from(deleteDoc(roomRef));
+		await deleteDoc(roomRef);
 	}
 
-	getChat(roomId: string): Observable<any[]> {
-		const ref = collection(this.firestore, 'rooms', roomId, 'chat');
+	getChat(): Observable<any[]> {
+		if (!this.roomId) return of([]);
+		const ref = collection(this.firestore, 'rooms', this.roomId, 'chat');
 		const queryAll = query(ref, orderBy('date', 'asc'));
 		return collectionData(queryAll) as Observable<any[]>;
 	}
 
-	addMessage(roomId: string, message: string): Observable<any> {
-		const ref = collection(this.firestore, 'rooms', roomId, 'chat');
+	addMessage(message: string): Observable<any> {
+		if (!this.roomId) return of();
+		const ref = collection(this.firestore, 'rooms', this.roomId, 'chat');
 		const date = Timestamp.fromDate(new Date());
 		return this.userService.currentUser$.pipe(
 			take(1),
@@ -249,9 +278,9 @@ export class StreamService {
 	}
 
 	private async createSDPAnswer(offer: any, roomRef: DocumentReference<DocumentData>): Promise<void> {
-		await this.pc.setRemoteDescription(offer);
-		const answerDescription = await this.pc.createAnswer();
-		await this.pc.setLocalDescription(answerDescription);
+		await this.peerConnection.setRemoteDescription(offer);
+		const answerDescription = await this.peerConnection.createAnswer();
+		await this.peerConnection.setLocalDescription(answerDescription);
 		const answer = {
 			sdp: answerDescription.sdp,
 			type: answerDescription.type
@@ -260,42 +289,50 @@ export class StreamService {
 	}
 
 	private addRemoteTracks(): void {
-		this.pc.addEventListener('track', event => {
+		this.peerConnection.addEventListener('track', event => {
 			console.log('Got remote track:', event.streams[0]);
 			event.streams[0].getTracks().forEach(track => {
 				console.log('Add a track to the remoteStream:', track);
-				this.viewStream.addTrack(track);
+				this.remoteStream.addTrack(track);
 			});
 		});
 	}
 
-	private async initStreamer(): Promise<void> {
-		console.log('Init streamer');
-		this.streamerStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+	private async addRoom(user: User): Promise<string> {
+		const host = {
+			id: user.uid,
+			name: user.displayName,
+			photoURL: user.photoURL,
+			date: Timestamp.fromDate(new Date())
+		};
+		const roomRef = await addDoc(collection(this.firestore, 'rooms'), { host });
+		console.log('Room created with id:', roomRef.id);
+		return roomRef.id;
 	}
 
-	private async saveRoom(streamId: string): Promise<void> {
-		const offerDescription = await this.pc.createOffer();
-		await this.pc.setLocalDescription(offerDescription);
+	private async saveRoomData(roomId: string): Promise<void> {
+		const offerDescription = await this.peerConnection.createOffer();
+		await this.peerConnection.setLocalDescription(offerDescription);
 		const offer = {
 			sdp: offerDescription.sdp,
 			type: offerDescription.type
 		};
-		const roomRef = doc(this.firestore, 'rooms', streamId);
-		await setDoc(roomRef, { offer }).then(() =>
-			console.log(`Offer has been saved. id=${streamId}, offer=${offerDescription}`)
+
+		const roomRef = doc(this.firestore, 'rooms', roomId);
+		await setDoc(roomRef, { offer }, { merge: true }).then(() =>
+			console.log(`Offer has been saved. id=${roomId}, offer=${offerDescription}`)
 		);
 	}
 
 	private addLocalTracks(): void {
-		this.streamerStream.getTracks().forEach(track => {
+		this.localStream.getTracks().forEach(track => {
 			console.log('Add track:', track);
-			this.pc.addTrack(track, this.streamerStream);
+			this.peerConnection.addTrack(track, this.localStream);
 		});
 	}
 
 	private stopLocalTracks(): void {
-		this.streamerStream?.getTracks()?.forEach(track => {
+		this.localStream.getTracks()?.forEach(track => {
 			track.stop();
 		});
 	}
@@ -303,17 +340,37 @@ export class StreamService {
 	private addRoomListener(streamId: string): void {
 		const roomRef = doc(this.firestore, 'rooms', streamId);
 		onSnapshot(roomRef, async snapshot => {
+			if (!snapshot.data()) return;
+
 			console.log('Got updated stream:', snapshot.data());
 			const data = snapshot.data();
-			if (!this.pc.currentRemoteDescription && data?.['answer']) {
+			if (data?.['answer'] && !this.peerConnection.currentRemoteDescription) {
 				console.log('Set remote description: ', data['answer']);
 				const answer = new RTCSessionDescription(data['answer']);
-				await this.pc.setRemoteDescription(answer);
+				await this.peerConnection.setRemoteDescription(answer);
 			}
 		});
 	}
 
 	get peerConnection() {
+		if (!this.pc) throw new Error('RTCPeerConnection is not initialized!');
+
 		return this.pc;
+	}
+
+	get localStream() {
+		if (!this.streamerStream) throw new Error('Stream is not initialized!');
+
+		return this.streamerStream;
+	}
+
+	get remoteStream() {
+		if (!this.viewStream) throw new Error('Stream is not initialized!');
+
+		return this.viewStream;
+	}
+
+	get room() {
+		return this.roomId;
 	}
 }

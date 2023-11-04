@@ -5,7 +5,8 @@ import { LoginComponent } from '@components/auth/login/login.component';
 import { RegistrationComponent } from '@components/auth/registration/registration.component';
 import { HomeComponent } from '@components/home/home.component';
 import { MessengerComponent } from '@components/messenger/messenger.component';
-import { RoomComponent } from '@components/room/room.component';
+import { RoomComponent } from '@components/stream/room/room.component';
+import { ViewRoomComponent } from '@components/stream/view-room/view-room.component';
 import { UserProfileComponent } from '@components/user-profile/user-profile.component';
 
 const redirectToLogin = () => redirectUnauthorizedTo(['login']);
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'profile', component: UserProfileComponent, ...canActivate(redirectToLogin) },
   { path: 'messages', component: MessengerComponent, ...canActivate(redirectToLogin) },
   { path: 'broadcast', component: RoomComponent, ...canActivate(redirectToLogin) },
+  { path: 'live', component: ViewRoomComponent, ...canActivate(redirectToLogin) },
   { path: 'home', component: HomeComponent, ...canActivate(redirectToLogin) },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];

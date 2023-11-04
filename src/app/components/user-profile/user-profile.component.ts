@@ -1,4 +1,13 @@
-import { combineLatest, concatMap, map, Observable, of, Subscription, throwError } from 'rxjs';
+import {
+	combineLatest,
+	concatMap,
+	from,
+	map,
+	Observable,
+	of,
+	Subscription,
+	throwError
+} from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { IPost } from 'src/app/interfaces/post.interface';
 import { User } from 'src/app/models';
@@ -148,6 +157,11 @@ export class UserProfileComponent implements OnInit {
 	}
 
 	startLiveStream(): void {
-		this.router.navigate([PATH.BROADCAST]);
+		this.userService.currentUser$.pipe(
+			concatMap(user => {
+				if (!user) return throwError(() => 'Not Authenticated!');
+				return from(this.router.navigate([PATH.BROADCAST]));
+			})
+		).subscribe();
 	}
 }

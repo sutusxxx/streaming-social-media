@@ -1,0 +1,39 @@
+.live-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.live-container {
+    max-width: 800px;
+    height: 300px;
+    margin: 20px;
+    background: none;
+    overflow: hidden;
+}
+
+.live-description {
+    box-shadow: none;
+    background: none;
+}
+
+.index {
+    cursor: pointer;
+    width: 100%;
+    border-radius: 15px;
+    margin: auto;
+    object-fit: cover;
+}
+
+.wrapper {
+    padding: 0 20px;
+    width: 90%;
+}
+
+@media screen and (max-width: 768px) {
+    .live-container {
+        max-width: 100%;
+    }
+}
