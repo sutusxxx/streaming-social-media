@@ -1,0 +1,19 @@
+<div class="post-list">
+    <mat-grid-list [cols]="cols" rowHeight="1:1" gutterSize="3">
+        <mat-grid-tile *ngFor="let post of posts" (click)="showPostDetails(post)">
+            <div class="post-container">
+                <img class="post-image" [src]="post.url">
+                <div class="overlay">
+                    <div class="likes">
+                        <ng-container *ngIf="post.likes; else noLikes">
+                            <span><mat-icon>favorite</mat-icon>{{ post.likes.length }}</span>
+                        </ng-container>
+                        <ng-template #noLikes>
+                            <span><mat-icon>favorite</mat-icon>0</span>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>

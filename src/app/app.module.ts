@@ -50,6 +50,9 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { DatePipe } from './pipes/date.pipe';
 import { ViewRoomComponent } from './components/stream/view-room/view-room.component';
 import { LiveChatComponent } from './components/stream/live-chat/live-chat.component';
+import { PostDetailsComponent } from './components/post-details/post-details.component';
+import { PostGridComponent } from './components/post-grid/post-grid.component';
+import { ExplorerComponent } from './components/explorer/explorer.component';
 
 @NgModule({
 	declarations: [
@@ -72,7 +75,10 @@ import { LiveChatComponent } from './components/stream/live-chat/live-chat.compo
 		ForgotPasswordDialogComponent,
 		NotificationsComponent,
   ViewRoomComponent,
-  LiveChatComponent
+  LiveChatComponent,
+  PostDetailsComponent,
+  PostGridComponent,
+  ExplorerComponent
 	],
 	imports: [
 		AngularFireModule,

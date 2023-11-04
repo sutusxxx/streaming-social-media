@@ -1,14 +1,28 @@
-import { Injectable } from '@angular/core';
-import { Observable, combineLatest, concatMap, from, of, take } from 'rxjs';
-import { AuthService } from './auth.service';
-import { Firestore, Timestamp, addDoc, arrayRemove, arrayUnion, collection, collectionData, deleteDoc, doc, docData, limit, orderBy, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
-import { ImageUploadService } from './image-upload.service';
-import { User } from '../models';
+import { combineLatest, concatMap, from, Observable, of, take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { IPost } from '../interfaces/post.interface';
-import { IUser } from '../interfaces';
-import { UserService } from './user.service';
+
+import { Injectable } from '@angular/core';
+import {
+	addDoc,
+	arrayRemove,
+	arrayUnion,
+	collection,
+	collectionData,
+	deleteDoc,
+	doc,
+	Firestore,
+	limit,
+	orderBy,
+	query,
+	Timestamp,
+	updateDoc,
+	where
+} from '@angular/fire/firestore';
+
 import { IComment } from '../interfaces/comment.interface';
+import { IPost } from '../interfaces/post.interface';
+import { ImageUploadService } from './image-upload.service';
+import { UserService } from './user.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -50,9 +64,12 @@ export class PostService {
 		)
 	}
 
-	getPosts(userIds: string[]): Observable<IPost[]> {
+	getPosts(userIds?: string[], include: boolean = true): Observable<IPost[]> {
 		const ref = collection(this.firestore, 'posts');
-		const q = query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), limit(10));
+		const operator = include ? 'in' : 'not-in';
+		const q = userIds && userIds.length
+			? query(ref, where('userId', operator, userIds), orderBy('timestamp', 'desc'), limit(10))
+			: query(ref, orderBy('timestamp', 'desc'), limit(20));
 		return collectionData(q, { idField: 'id' }) as Observable<IPost[]>;
 	}
 

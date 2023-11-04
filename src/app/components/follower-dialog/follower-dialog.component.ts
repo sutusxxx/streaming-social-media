@@ -1,8 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Route, Router } from '@angular/router';
 import { PATH } from 'src/app/constants/path.constant';
 import { IFollowDetails } from 'src/app/interfaces';
+
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-follower-dialog',

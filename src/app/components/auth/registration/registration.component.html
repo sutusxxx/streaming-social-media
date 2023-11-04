@@ -1,4 +1,4 @@
-<div class="form-container mat-elevation-z5 marginT-30">
+<div class="form-container marginT-30">
     <div class="title">Registration</div>
     <form #form="ngForm" [formGroup]="registrationForm" (ngSubmit)="registration()">
         <mat-form-field>
@@ -47,7 +47,7 @@
             The password and the confirm password is not the same
         </mat-error>
         <div class="center marginT-10">
-            <button class="primary-btn" mat-raised-button color="primary" type="submit">
+            <button class="primary-btn" mat-raised-button type="submit">
                 Sign Up
             </button>
         </div>

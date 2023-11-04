@@ -6,6 +6,7 @@ import {
 	Observable,
 	of,
 	Subscription,
+	take,
 	throwError
 } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
@@ -15,7 +16,9 @@ import { User } from 'src/app/models';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CreatePostDialogComponent } from '@components/create-post-dialog/create-post-dialog.component';
 import { FollowerDialogComponent } from '@components/follower-dialog/follower-dialog.component';
+import { PostDetailsComponent } from '@components/post-details/post-details.component';
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
@@ -72,7 +75,7 @@ export class UserProfileComponent implements OnInit {
 			.pipe(concatMap(user => {
 				if (!user) return of(null);
 
-				this.posts = this.postService.getPosts([user.uid]);
+				this.posts = this.postService.getPosts([userId]);
 				this.postCount = this.posts.pipe(map((posts) => posts.length));
 
 				return of(user);
@@ -119,12 +122,13 @@ export class UserProfileComponent implements OnInit {
 			this.followService.getFollowers(user.uid),
 			this.followService.getFollowing(user.uid)
 		]).pipe(
+			take(1),
 			concatMap(([followerIds, followingIds]) =>
 				this.followService.getDetails(followerIds, followingIds)
 			)
 		).subscribe(details => {
 			this.dialog.open(FollowerDialogComponent, { data: { details, activeTab }, height: '600px' });
-		}, error => console.log(error));
+		});
 	}
 
 	toggleFollow(userId: string): void {
@@ -163,5 +167,13 @@ export class UserProfileComponent implements OnInit {
 				return from(this.router.navigate([PATH.BROADCAST]));
 			})
 		).subscribe();
+	}
+
+	addPost(): void {
+		this.dialog.open(CreatePostDialogComponent);
+	}
+
+	showPostDetails(post: IPost): void {
+		this.dialog.open(PostDetailsComponent, { data: post });
 	}
 }

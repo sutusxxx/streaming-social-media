@@ -22,3 +22,8 @@
 .post-description {
     margin: 0.5em !important;
 }
+
+mat-card {
+    margin: 0 10px;
+    background: none;
+}

@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { User } from 'src/app/models';
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { UserService } from '@services/user.service';
 
 @Component({
@@ -14,8 +13,7 @@ export class HomeComponent implements OnInit {
 	currentUser: Observable<User | null> = this.userService.currentUser$;
 
 	constructor(
-		private readonly userService: UserService,
-		private readonly router: Router
+		private readonly userService: UserService
 	) { }
 
 	ngOnInit(): void {
