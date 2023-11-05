@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
@@ -43,6 +43,7 @@ export class RegistrationComponent implements OnInit {
 
     const { displayName, email, password, } = this.registrationForm.value;
     this.authService.registration(email, password).pipe(
+      take(1),
       switchMap(({ user: { uid } }) => this.userService.createUser({ uid, email, displayName: displayName.toLowerCase() }))
     )
       .subscribe(() => {

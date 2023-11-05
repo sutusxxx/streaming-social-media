@@ -45,16 +45,18 @@ export class PostComponent implements OnInit {
 
 		if (!this.liked) {
 			this.postService.likePost(postId).pipe(
+				take(1),
 				concatMap(() => this.sendPostLikedNotification())
 			).subscribe();
 		} else {
-			this.postService.dislikePost(postId).subscribe();
+			this.postService.dislikePost(postId).pipe(take(1)).subscribe();
 		}
 		this.liked = !this.liked;
 	}
 
 	sendPostLikedNotification(): Observable<void> {
 		return this.userService.currentUser$.pipe(
+			take(1),
 			concatMap(user => {
 				if (!user) return throwError(() => console.log('Not Authenticated'));
 

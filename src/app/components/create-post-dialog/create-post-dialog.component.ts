@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
-import { concatMap, take } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
 	selector: 'app-create-post-dialog',
@@ -41,8 +41,10 @@ export class CreatePostDialogComponent implements OnInit {
 	add(): void {
 		if (!this.selectedImage) return;
 
-		this.postService.createPost(this.selectedImage, this.description).subscribe(() => {
-			this.dialog.close();
-		});
+		this.postService.createPost(this.selectedImage, this.description)
+			.pipe(take(1))
+			.subscribe(() => {
+				this.dialog.close();
+			});
 	}
 }

@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { BaseComponent } from '@components/base/base.component';
 import { MessengerService } from '@services/messenger.service';
 import { UserService } from '@services/user.service';
-import { combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
+import { combineLatest, map, of, startWith, switchMap, takeUntil, tap } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { IChat } from 'src/app/interfaces';
 import { User } from 'src/app/models';
@@ -13,7 +14,7 @@ import { User } from 'src/app/models';
 	templateUrl: './messenger.component.html',
 	styleUrls: ['./messenger.component.css']
 })
-export class MessengerComponent implements OnInit {
+export class MessengerComponent extends BaseComponent implements OnInit {
 	@ViewChild('endOfChat')
 	endOfChat!: ElementRef;
 
@@ -52,13 +53,16 @@ export class MessengerComponent implements OnInit {
 		private readonly userService: UserService,
 		private readonly messengerService: MessengerService,
 		private readonly router: Router
-	) { }
+	) {
+		super();
+	}
 
 	ngOnInit(): void {
 	}
 
 	createChat(user: User): void {
 		this.messengerService.isExistingChat(user.uid).pipe(
+			takeUntil(this._unsubscribeAll),
 			switchMap(chatId => {
 				if (chatId) return of(chatId);
 				else return this.messengerService.createChat(user);
