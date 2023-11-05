@@ -57,7 +57,7 @@ export class PostService {
 					userId: user.uid,
 					user: {
 						displayName: user.displayName,
-						photoURL: user.photoURL
+						photoURL: user.photoURL ? user.photoURL : ''
 					}
 				});
 			})
@@ -68,7 +68,7 @@ export class PostService {
 		const ref = collection(this.firestore, 'posts');
 		const operator = include ? 'in' : 'not-in';
 		const q = userIds && userIds.length
-			? query(ref, where('userId', operator, userIds), orderBy('timestamp', 'desc'), limit(10))
+			? query(ref, where('userId', operator, userIds), limit(10))
 			: query(ref, orderBy('timestamp', 'desc'), limit(20));
 		return collectionData(q, { idField: 'id' }) as Observable<IPost[]>;
 	}

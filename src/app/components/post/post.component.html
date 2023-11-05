@@ -1,10 +1,14 @@
 <mat-card *ngIf="data" class="mat-elevation-z0">
     <mat-card-header>
-        <img mat-card-avatar [src]="data.user.photoURL">
-        <mat-card-title>{{ data.user.displayName }}</mat-card-title>
+        <img mat-card-avatar class="pointer"
+            [src]="data.user.photoURL ? data.user.photoURL : 'assets/images/user-placeholder.jpg'"
+            (click)="navigateToUserProfile(data.userId)" mat-dialog-close>
+        <mat-card-title class="pointer" (click)="navigateToUserProfile(data.userId)" mat-dialog-close>
+            {{ data.user.displayName }}
+        </mat-card-title>
         <mat-card-subtitle>{{ data.timestamp | date }}</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image class="post-content" [src]="data.url" alt="assets/images/user-placeholder.jpg">
+    <img mat-card-image class="post-content" [src]="data.url">
     <mat-card-content class="post-description">
         {{ data.description }}
     </mat-card-content>
