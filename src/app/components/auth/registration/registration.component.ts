@@ -14,7 +14,7 @@ import { passwordValidator } from 'src/app/validators/password-validator';
 })
 export class RegistrationComponent implements OnInit {
   registrationForm = new FormGroup({
-    displayName: new FormControl('', Validators.required),
+    displayName: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required),
     confirmPassword: new FormControl('', Validators.required),
@@ -24,7 +24,7 @@ export class RegistrationComponent implements OnInit {
 
   genders: string[] = [
     'Male',
-    'Femaile'
+    'Female'
   ];
 
   PATH = PATH;

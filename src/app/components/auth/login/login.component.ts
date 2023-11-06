@@ -23,6 +23,8 @@ export class LoginComponent implements OnInit {
 	isForgotPasswordEmailSent: boolean = false;
 	forgotPasswordEmail?: string;
 
+	isPasswordVisible: boolean = false;
+
 	readonly PATH = PATH;
 
 	constructor(
@@ -85,6 +87,10 @@ export class LoginComponent implements OnInit {
 			this.forgotPasswordEmail = email;
 			this.isForgotPasswordEmailSent = true;
 		});
+	}
+
+	togglePasswordVisibility(): void {
+		this.isPasswordVisible = !this.isPasswordVisible;
 	}
 
 	get email() {
