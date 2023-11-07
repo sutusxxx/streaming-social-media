@@ -41,3 +41,10 @@
     display: flex;
     justify-content: space-between;
 }
+
+.user-info {
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    padding-left: 5px;
+}

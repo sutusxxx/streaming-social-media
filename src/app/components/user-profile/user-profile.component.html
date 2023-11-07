@@ -26,15 +26,20 @@
             <ng-container *ngIf="isFollowing ; then unfollowButton else followButton">
             </ng-container>
         </div>
-        <div class="marginT-20">
+        <div class="user-info">
+            <span *ngIf="user.fullName" class="font-size-16 bold">
+                {{ user.fullName }}
+            </span>
+        </div>
+        <div>
             <textarea class="description" type="text" maxlength="60" [(ngModel)]="user.description"
                 [disabled]="!isCurrentUser" (blur)="updateDescription($event, user)">
             </textarea>
         </div>
         <div *ngIf="isCurrentUser" class="marginT-30">
             <div class="button-container">
-                <button mat-button (click)="startLiveStream()">
-                    GO LIVE
+                <button mat-button (click)="startLiveStream()" class="bold">
+                    GO LIVE <mat-icon color="warn">videocam</mat-icon>
                 </button>
                 <button mat-button (click)="addPost()">
                     Create Post

@@ -14,6 +14,7 @@ import {
     documentId,
     DocumentReference,
     Firestore,
+    getCountFromServer,
     orderBy,
     query,
     setDoc,
@@ -37,8 +38,25 @@ export class UserService {
     ) { }
 
     createUser(user: IUser): Observable<void> {
-        const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', user?.uid);
+        const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', user.uid);
         return from(setDoc(ref, user));
+    }
+
+
+    async generateUsername(displayName?: string): Promise<string> {
+        const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
+        const snapshot = await getCountFromServer(ref);
+        const suffix = snapshot.data().count + Math.floor(Math.random() * 91 + 10);
+        return displayName
+            ? (displayName.replace(/[^\x00-\x7F]/g, "").replace(/\s/g, "").toLowerCase() + suffix)
+            : ('user' + suffix);
+    }
+
+    checkUsernameAvailability(username: string): Observable<boolean> {
+        const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
+        return collectionData(query(ref, where('displayName', '==', username))).pipe(
+            switchMap(users => of(!users || !users.length))
+        );
     }
 
     saveUser(user: User): Observable<void> {

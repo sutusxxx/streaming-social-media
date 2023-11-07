@@ -56,11 +56,12 @@ export class LoginComponent implements OnInit {
 	signInWithGoogle(): void {
 		this.authService.signInWithGoogle().pipe(
 			take(1),
-			concatMap(userData => {
+			concatMap(async userData => {
 				const user = userData.user;
-				if (!user.email || !user.displayName) throw Error('Something went wrong!');
+				if (!user.email) throw Error('Something went wrong!');
 
-				return this.userService.createUser({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL ?? '' });
+				const displayName = await this.userService.generateUsername(user.displayName ?? undefined);
+				return this.userService.createUser({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
 			})
 		).subscribe(() => {
 			this.router.navigate(['home']);
@@ -70,11 +71,12 @@ export class LoginComponent implements OnInit {
 	signInWithFacebook(): void {
 		this.authService.signInWithFacebook().pipe(
 			take(1),
-			concatMap(userData => {
+			concatMap(async userData => {
 				const user = userData.user;
-				if (!user.email || !user.displayName) throw Error('Something went wrong!');
+				if (!user.email) throw Error('Something went wrong!');
 
-				return this.userService.createUser({ uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL ?? '' });
+				const displayName = await this.userService.generateUsername(user.displayName ?? undefined);
+				return this.userService.createUser({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
 			})
 		).subscribe(() => {
 			this.router.navigate(['home']);
@@ -84,8 +86,10 @@ export class LoginComponent implements OnInit {
 	openForgotPasswordDialog(): void {
 		const dialogRef = this.dialog.open(ForgotPasswordDialogComponent);
 		dialogRef.afterClosed().subscribe(email => {
-			this.forgotPasswordEmail = email;
-			this.isForgotPasswordEmailSent = true;
+			if (email) {
+				this.forgotPasswordEmail = email;
+				this.isForgotPasswordEmailSent = true;
+			}
 		});
 	}
 
