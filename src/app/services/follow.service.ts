@@ -1,5 +1,5 @@
 import { deleteField, DocumentReference } from 'firebase/firestore';
-import { catchError, combineLatest, from, map, Observable, throwError } from 'rxjs';
+import { catchError, combineLatest, from, map, Observable, take, throwError } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import {
@@ -27,7 +27,7 @@ export class FollowService {
 	getFollowers(userId: string): Observable<string[]> {
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `followers/${userId}`);
 		return (docData(ref) as Observable<any>)
-			.pipe(map(values => {
+			.pipe(take(1), map(values => {
 				if (!values) return [];
 				return Object.keys(values)
 			}));
@@ -36,7 +36,7 @@ export class FollowService {
 	getFollowing(userId: string): Observable<string[]> {
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `following/${userId}`);
 		return (docData(ref) as Observable<any>)
-			.pipe(map(values => {
+			.pipe(take(1), map(values => {
 				if (!values) return [];
 				return Object.keys(values)
 			}));
@@ -47,6 +47,7 @@ export class FollowService {
 			this.userService.getMultipleUsersById(followerIds),
 			this.userService.getMultipleUsersById(followingIds)
 		]).pipe(
+			take(1),
 			map(([followers, following]) => {
 				return {
 					followers,

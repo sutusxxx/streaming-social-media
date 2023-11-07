@@ -1,4 +1,4 @@
-import { catchError, throwError } from 'rxjs';
+import { catchError, take, throwError } from 'rxjs';
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
@@ -28,6 +28,7 @@ export class ForgotPasswordDialogComponent implements OnInit {
 
 		const email = this.emailForm.value;
 		this.authService.resetPasswordByEmail(email).pipe(
+			take(1),
 			catchError(error => {
 				this.userNotFoundError = true;
 				return throwError(() => new Error('User Not Found!'))

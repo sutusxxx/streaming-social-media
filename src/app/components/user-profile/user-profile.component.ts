@@ -7,6 +7,7 @@ import {
 	of,
 	Subscription,
 	take,
+	takeUntil,
 	throwError
 } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
@@ -24,13 +25,14 @@ import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
+import { BaseComponent } from '@components/base/base.component';
 
 @Component({
 	selector: 'app-user-profile',
 	templateUrl: './user-profile.component.html',
 	styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent extends BaseComponent implements OnInit {
 	user$!: Observable<User | null>;
 	currentUserId: string = '';
 
@@ -57,7 +59,9 @@ export class UserProfileComponent implements OnInit {
 		private readonly postService: PostService,
 		private readonly router: Router,
 		public dialog: MatDialog
-	) { }
+	) {
+		super();
+	}
 
 	ngOnInit(): void {
 		this.route.queryParams
@@ -72,7 +76,7 @@ export class UserProfileComponent implements OnInit {
 	setUserData(userId: string): void {
 		this.user$ = this.userService.getUserById(userId);
 		this.authService.currentUser$
-			.pipe(concatMap(user => {
+			.pipe(take(1), concatMap(user => {
 				if (!user) return of(null);
 
 				this.posts = this.postService.getPosts([userId]);
@@ -91,12 +95,14 @@ export class UserProfileComponent implements OnInit {
 
 	addFollowersAndFollowingListeners(userId: string): void {
 		this.followers = this.followService.getFollowers(userId)
+			.pipe(take(1))
 			.subscribe(followers => {
 				this.followerCount = followers.length;
 				this.isFollowing = followers.includes(this.currentUserId);
 			});
 
 		this.following = this.followService.getFollowing(userId)
+			.pipe(take(1))
 			.subscribe(following => {
 				this.followingCount = following.length;
 			});
@@ -104,6 +110,7 @@ export class UserProfileComponent implements OnInit {
 
 	uploadImage(event: any, user: User): void {
 		this.imageUploadService.uploadImage(event.target.files[0], `images/profile/${user.uid}`).pipe(
+			take(1),
 			concatMap(photoURL => {
 				const userToUpdate = new User(user.uid, { photoURL });
 				return this.userService.saveUser(userToUpdate);
@@ -122,7 +129,7 @@ export class UserProfileComponent implements OnInit {
 			this.followService.getFollowers(user.uid),
 			this.followService.getFollowing(user.uid)
 		]).pipe(
-			take(1),
+			takeUntil(this._unsubscribeAll),
 			concatMap(([followerIds, followingIds]) =>
 				this.followService.getDetails(followerIds, followingIds)
 			)
@@ -162,6 +169,7 @@ export class UserProfileComponent implements OnInit {
 
 	startLiveStream(): void {
 		this.userService.currentUser$.pipe(
+			take(1),
 			concatMap(user => {
 				if (!user) return throwError(() => 'Not Authenticated!');
 				return from(this.router.navigate([PATH.BROADCAST]));

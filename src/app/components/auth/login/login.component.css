@@ -12,3 +12,14 @@
 .icon {
     width: 20px;
 }
+
+.password-input {
+    display: flex;
+    align-items: center
+}
+
+.eye {
+    position: absolute;
+    top: -10px;
+    z-index: 1000;
+}

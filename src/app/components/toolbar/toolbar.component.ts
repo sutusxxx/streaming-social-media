@@ -1,4 +1,4 @@
-import { filter, map } from 'rxjs';
+import { filter, map, take } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 
 import { Component, OnInit } from '@angular/core';
@@ -34,6 +34,7 @@ export class ToolbarComponent implements OnInit {
 
 	logout() {
 		this.authService.logout()
+			.pipe(take(1))
 			.subscribe(() => {
 				this.router.navigate([PATH.LOGIN]);
 			});

@@ -9,7 +9,8 @@ body {
     font-family: Verdana, Arial, sans-serif;
 }
 
-.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+.mat-tab-group.mat-primary .mat-ink-bar,
+.mat-tab-nav-bar.mat-primary .mat-ink-bar {
     background-color: #3a62b7 !important;
 }
 
@@ -18,11 +19,17 @@ body {
     background: #3a62b7 !important;
 }
 
-.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
+.mat-flat-button.mat-accent,
+.mat-raised-button.mat-accent,
+.mat-fab.mat-accent,
+.mat-mini-fab.mat-accent {
     background-color: #3a62b7 !important;
 }
 
-.mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
+.mat-flat-button.mat-accent,
+.mat-raised-button.mat-accent,
+.mat-fab.mat-accent,
+.mat-mini-fab.mat-accent {
     color: #fff;
 }
 
@@ -186,4 +193,8 @@ body {
     margin: 10px;
     font-weight: lighter;
     font-size: small;
+}
+
+.pointer {
+    cursor: pointer;
 }

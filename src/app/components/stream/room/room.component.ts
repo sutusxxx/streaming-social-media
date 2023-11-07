@@ -1,4 +1,4 @@
-import { finalize, Observable } from 'rxjs';
+import { finalize, Observable, take } from 'rxjs';
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { StreamService } from '@services/stream.service';
@@ -19,7 +19,7 @@ export class RoomComponent implements OnDestroy, AfterViewInit {
 	ngAfterViewInit(): void {
 		this.streamService.initPeerConnection();
 		this.streamService.createRoom()
-			.pipe(finalize(() => this.streamService.sendLiveStartedNotificationToFollowers()))
+			.pipe(take(1), finalize(() => this.streamService.sendLiveStartedNotificationToFollowers()))
 			.subscribe(mediaStream => {
 				this.localVideoElement.nativeElement.srcObject = mediaStream;
 				this.messages$ = this.streamService.getChat();

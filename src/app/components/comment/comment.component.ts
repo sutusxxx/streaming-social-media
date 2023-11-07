@@ -4,6 +4,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostService } from '@services/post.service';
+import { take } from 'rxjs';
 
 @Component({
 	selector: 'app-comment',
@@ -29,7 +30,9 @@ export class CommentComponent implements OnInit {
 		const comment = this.commentControl.value;
 		if (!comment) return;
 
-		this.postService.addComment(this.postId, comment).subscribe();
+		this.postService.addComment(this.postId, comment)
+			.pipe(take(1))
+			.subscribe();
 		this.commentControl.setValue('');
 	}
 }

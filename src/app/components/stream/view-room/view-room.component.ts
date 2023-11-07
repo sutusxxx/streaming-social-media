@@ -1,4 +1,4 @@
-import { concatMap, Observable } from 'rxjs';
+import { concatMap, Observable, take } from 'rxjs';
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -20,6 +20,7 @@ export class ViewRoomComponent implements AfterViewInit, OnDestroy {
 
 	ngAfterViewInit(): void {
 		this.route.queryParams.pipe(
+			take(1),
 			concatMap(params => {
 				this.streamService.initPeerConnection();
 				return this.streamService.joinRoomById(params['room'])

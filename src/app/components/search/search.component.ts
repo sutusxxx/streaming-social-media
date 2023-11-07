@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { BaseComponent } from '@components/base/base.component';
 import { SearchService } from '@services/search.service';
-import { Observable, Subject, combineLatest } from "rxjs";
+import { Observable, Subject, combineLatest, takeUntil } from "rxjs";
 import { User } from 'src/app/models';
 
 @Component({
@@ -9,7 +10,7 @@ import { User } from 'src/app/models';
 	templateUrl: './search.component.html',
 	styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent extends BaseComponent implements OnInit {
 	searching: Subject<string> = new Subject();
 	onSearch: Observable<string> = this.searching.asObservable();
 
@@ -18,12 +19,16 @@ export class SearchComponent implements OnInit {
 	constructor(
 		private readonly searchService: SearchService,
 		private readonly router: Router
-	) { }
+	) {
+		super();
+	}
 
 	ngOnInit(): void {
-		this.onSearch.subscribe(
-			searchTerm => this.users = this.searchService.search(searchTerm)
-		);
+		this.onSearch
+			.pipe(takeUntil(this._unsubscribeAll))
+			.subscribe(
+				searchTerm => this.users = this.searchService.search(searchTerm)
+			);
 	}
 
 	search(event: any): void {

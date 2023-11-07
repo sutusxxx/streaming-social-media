@@ -6,6 +6,9 @@
             <mat-error *ngIf="displayName?.errors?.['required']">
                 Required field
             </mat-error>
+            <mat-error *ngIf="displayName?.errors?.['pattern']">
+                Name should be only letters and numbers.
+            </mat-error>
         </mat-form-field>
         <mat-form-field>
             <input matInput placeholder="Email address" formControlName="email">

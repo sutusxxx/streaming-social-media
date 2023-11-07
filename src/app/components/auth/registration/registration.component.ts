@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
@@ -14,7 +14,7 @@ import { passwordValidator } from 'src/app/validators/password-validator';
 })
 export class RegistrationComponent implements OnInit {
   registrationForm = new FormGroup({
-    displayName: new FormControl('', Validators.required),
+    displayName: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]*$')]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required),
     confirmPassword: new FormControl('', Validators.required),
@@ -24,7 +24,7 @@ export class RegistrationComponent implements OnInit {
 
   genders: string[] = [
     'Male',
-    'Femaile'
+    'Female'
   ];
 
   PATH = PATH;
@@ -43,6 +43,7 @@ export class RegistrationComponent implements OnInit {
 
     const { displayName, email, password, } = this.registrationForm.value;
     this.authService.registration(email, password).pipe(
+      take(1),
       switchMap(({ user: { uid } }) => this.userService.createUser({ uid, email, displayName: displayName.toLowerCase() }))
     )
       .subscribe(() => {

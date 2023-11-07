@@ -2,15 +2,17 @@
 
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { BaseComponent } from '@components/base/base.component';
 import { StreamService } from '@services/stream.service';
 import { UserService } from '@services/user.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-live-chat',
     templateUrl: './live-chat.component.html',
     styleUrls: ['./live-chat.component.css']
 })
-export class LiveChatComponent implements OnInit {
+export class LiveChatComponent extends BaseComponent implements OnInit {
     @ViewChild('endOfChat') endOfChat!: ElementRef;
     @Input() messages: any[] = [];
 
@@ -21,16 +23,20 @@ export class LiveChatComponent implements OnInit {
     constructor(
         private readonly streamService: StreamService,
         private readonly userService: UserService
-    ) { }
+    ) {
+        super();
+    }
 
     ngOnInit(): void {
     }
 
     sendMessage(): void {
         const message = this.messageControl.value;
-        this.streamService.addMessage(message).subscribe(
-            () => this.scrollToBottom()
-        );
+        this.streamService.addMessage(message)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                () => this.scrollToBottom()
+            );
         this.messageControl.setValue('');
     }
 

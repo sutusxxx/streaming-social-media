@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ForgotPasswordDialogComponent } from '@components/forgot-password-dialog/forgot-password-dialog.component';
 import { UserService } from '@services/user.service';
-import { catchError, concatMap, of } from 'rxjs';
+import { catchError, concatMap, of, take } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -22,6 +22,8 @@ export class LoginComponent implements OnInit {
 
 	isForgotPasswordEmailSent: boolean = false;
 	forgotPasswordEmail?: string;
+
+	isPasswordVisible: boolean = false;
 
 	readonly PATH = PATH;
 
@@ -41,6 +43,7 @@ export class LoginComponent implements OnInit {
 
 		const { email, password } = this.loginForm.value;
 		this.authService.login(email, password).pipe(
+			take(1),
 			catchError(error => {
 				this.loginForm.setErrors({ 'userNotFound': true });
 				return of(error);
@@ -52,6 +55,7 @@ export class LoginComponent implements OnInit {
 
 	signInWithGoogle(): void {
 		this.authService.signInWithGoogle().pipe(
+			take(1),
 			concatMap(userData => {
 				const user = userData.user;
 				if (!user.email || !user.displayName) throw Error('Something went wrong!');
@@ -65,6 +69,7 @@ export class LoginComponent implements OnInit {
 
 	signInWithFacebook(): void {
 		this.authService.signInWithFacebook().pipe(
+			take(1),
 			concatMap(userData => {
 				const user = userData.user;
 				if (!user.email || !user.displayName) throw Error('Something went wrong!');
@@ -82,6 +87,10 @@ export class LoginComponent implements OnInit {
 			this.forgotPasswordEmail = email;
 			this.isForgotPasswordEmailSent = true;
 		});
+	}
+
+	togglePasswordVisibility(): void {
+		this.isPasswordVisible = !this.isPasswordVisible;
 	}
 
 	get email() {
