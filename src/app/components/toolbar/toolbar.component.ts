@@ -1,4 +1,4 @@
-import { filter, map, take } from 'rxjs';
+import { filter, map, of, switchMap, take } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 
 import { Component, OnInit } from '@angular/core';
@@ -20,6 +20,10 @@ export class ToolbarComponent implements OnInit {
 			.length
 		)
 	);
+
+	showBadge$ = this.unreadNotificationCounter$.pipe(
+		switchMap(notifications => of(notifications !== 0))
+	)
 
 	readonly PATH = PATH;
 

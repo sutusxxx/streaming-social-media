@@ -33,6 +33,10 @@ body {
     color: #fff;
 }
 
+.mat-input-element {
+    caret-color: #3a62b7 !important;
+}
+
 .title {
     margin: 16px 6px;
     font-size: 32px;
@@ -197,4 +201,12 @@ body {
 
 .pointer {
     cursor: pointer;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.font-size-16 {
+    font-size: 16px;
 }

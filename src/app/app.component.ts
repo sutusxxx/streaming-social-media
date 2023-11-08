@@ -21,7 +21,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 			if (event instanceof NavigationStart) {
 				const browserRefresh = !this.router.navigated;
 				if (browserRefresh) {
-					console.log(this.router.getCurrentNavigation);
+					console.log(this.router.getCurrentNavigation());
 				}
 			}
 		})
