@@ -1,4 +1,4 @@
-import { concatMap, Observable, take } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -19,13 +19,11 @@ export class ViewRoomComponent implements AfterViewInit, OnDestroy {
 	) { }
 
 	ngAfterViewInit(): void {
-		this.route.queryParams.pipe(
-			take(1),
-			concatMap(params => {
-				this.streamService.initPeerConnection();
-				return this.streamService.joinRoomById(params['room'])
-			})
-		).subscribe(mediaStream => {
+		const roomId = this.route.snapshot.queryParamMap.get('room');
+		if (!roomId) return;
+
+		this.streamService.initPeerConnection();
+		this.streamService.joinRoomById(roomId).subscribe(mediaStream => {
 			this.messages$ = this.streamService.getChat();
 			this.remoteVideoElement.nativeElement.srcObject = mediaStream;
 		});

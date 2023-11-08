@@ -17,6 +17,7 @@ import { User } from 'src/app/models';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BaseComponent } from '@components/base/base.component';
 import { CreatePostDialogComponent } from '@components/create-post-dialog/create-post-dialog.component';
 import { FollowerDialogComponent } from '@components/follower-dialog/follower-dialog.component';
 import { PostDetailsComponent } from '@components/post-details/post-details.component';
@@ -25,7 +26,6 @@ import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
-import { BaseComponent } from '@components/base/base.component';
 
 @Component({
 	selector: 'app-user-profile',
