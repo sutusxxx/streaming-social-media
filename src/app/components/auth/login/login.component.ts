@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
 				if (!user.email) throw Error('Something went wrong!');
 
 				const displayName = await this.userService.generateUsername(user.displayName ?? undefined);
-				return this.userService.createUser({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
+				return this.userService.createUserIfNotExists({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
 			})
 		).subscribe(() => {
 			this.router.navigate(['home']);
@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
 				if (!user.email) throw Error('Something went wrong!');
 
 				const displayName = await this.userService.generateUsername(user.displayName ?? undefined);
-				return this.userService.createUser({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
+				return this.userService.createUserIfNotExists({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
 			})
 		).subscribe(() => {
 			this.router.navigate(['home']);

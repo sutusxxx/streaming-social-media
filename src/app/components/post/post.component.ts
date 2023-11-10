@@ -1,4 +1,4 @@
-import { concatMap, map, Observable, take, throwError } from 'rxjs';
+import { concatMap, map, Observable, of, take, throwError } from 'rxjs';
 import { IPost } from 'src/app/interfaces/post.interface';
 
 import { Component, Input, OnInit } from '@angular/core';
@@ -8,6 +8,7 @@ import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
 import { Router } from '@angular/router';
 import { PATH } from 'src/app/constants/path.constant';
+import { User } from 'src/app/models';
 
 @Component({
 	selector: 'app-post',
@@ -40,30 +41,35 @@ export class PostComponent implements OnInit {
 		this.dialog.open(CommentComponent, { data: this.data?.id })
 	}
 
-	toggleLike(event: any, postId: string): void {
+	toggleLike(event: any, post: IPost): void {
 		event.stopPropagation();
 
-		if (!this.liked) {
-			this.postService.likePost(postId).pipe(
-				take(1),
-				concatMap(() => this.sendPostLikedNotification())
-			).subscribe();
-		} else {
-			this.postService.dislikePost(postId).pipe(take(1)).subscribe();
-		}
-		this.liked = !this.liked;
-	}
-
-	sendPostLikedNotification(): Observable<void> {
-		return this.userService.currentUser$.pipe(
+		this.userService.currentUser$.pipe(
 			take(1),
 			concatMap(user => {
-				if (!user) return throwError(() => console.log('Not Authenticated'));
+				if (!user) return throwError(() => 'Not Authenticated!');
 
-				const notificationMessage = `${user.displayName} liked your post.`;
-				return this.userService.notifyUser(this.data.userId, notificationMessage);
+				if (!this.liked) {
+					return this.postService.likePost(post.id, user.uid).pipe(
+						concatMap(() => {
+							if (post.userId !== user.uid) {
+								return this.sendPostLikedNotification(user, post);
+							}
+							return of();
+						})
+					);
+				} else {
+					return this.postService.dislikePost(post.id, user.uid);
+				}
 			})
-		);
+		).subscribe(() => {
+			this.liked = !this.liked;
+		});
+	}
+
+	sendPostLikedNotification(currentUser: User, post: IPost): Observable<void> {
+		const notificationMessage = `${currentUser.displayName} liked your post.`;
+		return this.userService.notifyUser(post.userId, notificationMessage);
 	}
 
 	navigateToUserProfile(userId: string): void {

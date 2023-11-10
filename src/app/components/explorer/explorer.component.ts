@@ -18,7 +18,7 @@ export class ExplorerComponent implements OnInit {
 			return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
 		}),
 		concatMap(([currentUserId, userIds]) =>
-			this.postService.getPosts(userIds.concat(currentUserId), false)
+			this.postService.getPosts(userIds.concat(currentUserId), { include: false })
 		)
 	);
 

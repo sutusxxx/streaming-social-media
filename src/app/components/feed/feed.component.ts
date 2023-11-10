@@ -1,4 +1,4 @@
-import { combineLatest, concatMap, of, takeUntil } from 'rxjs';
+import { Observable, combineLatest, concatMap, of, takeUntil } from 'rxjs';
 import { IPost } from 'src/app/interfaces/post.interface';
 
 import { Component, OnInit } from '@angular/core';
@@ -8,6 +8,7 @@ import { FollowService } from '@services/follow.service';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
 import { BaseComponent } from '@components/base/base.component';
+import { AuthService } from '@services/auth.service';
 
 @Component({
 	selector: 'app-feed',
@@ -15,12 +16,12 @@ import { BaseComponent } from '@components/base/base.component';
 	styleUrls: ['./feed.component.css']
 })
 export class FeedComponent extends BaseComponent implements OnInit {
-	posts: IPost[] = [];
+	posts$ = this.getPosts();
 
 	constructor(
 		public dialog: MatDialog,
 		private readonly postService: PostService,
-		private readonly userService: UserService,
+		private readonly authService: AuthService,
 		private readonly followService: FollowService
 	) {
 		super();
@@ -34,18 +35,16 @@ export class FeedComponent extends BaseComponent implements OnInit {
 		this.dialog.open(CreatePostDialogComponent);
 	}
 
-	getPosts(): void {
-		this.userService.currentUser$.pipe(
+	getPosts(): Observable<IPost[]> {
+		return this.authService.currentUser$.pipe(
 			takeUntil(this._unsubscribeAll),
 			concatMap(user => {
 				if (!user) throw Error('Not Authenticated!');
 				return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
 			}),
 			concatMap(([currentUserId, userIds]) =>
-				this.postService.getPosts(userIds.concat(currentUserId))
+				this.postService.getPosts(userIds.concat(currentUserId), { include: true })
 			)
-		).subscribe(posts => {
-			this.posts = posts;
-		});
+		);
 	}
 }

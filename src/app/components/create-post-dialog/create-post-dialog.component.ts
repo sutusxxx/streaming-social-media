@@ -40,11 +40,7 @@ export class CreatePostDialogComponent implements OnInit {
 
 	add(): void {
 		if (!this.selectedImage) return;
-
-		this.postService.createPost(this.selectedImage, this.description)
-			.pipe(take(1))
-			.subscribe(() => {
-				this.dialog.close();
-			});
+		this.dialog.close();
+		this.postService.createPost(this.selectedImage, this.description).subscribe();
 	}
 }

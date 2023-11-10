@@ -14,6 +14,7 @@ import {
 	limit,
 	orderBy,
 	query,
+	startAt,
 	Timestamp,
 	updateDoc,
 	where
@@ -64,12 +65,21 @@ export class PostService {
 		)
 	}
 
-	getPosts(userIds?: string[], include: boolean = true): Observable<IPost[]> {
+	getPosts(
+		userIds: string[],
+		options?: {
+			include?: boolean,
+			count?: number,
+			startAt?: number
+		}
+	): Observable<IPost[]> {
 		const ref = collection(this.firestore, 'posts');
-		const operator = include ? 'in' : 'not-in';
-		const q = userIds && userIds.length
-			? query(ref, where('userId', operator, userIds), limit(10))
-			: query(ref, orderBy('timestamp', 'desc'), limit(20));
+		const ArrayOperator = options?.include ? 'in' : 'not-in';
+		const limitOption = options?.count ? limit(options.count) : limit(12);
+		// const startAtOption = options?.startAt ? startAt()
+		const q = userIds.length
+			? query(ref, where('userId', ArrayOperator, userIds), limitOption,)
+			: query(ref, orderBy('timestamp', 'desc'), limitOption);
 		return collectionData(q, { idField: 'id' }) as Observable<IPost[]>;
 	}
 
@@ -78,34 +88,20 @@ export class PostService {
 		return from(deleteDoc(ref));
 	}
 
-	likePost(postId: string): Observable<any> {
-		return this.userService.currentUser$.pipe(
-			take(1),
-			concatMap(currentUser => {
-				if (!currentUser) throw Error('Not Authenticated');
-
-				const ref = doc(this.firestore, 'posts', postId);
-				return updateDoc(
-					ref, {
-					likes: arrayUnion(currentUser.uid)
-				});
-			})
-		);
+	likePost(postId: string, userId: string): Observable<any> {
+		const ref = doc(this.firestore, 'posts', postId);
+		return from(updateDoc(
+			ref, {
+			likes: arrayUnion(userId)
+		}));
 	}
 
-	dislikePost(postId: string): Observable<any> {
-		return this.userService.currentUser$.pipe(
-			take(1),
-			concatMap(currentUser => {
-				if (!currentUser) throw Error('Not Authenticated');
-
-				const ref = doc(this.firestore, 'posts', postId);
-				return updateDoc(
-					ref, {
-					likes: arrayRemove(currentUser.uid)
-				});
-			})
-		);
+	dislikePost(postId: string, userId: string): Observable<any> {
+		const ref = doc(this.firestore, 'posts', postId);
+		return from(updateDoc(
+			ref, {
+			likes: arrayRemove(userId)
+		}));
 	}
 
 	addComment(postId: string, comment: string): Observable<any> {

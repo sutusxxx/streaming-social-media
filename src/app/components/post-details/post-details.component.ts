@@ -3,6 +3,7 @@ import { IPost } from 'src/app/interfaces/post.interface';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '@services/user.service';
+import { PostService } from '@services/post.service';
 
 @Component({
 	selector: 'app-post-details',
@@ -15,10 +16,15 @@ export class PostDetailsComponent implements OnInit {
 	constructor(
 		public dialogRef: MatDialogRef<PostDetailsComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: IPost,
-		private readonly userService: UserService
+		private readonly userService: UserService,
+		private readonly postService: PostService
 	) { }
 
 	ngOnInit(): void {
 	}
 
+	deletePost(postId: string): void {
+		this.dialogRef.close();
+		this.postService.deletePost(postId).subscribe();
+	}
 }

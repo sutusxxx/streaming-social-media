@@ -1,4 +1,4 @@
-import { from, Observable, of, switchMap } from 'rxjs';
+import { concatMap, from, Observable, of, switchMap } from 'rxjs';
 import { INotification } from 'src/app/interfaces/notification.interface';
 
 import { Injectable } from '@angular/core';
@@ -42,6 +42,14 @@ export class UserService {
         return from(setDoc(ref, user));
     }
 
+    createUserIfNotExists(user: IUser): Observable<void> {
+        return this.getUserById(user.uid).pipe(
+            concatMap(user => {
+                if (!user) return this.createUser(user);
+                return of();
+            })
+        );
+    }
 
     async generateUsername(displayName?: string): Promise<string> {
         const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
