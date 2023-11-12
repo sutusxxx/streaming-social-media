@@ -2,8 +2,8 @@ import { IPost } from 'src/app/interfaces/post.interface';
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UserService } from '@services/user.service';
 import { PostService } from '@services/post.service';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-post-details',
@@ -25,6 +25,6 @@ export class PostDetailsComponent implements OnInit {
 
 	deletePost(postId: string): void {
 		this.dialogRef.close();
-		this.postService.deletePost(postId).subscribe();
+		this.postService.deletePost(postId);
 	}
 }

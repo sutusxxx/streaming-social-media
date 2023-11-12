@@ -1,6 +1,21 @@
+import { concatMap, from, Observable, of } from 'rxjs';
+
 import { Injectable } from '@angular/core';
-import { Auth, GoogleAuthProvider, FacebookAuthProvider, UserCredential, UserInfo, authState, createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, updateEmail, updateProfile, signInWithPopup, sendPasswordResetEmail } from '@angular/fire/auth';
-import { Observable, concatMap, from, of, switchMap } from 'rxjs';
+import {
+    Auth,
+    authState,
+    createUserWithEmailAndPassword,
+    deleteUser,
+    FacebookAuthProvider,
+    GoogleAuthProvider,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    updateEmail,
+    updateProfile,
+    UserCredential,
+    UserInfo
+} from '@angular/fire/auth';
 
 @Injectable({
     providedIn: 'root'

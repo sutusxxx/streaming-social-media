@@ -3,21 +3,23 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Injectable } from '@angular/core';
 import {
-	addDoc,
-	arrayRemove,
-	arrayUnion,
-	collection,
-	collectionData,
-	deleteDoc,
-	doc,
-	Firestore,
-	limit,
-	orderBy,
-	query,
-	startAt,
-	Timestamp,
-	updateDoc,
-	where
+    addDoc,
+    arrayRemove,
+    arrayUnion,
+    collection,
+    collectionData,
+    deleteDoc,
+    doc,
+    docData,
+    Firestore,
+    getDocs,
+    limit,
+    orderBy,
+    query,
+    startAt,
+    Timestamp,
+    updateDoc,
+    where
 } from '@angular/fire/firestore';
 
 import { IComment } from '../interfaces/comment.interface';
@@ -65,14 +67,14 @@ export class PostService {
 		)
 	}
 
-	getPosts(
+	async getPosts(
 		userIds: string[],
 		options?: {
 			include?: boolean,
 			count?: number,
 			startAt?: number
 		}
-	): Observable<IPost[]> {
+	): Promise<IPost[]> {
 		const ref = collection(this.firestore, 'posts');
 		const ArrayOperator = options?.include ? 'in' : 'not-in';
 		const limitOption = options?.count ? limit(options.count) : limit(12);
@@ -80,12 +82,20 @@ export class PostService {
 		const q = userIds.length
 			? query(ref, where('userId', ArrayOperator, userIds), limitOption,)
 			: query(ref, orderBy('timestamp', 'desc'), limitOption);
-		return collectionData(q, { idField: 'id' }) as Observable<IPost[]>;
+
+		const snapshot = await getDocs(q);
+		const result: IPost[] = [];
+		snapshot.forEach(doc => {
+			const post: IPost = doc.data() as IPost;
+			post.id = doc.id;
+			result.push(post)
+		});
+		return result;
 	}
 
-	deletePost(postId: string): Observable<void> {
+	deletePost(postId: string): Promise<void> {
 		const ref = doc(this.firestore, 'posts', postId);
-		return from(deleteDoc(ref));
+		return deleteDoc(ref);
 	}
 
 	likePost(postId: string, userId: string): Observable<any> {
@@ -126,5 +136,10 @@ export class PostService {
 		const queryAll = query(ref, orderBy('date', 'asc'));
 
 		return collectionData(queryAll) as Observable<IComment[]>;
+	}
+
+	getPost(postId: string): Observable<IPost> {
+		const ref = doc(this.firestore, 'posts', postId);
+		return docData(ref) as Observable<IPost>;
 	}
 }

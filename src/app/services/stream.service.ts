@@ -1,26 +1,26 @@
 import {
-	collection,
-	CollectionReference,
-	doc,
-	DocumentData,
-	DocumentReference,
-	onSnapshot,
-	orderBy,
-	query,
-	setDoc,
-	Timestamp,
-	updateDoc
+    collection,
+    CollectionReference,
+    doc,
+    DocumentData,
+    DocumentReference,
+    onSnapshot,
+    orderBy,
+    query,
+    setDoc,
+    Timestamp,
+    updateDoc
 } from 'firebase/firestore';
 import {
-	catchError,
-	combineLatest,
-	concatMap,
-	EMPTY,
-	forkJoin,
-	Observable,
-	of,
-	take,
-	throwError
+    catchError,
+    combineLatest,
+    concatMap,
+    EMPTY,
+    forkJoin,
+    Observable,
+    of,
+    take,
+    throwError
 } from 'rxjs';
 import { servers } from 'src/app/configuration/server';
 import { IRoom } from 'src/app/interfaces/room.interface';
@@ -28,12 +28,12 @@ import { User } from 'src/app/models';
 
 import { Injectable } from '@angular/core';
 import {
-	addDoc,
-	collectionData,
-	deleteDoc,
-	docData,
-	Firestore,
-	getDocs
+    addDoc,
+    collectionData,
+    deleteDoc,
+    docData,
+    Firestore,
+    getDocs
 } from '@angular/fire/firestore';
 import { FollowService } from '@services/follow.service';
 import { UserService } from '@services/user.service';
@@ -95,7 +95,9 @@ export class StreamService {
 				this.addLocalTracks();
 
 				this.roomId = await this.addRoom(currentUser);
+				this.peerConnection.ontrack = (e) => {
 
+				}
 				this.addIceCandidateEventListener('offerCandidates', this.roomId);
 
 				await this.saveRoomData(this.roomId);

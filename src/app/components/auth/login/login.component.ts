@@ -1,12 +1,13 @@
+import { catchError, concatMap, of, take } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
+import { AuthService } from 'src/app/services/auth.service';
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ForgotPasswordDialogComponent } from '@components/forgot-password-dialog/forgot-password-dialog.component';
 import { UserService } from '@services/user.service';
-import { catchError, concatMap, of, take } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
 	selector: 'app-login',
@@ -84,7 +85,7 @@ export class LoginComponent implements OnInit {
 	}
 
 	openForgotPasswordDialog(): void {
-		const dialogRef = this.dialog.open(ForgotPasswordDialogComponent);
+		const dialogRef = this.dialog.open(ForgotPasswordDialogComponent, { width: '400px' });
 		dialogRef.afterClosed().subscribe(email => {
 			if (email) {
 				this.forgotPasswordEmail = email;

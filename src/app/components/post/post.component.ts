@@ -1,14 +1,14 @@
 import { concatMap, map, Observable, of, take, throwError } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
 import { IPost } from 'src/app/interfaces/post.interface';
+import { User } from 'src/app/models';
 
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { CommentComponent } from '@components/comment/comment.component';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
-import { Router } from '@angular/router';
-import { PATH } from 'src/app/constants/path.constant';
-import { User } from 'src/app/models';
 
 @Component({
 	selector: 'app-post',
@@ -35,6 +35,8 @@ export class PostComponent implements OnInit {
 				return this.data.likes?.includes(user?.uid);
 			})
 		).subscribe(liked => this.liked = liked);
+
+		this.postService.getPost(this.data.id).subscribe((post) => console.log('post', post))
 	}
 
 	addComment(): void {

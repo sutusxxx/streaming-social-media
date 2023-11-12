@@ -11,7 +11,7 @@ import { PostDetailsComponent } from '@components/post-details/post-details.comp
 })
 export class PostGridComponent implements OnInit {
 	@Input() cols: number = 3;
-	@Input() posts: IPost[] | null = null;
+	@Input() posts: IPost[] = [];
 
 	constructor(
 		public dialog: MatDialog
