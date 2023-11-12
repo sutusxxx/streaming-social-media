@@ -15,7 +15,7 @@ import { PostService } from '@services/post.service';
 	styleUrls: ['./feed.component.css']
 })
 export class FeedComponent extends BaseComponent implements OnInit {
-	posts$ = this.getPosts();
+	posts$ = this.loadPosts();
 
 	constructor(
 		public dialog: MatDialog,
@@ -27,23 +27,24 @@ export class FeedComponent extends BaseComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.getPosts();
+		this.loadPosts();
 	}
 
 	addPost(): void {
 		this.dialog.open(CreatePostDialogComponent);
 	}
 
-	getPosts(): Observable<IPost[]> {
+	loadPosts(): Observable<IPost[]> {
 		return this.authService.currentUser$.pipe(
 			takeUntil(this._unsubscribeAll),
 			concatMap(user => {
 				if (!user) throw Error('Not Authenticated!');
 				return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
 			}),
-			concatMap(([currentUserId, userIds]) =>
-				from(this.postService.getPosts(userIds.concat(currentUserId), { include: true }))
-			)
+			concatMap(([currentUserId, userIds]) => {
+				userIds = userIds.concat(currentUserId)
+				return this.postService.getPosts$(userIds, { include: true });
+			})
 		);
 	}
 }

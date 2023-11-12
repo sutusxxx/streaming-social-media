@@ -1,4 +1,4 @@
-import { combineLatest, concatMap, Observable, of } from 'rxjs';
+import { Observable, combineLatest, concatMap, of } from 'rxjs';
 import { IPost } from 'src/app/interfaces/post.interface';
 
 import { Component, OnInit } from '@angular/core';
@@ -12,15 +12,7 @@ import { UserService } from '@services/user.service';
 	styleUrls: ['./explorer.component.css']
 })
 export class ExplorerComponent implements OnInit {
-	posts$: Observable<IPost[]> = this.userService.currentUser$.pipe(
-		concatMap(user => {
-			if (!user) throw Error('Not Authenticated!');
-			return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
-		}),
-		concatMap(([currentUserId, userIds]) =>
-			this.postService.getPosts(userIds.concat(currentUserId), { include: false })
-		)
-	);
+	posts$ = this.loadPosts();
 
 	constructor(
 		private readonly userService: UserService,
@@ -29,6 +21,18 @@ export class ExplorerComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.loadPosts();
 	}
 
+	loadPosts(): Observable<IPost[]> {
+		return this.userService.currentUser$.pipe(
+			concatMap(user => {
+				if (!user) throw Error('Not Authenticated!');
+				return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
+			}),
+			concatMap(([currentUserId, userIds]) =>
+				this.postService.getPosts$(userIds.concat(currentUserId), { include: false })
+			)
+		);
+	}
 }

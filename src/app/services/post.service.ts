@@ -3,23 +3,23 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Injectable } from '@angular/core';
 import {
-    addDoc,
-    arrayRemove,
-    arrayUnion,
-    collection,
-    collectionData,
-    deleteDoc,
-    doc,
-    docData,
-    Firestore,
-    getDocs,
-    limit,
-    orderBy,
-    query,
-    startAt,
-    Timestamp,
-    updateDoc,
-    where
+	addDoc,
+	arrayRemove,
+	arrayUnion,
+	collection,
+	collectionData,
+	deleteDoc,
+	doc,
+	docData,
+	Firestore,
+	getDocs,
+	limit,
+	orderBy,
+	query,
+	startAt,
+	Timestamp,
+	updateDoc,
+	where
 } from '@angular/fire/firestore';
 
 import { IComment } from '../interfaces/comment.interface';
@@ -67,14 +67,14 @@ export class PostService {
 		)
 	}
 
-	async getPosts(
+	getPosts$(
 		userIds: string[],
 		options?: {
 			include?: boolean,
 			count?: number,
 			startAt?: number
 		}
-	): Promise<IPost[]> {
+	): Observable<IPost[]> {
 		const ref = collection(this.firestore, 'posts');
 		const ArrayOperator = options?.include ? 'in' : 'not-in';
 		const limitOption = options?.count ? limit(options.count) : limit(12);
@@ -83,14 +83,7 @@ export class PostService {
 			? query(ref, where('userId', ArrayOperator, userIds), limitOption,)
 			: query(ref, orderBy('timestamp', 'desc'), limitOption);
 
-		const snapshot = await getDocs(q);
-		const result: IPost[] = [];
-		snapshot.forEach(doc => {
-			const post: IPost = doc.data() as IPost;
-			post.id = doc.id;
-			result.push(post)
-		});
-		return result;
+		return collectionData(q) as Observable<IPost[]>;
 	}
 
 	deletePost(postId: string): Promise<void> {

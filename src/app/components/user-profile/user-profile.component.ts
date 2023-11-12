@@ -1,14 +1,14 @@
 import {
-    combineLatest,
-    concatMap,
-    from,
-    map,
-    Observable,
-    of,
-    Subscription,
-    take,
-    takeUntil,
-    throwError
+	combineLatest,
+	concatMap,
+	from,
+	map,
+	Observable,
+	of,
+	Subscription,
+	take,
+	takeUntil,
+	throwError
 } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { IPost } from 'src/app/interfaces/post.interface';
@@ -43,7 +43,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	followingCount: number = 0;
 
 	postCount: Observable<number> = of(0);
-	posts: Observable<IPost[]> = of([]);
+	posts$: Observable<IPost[]> = of([]);
 
 	followers: Subscription | null = null;
 	following: Subscription | null = null;
@@ -79,8 +79,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 			.pipe(take(1), concatMap(user => {
 				if (!user) return of(null);
 
-				this.posts = from(this.postService.getPosts([userId], { include: true }));
-				this.postCount = this.posts.pipe(map((posts) => posts.length));
+				this.posts$ = this.postService.getPosts$([userId], { include: true });
+				this.postCount = this.posts$.pipe(map((posts) => posts.length));
 
 				return of(user);
 			}))
