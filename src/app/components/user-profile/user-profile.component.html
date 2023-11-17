@@ -3,10 +3,17 @@
         <h1>{{ user.displayName }}</h1>
         <div class="profile-image">
             <img width="120" height="120" [src]="user.photoURL ?? 'assets/images/user-placeholder.jpg'">
-            <button *ngIf="isCurrentUser" mat-mini-fab (click)="inputField.click()">
+            <div *ngIf="story$ | async as story" class="story" (click)="showStory(story)"></div>
+            <button *ngIf="isCurrentUser" mat-mini-fab [matMenuTriggerFor]="menu">
                 <mat-icon>edit</mat-icon>
             </button>
-            <input #inputField type="file" hidden (change)="uploadImage($event, user)">
+            <mat-menu #menu>
+                <button mat-menu-item (click)="PhotoInputField.click()">Change profile picture</button>
+                <button mat-menu-item (click)="StoryInputField.click()">Add Story</button>
+                <input #PhotoInputField type="file" hidden (change)="uploadImage($event, user)">
+                <input #StoryInputField type="file" hidden (change)="addStory($event, user)">
+            </mat-menu>
+
         </div>
         <div class="counter-container marginT-10">
             <div class="counter">

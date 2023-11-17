@@ -53,6 +53,7 @@ import { LiveChatComponent } from './components/stream/live-chat/live-chat.compo
 import { PostDetailsComponent } from './components/post-details/post-details.component';
 import { PostGridComponent } from './components/post-grid/post-grid.component';
 import { ExplorerComponent } from './components/explorer/explorer.component';
+import { StoryPreviewComponent } from './components/story-preview/story-preview.component';
 
 @NgModule({
 	declarations: [
@@ -78,7 +79,8 @@ import { ExplorerComponent } from './components/explorer/explorer.component';
   LiveChatComponent,
   PostDetailsComponent,
   PostGridComponent,
-  ExplorerComponent
+  ExplorerComponent,
+  StoryPreviewComponent
 	],
 	imports: [
 		AngularFireModule,

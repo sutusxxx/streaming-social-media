@@ -48,3 +48,17 @@
     margin-bottom: 5px;
     padding-left: 5px;
 }
+
+.story {
+    position: absolute;
+    top: -2px;
+    left: 113px;
+    width: 120px;
+    height: 120px;
+    background: none;
+    /* Transparent black background */
+    border-radius: 100%;
+    cursor: pointer;
+    /* Add border styles as needed */
+    border: 2px solid rgb(234, 211, 0);
+}

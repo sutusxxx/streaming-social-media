@@ -1,3 +1,5 @@
+import { IStory } from "./story.interface";
+
 export interface IUser {
     uid: string;
     email?: string;
@@ -6,5 +8,6 @@ export interface IUser {
     gender?: string;
     dateOfBirth?: Date;
     photoURL?: string;
+    story?: IStory;
     description?: string;
 }

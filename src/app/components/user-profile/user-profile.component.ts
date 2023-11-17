@@ -6,6 +6,7 @@ import {
 	Observable,
 	of,
 	Subscription,
+	switchMap,
 	take,
 	takeUntil,
 	throwError
@@ -26,6 +27,9 @@ import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
+import { IStory } from 'src/app/interfaces/story.interface';
+import { StoryService } from '@services/story.service';
+import { StoryPreviewComponent } from '@components/story-preview/story-preview.component';
 
 @Component({
 	selector: 'app-user-profile',
@@ -48,6 +52,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	followers: Subscription | null = null;
 	following: Subscription | null = null;
 
+	story$: Observable<IStory | null> = of(null);
+
 	readonly PATH = PATH;
 
 	constructor(
@@ -57,6 +63,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		private readonly followService: FollowService,
 		private readonly imageUploadService: ImageUploadService,
 		private readonly postService: PostService,
+		private readonly storyService: StoryService,
 		private readonly router: Router,
 		public dialog: MatDialog
 	) {
@@ -81,6 +88,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 
 				this.posts$ = this.postService.getPosts$([userId], { include: true });
 				this.postCount = this.posts$.pipe(map((posts) => posts.length));
+
+				this.story$ = this.storyService.getStory(userId);
 
 				return of(user);
 			}))
@@ -116,6 +125,19 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 				return this.userService.saveUser(userToUpdate);
 			})
 		).subscribe();
+	}
+
+	addStory(event: any, user: User): void {
+		this.imageUploadService.uploadImage(event.target.files[0], `images/story/${user.uid}`).pipe(
+			take(1),
+			concatMap(storyURL => {
+				return this.storyService.addStory(user.uid, storyURL);
+			})
+		).subscribe();
+	}
+
+	showStory(story: IStory): void {
+		this.dialog.open(StoryPreviewComponent, { data: story });
 	}
 
 	updateDescription(event: any, user: User): void {
