@@ -1,4 +1,8 @@
 <div mat-dialog-content class="dialog-container">
     <div class="close-icon" (click)="closeDialog()">✕</div>
-    <img [src]="data.url" alt="Image" class="dialog-image">
+    <img [src]="data[currentIndex].url" alt="Image" class="dialog-image">
+    <div *ngIf="data.length > 1" class="navigation">
+        <button class="prev" mat-icon-button (click)="prev()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+        <button class="next" mat-icon-button (click)="next()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+    </div>
 </div>

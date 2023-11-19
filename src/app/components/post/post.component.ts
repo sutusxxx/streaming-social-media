@@ -1,4 +1,4 @@
-import { concatMap, map, Observable, of, take, throwError } from 'rxjs';
+import { concatMap, firstValueFrom, map, Observable, of, take, throwError } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { IPost } from 'src/app/interfaces/post.interface';
 import { User } from 'src/app/models';
@@ -18,6 +18,8 @@ import { UserService } from '@services/user.service';
 export class PostComponent implements OnInit {
 	@Input() data!: IPost;
 
+	post$!: Observable<IPost>
+
 	liked: boolean = false;
 
 	constructor(
@@ -27,16 +29,18 @@ export class PostComponent implements OnInit {
 		private readonly router: Router
 	) { }
 
-	ngOnInit(): void {
-		this.userService.currentUser$.pipe(
-			take(1),
+	async ngOnInit(): Promise<void> {
+		this.liked = await this.isLikedByCurrentUser();
+		this.post$ = this.postService.getPost(this.data.id)
+	}
+
+	async isLikedByCurrentUser(): Promise<boolean> {
+		return firstValueFrom(this.userService.currentUser$.pipe(
 			map(user => {
 				if (!user || !this.data.likes) return false;
 				return this.data.likes?.includes(user?.uid);
 			})
-		).subscribe(liked => this.liked = liked);
-
-		this.postService.getPost(this.data.id).subscribe((post) => console.log('post', post))
+		));
 	}
 
 	addComment(): void {
@@ -47,7 +51,6 @@ export class PostComponent implements OnInit {
 		event.stopPropagation();
 
 		this.userService.currentUser$.pipe(
-			take(1),
 			concatMap(user => {
 				if (!user) return throwError(() => 'Not Authenticated!');
 

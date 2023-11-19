@@ -3,6 +3,7 @@ import { takeUntil } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
+import { AuthService } from '@services/auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -11,7 +12,8 @@ import { BaseComponent } from '@components/base/base.component';
 })
 export class AppComponent extends BaseComponent implements OnInit {
 	constructor(
-		private readonly router: Router
+		private readonly router: Router,
+		private readonly authService: AuthService
 	) {
 		super();
 	}
@@ -24,6 +26,6 @@ export class AppComponent extends BaseComponent implements OnInit {
 					console.log(this.router.getCurrentNavigation());
 				}
 			}
-		})
+		});
 	}
 }

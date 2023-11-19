@@ -40,7 +40,6 @@ export class PostService {
 
 	createPost(image: File, description: string): Observable<any> {
 		return this.userService.currentUser$.pipe(
-			take(1),
 			concatMap(currentUser => {
 				if (!currentUser) throw Error('Not Authenticated');
 
@@ -72,9 +71,26 @@ export class PostService {
 		options?: {
 			include?: boolean,
 			count?: number,
-			startAt?: number
 		}
 	): Observable<IPost[]> {
+		const ref = collection(this.firestore, 'posts');
+		const ArrayOperator = options?.include ? 'in' : 'not-in';
+		const limitOption = options?.count ? limit(options.count) : limit(12);
+		const q = userIds.length
+			? query(ref, where('userId', ArrayOperator, userIds), limitOption,)
+			: query(ref, orderBy('timestamp', 'desc'), limitOption);
+
+		return collectionData(q, { idField: 'id' }) as Observable<IPost[]>;
+	}
+
+	async getPosts(
+		userIds: string[],
+		options?: {
+			include?: boolean,
+			count?: number,
+			startAt?: number
+		}
+	): Promise<IPost[]> {
 		const ref = collection(this.firestore, 'posts');
 		const ArrayOperator = options?.include ? 'in' : 'not-in';
 		const limitOption = options?.count ? limit(options.count) : limit(12);
@@ -82,8 +98,14 @@ export class PostService {
 		const q = userIds.length
 			? query(ref, where('userId', ArrayOperator, userIds), limitOption,)
 			: query(ref, orderBy('timestamp', 'desc'), limitOption);
-
-		return collectionData(q) as Observable<IPost[]>;
+		const snapshot = await getDocs(q);
+		const result: IPost[] = []
+		snapshot.docs.forEach(doc => {
+			const post: IPost = doc.data() as IPost;
+			post.id = doc.id;
+			result.push(post);
+		});
+		return result;
 	}
 
 	deletePost(postId: string): Promise<void> {
@@ -110,7 +132,6 @@ export class PostService {
 	addComment(postId: string, comment: string): Observable<any> {
 		const ref = collection(this.firestore, 'posts', postId, 'comments');
 		return this.userService.currentUser$.pipe(
-			take(1),
 			concatMap(currentUser =>
 				addDoc(
 					ref, {
@@ -133,6 +154,6 @@ export class PostService {
 
 	getPost(postId: string): Observable<IPost> {
 		const ref = doc(this.firestore, 'posts', postId);
-		return docData(ref) as Observable<IPost>;
+		return docData(ref, { idField: 'id' }) as Observable<IPost>;
 	}
 }

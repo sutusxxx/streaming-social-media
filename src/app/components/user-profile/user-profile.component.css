@@ -51,14 +51,13 @@
 
 .story {
     position: absolute;
-    top: -2px;
-    left: 113px;
+    top: 0px;
+    left: 115px;
     width: 120px;
     height: 120px;
     background: none;
-    /* Transparent black background */
     border-radius: 100%;
     cursor: pointer;
-    /* Add border styles as needed */
-    border: 2px solid rgb(234, 211, 0);
+    opacity: 0.5;
+    box-shadow: 0 0 40px 10px rgb(0, 47, 255);
 }

@@ -1,4 +1,4 @@
-import { combineLatest, concatMap, from, Observable, of, takeUntil } from 'rxjs';
+import { combineLatest, concatMap, firstValueFrom, from, Observable, of, switchMap, takeUntil, throwError } from 'rxjs';
 import { IPost } from 'src/app/interfaces/post.interface';
 
 import { Component, OnInit } from '@angular/core';
@@ -15,7 +15,7 @@ import { PostService } from '@services/post.service';
 	styleUrls: ['./feed.component.css']
 })
 export class FeedComponent extends BaseComponent implements OnInit {
-	posts$ = this.loadPosts();
+	posts: IPost[] = [];
 
 	constructor(
 		public dialog: MatDialog,
@@ -34,16 +34,20 @@ export class FeedComponent extends BaseComponent implements OnInit {
 		this.dialog.open(CreatePostDialogComponent);
 	}
 
-	loadPosts(): Observable<IPost[]> {
+	async loadPosts(): Promise<void> {
+		const userIds = await firstValueFrom(this.getUserIds());
+		this.posts = await this.postService.getPosts(userIds, { include: true });
+	}
+
+	private getUserIds(): Observable<string[]> {
 		return this.authService.currentUser$.pipe(
 			takeUntil(this._unsubscribeAll),
-			concatMap(user => {
-				if (!user) throw Error('Not Authenticated!');
+			switchMap(user => {
+				if (!user) return [];
 				return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
 			}),
 			concatMap(([currentUserId, userIds]) => {
-				userIds = userIds.concat(currentUserId)
-				return this.postService.getPosts$(userIds, { include: true });
+				return of(userIds.concat(currentUserId));
 			})
 		);
 	}

@@ -30,6 +30,7 @@ import { UserService } from '@services/user.service';
 import { IStory } from 'src/app/interfaces/story.interface';
 import { StoryService } from '@services/story.service';
 import { StoryPreviewComponent } from '@components/story-preview/story-preview.component';
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
 	selector: 'app-user-profile',
@@ -52,7 +53,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	followers: Subscription | null = null;
 	following: Subscription | null = null;
 
-	story$: Observable<IStory | null> = of(null);
+	story$: Observable<IStory[] | null> = of(null);
 
 	readonly PATH = PATH;
 
@@ -128,7 +129,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	}
 
 	addStory(event: any, user: User): void {
-		this.imageUploadService.uploadImage(event.target.files[0], `images/story/${user.uid}`).pipe(
+		const timestamp = Timestamp.fromDate(new Date());
+		this.imageUploadService.uploadImage(event.target.files[0], `images/story/${user.uid}/${timestamp.toMillis()}`).pipe(
 			take(1),
 			concatMap(storyURL => {
 				return this.storyService.addStory(user.uid, storyURL);
@@ -136,7 +138,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		).subscribe();
 	}
 
-	showStory(story: IStory): void {
+	showStory(story: IStory[]): void {
 		this.dialog.open(StoryPreviewComponent, { data: story });
 	}
 

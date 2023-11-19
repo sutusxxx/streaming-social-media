@@ -1,21 +1,21 @@
-<mat-card *ngIf="data" class="mat-elevation-z0">
+<mat-card *ngIf="post$ | async as post" class="mat-elevation-z0">
     <mat-card-header>
         <img mat-card-avatar class="pointer"
-            [src]="data.user.photoURL ? data.user.photoURL : 'assets/images/user-placeholder.jpg'"
-            (click)="navigateToUserProfile(data.userId)" mat-dialog-close>
-        <mat-card-title class="pointer" (click)="navigateToUserProfile(data.userId)" mat-dialog-close>
-            {{ data.user.displayName }}
+            [src]="post.user.photoURL ? post.user.photoURL : 'assets/images/user-placeholder.jpg'"
+            (click)="navigateToUserProfile(post.userId)" mat-dialog-close>
+        <mat-card-title class="pointer" (click)="navigateToUserProfile(post.userId)" mat-dialog-close>
+            {{ post.user.displayName }}
         </mat-card-title>
-        <mat-card-subtitle>{{ data.timestamp | date }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ post.timestamp | date }}</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image class="post-content" [src]="data.url">
+    <img mat-card-image class="post-content" [src]="post.url">
     <mat-card-content class="post-description">
-        {{ data.description }}
+        {{ post.description }}
     </mat-card-content>
     <mat-card-actions>
         <mat-icon class="action-item favorite" [ngClass]="{ red: liked }"
-            (click)="toggleLike($event, data)">favorite</mat-icon>
-        {{ data.likes?.length ? data.likes?.length : 0 }}
+            (click)="toggleLike($event, post)">favorite</mat-icon>
+        {{ post.likes?.length ? post.likes?.length : 0 }}
         <mat-icon class="action-item" (click)="addComment()">chat_bubble_outline</mat-icon>
     </mat-card-actions>
 </mat-card>
