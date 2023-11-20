@@ -54,6 +54,7 @@ import { PostDetailsComponent } from './components/post-details/post-details.com
 import { PostGridComponent } from './components/post-grid/post-grid.component';
 import { ExplorerComponent } from './components/explorer/explorer.component';
 import { StoryPreviewComponent } from './components/story-preview/story-preview.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
 	declarations: [
@@ -75,12 +76,12 @@ import { StoryPreviewComponent } from './components/story-preview/story-preview.
 		CommentComponent,
 		ForgotPasswordDialogComponent,
 		NotificationsComponent,
-  ViewRoomComponent,
-  LiveChatComponent,
-  PostDetailsComponent,
-  PostGridComponent,
-  ExplorerComponent,
-  StoryPreviewComponent
+		ViewRoomComponent,
+		LiveChatComponent,
+		PostDetailsComponent,
+		PostGridComponent,
+		ExplorerComponent,
+		StoryPreviewComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -107,6 +108,7 @@ import { StoryPreviewComponent } from './components/story-preview/story-preview.
 		MatCardModule,
 		MatGridListModule,
 		MatBadgeModule,
+		MatProgressBarModule,
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
 		provideStorage(() => getStorage()),

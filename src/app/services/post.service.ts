@@ -83,21 +83,20 @@ export class PostService {
 		return collectionData(q, { idField: 'id' }) as Observable<IPost[]>;
 	}
 
-	async getPosts(
+	async getPostsForUsers(
 		userIds: string[],
 		options?: {
-			include?: boolean,
 			count?: number,
-			startAt?: number
+			startAt?: Date
 		}
 	): Promise<IPost[]> {
 		const ref = collection(this.firestore, 'posts');
-		const ArrayOperator = options?.include ? 'in' : 'not-in';
-		const limitOption = options?.count ? limit(options.count) : limit(12);
-		// const startAtOption = options?.startAt ? startAt()
-		const q = userIds.length
-			? query(ref, where('userId', ArrayOperator, userIds), limitOption,)
-			: query(ref, orderBy('timestamp', 'desc'), limitOption);
+		const limitOption = options?.count
+			? limit(options.count)
+			: limit(12);
+		const q = options?.startAt
+			? query(ref, where('userId', 'in', userIds), startAt(options.startAt), limitOption, orderBy('timestamp', 'desc'))
+			: query(ref, where('userId', 'in', userIds), limitOption, orderBy('timestamp', 'desc'));
 		const snapshot = await getDocs(q);
 		const result: IPost[] = []
 		snapshot.docs.forEach(doc => {

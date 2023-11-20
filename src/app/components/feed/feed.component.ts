@@ -16,6 +16,8 @@ import { PostService } from '@services/post.service';
 })
 export class FeedComponent extends BaseComponent implements OnInit {
 	posts: IPost[] = [];
+	lastKey: Date | null = null;
+	totalCount: number = 0;
 
 	constructor(
 		public dialog: MatDialog,
@@ -36,7 +38,19 @@ export class FeedComponent extends BaseComponent implements OnInit {
 
 	async loadPosts(): Promise<void> {
 		const userIds = await firstValueFrom(this.getUserIds());
-		this.posts = await this.postService.getPosts(userIds, { include: true });
+
+		if (this.lastKey)
+			this.posts = await this.postService.getPostsForUsers(userIds, { startAt: this.lastKey });
+		else
+			this.posts = await this.postService.getPostsForUsers(userIds);
+		this.lastKey = this.posts[this.posts.length - 1].timestamp;
+	}
+
+	async onScrollLoadPosts() {
+		console.log('scroll')
+		if (this.posts.length !== this.totalCount) {
+			await this.loadPosts();
+		}
 	}
 
 	private getUserIds(): Observable<string[]> {

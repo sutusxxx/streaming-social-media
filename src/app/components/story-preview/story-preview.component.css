@@ -50,8 +50,7 @@ button {
     right: -310px;
 }
 
-.mat-dialog-container {
-    background: none !important;
-    color: rgba(0, 0, 0, .87) !important;
-    box-shadow: none !important;
+.progress-bar {
+    z-index: 10;
+    top: -340px;
 }

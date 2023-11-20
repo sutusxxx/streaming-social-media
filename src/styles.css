@@ -37,6 +37,12 @@ body {
     caret-color: #3a62b7 !important;
 }
 
+.mat-dialog-container {
+    background: none !important;
+    color: rgba(0, 0, 0, .87) !important;
+    box-shadow: none !important;
+}
+
 .title {
     margin: 16px 6px;
     font-size: 32px;
