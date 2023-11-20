@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
 import { SearchService } from '@services/search.service';
@@ -32,8 +33,10 @@ export class SearchComponent extends BaseComponent implements OnInit {
 	}
 
 	search(event: any): void {
-		const searchTerm: string = event.target.value;
-		this.searching.next(searchTerm);
+		if (event.which <= 90 && event.which >= 48) {
+			const searchTerm: string = event.target.value;
+			this.searching.next(searchTerm);
+		}
 	}
 
 	selectUser(userId: string): void {

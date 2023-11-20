@@ -1,3 +1,9 @@
+.comment-dialog {
+    margin: 10px;
+    background: #fff;
+    border-radius: 5px;
+}
+
 .comment-area {
     margin-top: 10px;
     width: 100%;
