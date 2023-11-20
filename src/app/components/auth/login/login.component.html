@@ -19,7 +19,7 @@
         <mat-form-field>
             <input matInput placeholder="Password" formControlName="password"
                 [type]="isPasswordVisible ? 'text' : 'password'">
-            <button class="eye" mat-icon-button (click)="togglePasswordVisibility()">
+            <button class="eye" mat-icon-button (mousedown)="togglePasswordVisibility()">
                 <mat-icon>{{ isPasswordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
             </button>
             <mat-error *ngIf="password?.errors?.['required']">

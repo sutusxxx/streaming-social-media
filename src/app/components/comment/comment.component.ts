@@ -31,7 +31,6 @@ export class CommentComponent implements OnInit {
 		if (!comment) return;
 
 		this.postService.addComment(this.postId, comment)
-			.pipe(take(1))
 			.subscribe();
 		this.commentControl.setValue('');
 	}
