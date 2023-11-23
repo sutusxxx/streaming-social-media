@@ -44,7 +44,7 @@ export class PostComponent implements OnInit {
 	}
 
 	addComment(): void {
-		this.dialog.open(CommentComponent, { data: this.data?.id })
+		// this.dialog.open(CommentComponent, { data: this.data?.id })
 	}
 
 	toggleLike(event: any, post: IPost): void {

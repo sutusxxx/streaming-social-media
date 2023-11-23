@@ -5,7 +5,7 @@
             <img width="120" height="120" [src]="user.photoURL ?? 'assets/images/user-placeholder.jpg'">
             <div *ngIf="story$ | async as story" class="story" (click)="showStory(story)"></div>
             <button *ngIf="isCurrentUser" mat-mini-fab [matMenuTriggerFor]="menu">
-                <mat-icon>edit</mat-icon>
+                <mat-icon>add</mat-icon>
             </button>
             <mat-menu #menu>
                 <button mat-menu-item (click)="PhotoInputField.click()">Change profile picture</button>

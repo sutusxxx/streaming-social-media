@@ -1,6 +1,6 @@
 import { PATH } from 'src/app/constants/path.constant';
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostService } from '@services/post.service';
@@ -12,6 +12,7 @@ import { take } from 'rxjs';
 	styleUrls: ['./comment.component.css']
 })
 export class CommentComponent implements OnInit {
+	@Input() postId: string = '';
 	commentControl = new FormControl('');
 
 	comments$ = this.postService.getPostComments$(this.postId);
@@ -19,7 +20,6 @@ export class CommentComponent implements OnInit {
 	readonly PATH = PATH;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) private postId: string,
 		private readonly postService: PostService
 	) { }
 
