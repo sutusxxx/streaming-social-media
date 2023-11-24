@@ -103,7 +103,7 @@ export class UserService {
             switchMap(user => {
                 if (!user) return of([]);
                 const ref = collection(this.firestore, 'users', user.uid, 'notifications')
-                const queryAll = query(ref, orderBy('date', 'asc'));
+                const queryAll = query(ref, orderBy('date', 'desc'));
                 return collectionData(queryAll) as Observable<INotification[]>;
             })
         )

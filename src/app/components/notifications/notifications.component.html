@@ -1,6 +1,17 @@
-<div class="notification-list" *ngIf="notifications">
-    <div class="list-item" *ngFor="let notification of notifications">
-        <p>{{notification.message}}</p>
-        <mat-divider></mat-divider>
+<div class="notification-header">
+    <h2>Notifications</h2>
+</div>
+<div class="notifcation-container">
+    <div class="notification-list" *ngIf="notifications && notifications.length; else noData">
+        <div class="list-item" *ngFor="let notification of notifications; let last = last">
+            <p mat-line>
+                {{notification.message}}
+                <span class="notification-date">{{ notification.date | pastTime }}</span>
+            </p>
+            <mat-divider *ngIf="!last"></mat-divider>
+        </div>
     </div>
+    <ng-template #noData>
+        <p>Notifications are empty</p>
+    </ng-template>
 </div>

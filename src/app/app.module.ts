@@ -55,6 +55,7 @@ import { PostGridComponent } from './components/post-grid/post-grid.component';
 import { ExplorerComponent } from './components/explorer/explorer.component';
 import { StoryPreviewComponent } from './components/story-preview/story-preview.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PastTimePipe } from './pipes/past-time.pipe';
 
 @NgModule({
 	declarations: [
@@ -81,7 +82,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 		PostDetailsComponent,
 		PostGridComponent,
 		ExplorerComponent,
-		StoryPreviewComponent
+		StoryPreviewComponent,
+  PastTimePipe
 	],
 	imports: [
 		AngularFireModule,

@@ -43,6 +43,12 @@ body {
     box-shadow: none !important;
 }
 
+.mat-menu-panel {
+    min-width: 200px !important;
+    max-width: 300px !important;
+    overflow: hidden !important;
+}
+
 .title {
     margin: 16px 6px;
     font-size: 32px;
