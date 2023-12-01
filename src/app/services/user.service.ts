@@ -1,4 +1,4 @@
-import { concatMap, from, Observable, of, switchMap } from 'rxjs';
+import { catchError, concatMap, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { INotification } from 'src/app/interfaces/notification.interface';
 
 import { Injectable } from '@angular/core';
@@ -26,6 +26,7 @@ import {
 import { IUser } from '../interfaces';
 import { User } from '../models';
 import { AuthService } from './auth.service';
+import { limit, runTransaction } from 'firebase/firestore';
 
 @Injectable({
     providedIn: 'root'
@@ -95,18 +96,47 @@ export class UserService {
             message: text,
             read: false,
             date: Timestamp.fromDate(new Date())
-        }))
+        }));
+    }
+
+    setNotificationsToRead(notificatons: INotification[]): Observable<void> {
+        return this.currentUser$.pipe(
+            switchMap(user => {
+                if (!user) return of();
+                return from(runTransaction(this.firestore, async transaction => {
+                    for (const notification of notificatons) {
+                        notification.read = true;
+
+                        const ref = doc(this.firestore, 'users', user.uid, 'notifications', notification.id);
+                        transaction.update(ref, { ...notification });
+                    }
+                }));
+            })
+        ).pipe(
+            catchError(error => throwError(() => console.log(error)))
+        );
     }
 
     get notifications$(): Observable<INotification[]> {
         return this.currentUser$.pipe(
             switchMap(user => {
                 if (!user) return of([]);
-                const ref = collection(this.firestore, 'users', user.uid, 'notifications')
-                const queryAll = query(ref, orderBy('date', 'desc'));
-                return collectionData(queryAll) as Observable<INotification[]>;
+                const ref = collection(this.firestore, 'users', user.uid, 'notifications');
+                const queryAll = query(ref, orderBy('date', 'desc'), limit(10));
+                return collectionData(queryAll, { idField: 'id' }) as Observable<INotification[]>;
             })
-        )
+        );
+    }
+
+    get unreadNotifications$(): Observable<INotification[]> {
+        return this.currentUser$.pipe(
+            switchMap(user => {
+                if (!user) return of([]);
+                const ref = collection(this.firestore, 'users', user.uid, 'notifications');
+                const queryAll = query(ref, orderBy('date', 'desc'), where('read', '==', false));
+                return collectionData(queryAll, { idField: 'id' }) as Observable<INotification[]>;
+            })
+        );
     }
 
     get currentUser$(): Observable<User | null> {

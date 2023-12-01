@@ -6,8 +6,7 @@
     <ng-container *ngIf="currentUser$ | async as user; else loginButton">
         <button mat-icon-button class="notification-icon" [matMenuTriggerFor]="notifications"
             (click)="setUnreadNotifications()">
-            <mat-icon [matBadge]="unreadNotificationCounter$ | async"
-                [matBadgeHidden]="!(showBadge$ | async)">notifications</mat-icon>
+            <mat-icon [matBadge]="unreadNotifications.length" [matBadgeHidden]="!showBadge">notifications</mat-icon>
         </button>
         <mat-menu #notifications="matMenu" width="300px">
             <app-notifications [notifications]="notifications$ | async"></app-notifications>

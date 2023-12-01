@@ -1,29 +1,23 @@
-import { filter, map, of, switchMap, take } from 'rxjs';
+import { map, of, switchMap, take, takeUntil } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
+import { INotification } from 'src/app/interfaces/notification.interface';
+import { BaseComponent } from '@components/base/base.component';
 
 @Component({
 	selector: 'app-toolbar',
 	templateUrl: './toolbar.component.html',
 	styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent extends BaseComponent implements OnInit {
 	currentUser$ = this.userService.currentUser$;
 	notifications$ = this.userService.notifications$;
-	unreadNotificationCounter$ = this.notifications$.pipe(
-		map(notifications => notifications
-			.filter(notification => !notification.read)
-			.length
-		)
-	);
-
-	showBadge$ = this.unreadNotificationCounter$.pipe(
-		switchMap(notifications => of(notifications !== 0))
-	)
+	unreadNotifications: INotification[] = [];
+	showBadge: boolean = false;
 
 	readonly PATH = PATH;
 
@@ -31,9 +25,17 @@ export class ToolbarComponent implements OnInit {
 		private readonly authService: AuthService,
 		private readonly userService: UserService,
 		private readonly router: Router
-	) { }
+	) {
+		super();
+	}
 
 	ngOnInit(): void {
+		this.userService.unreadNotifications$
+			.pipe(takeUntil(this._unsubscribeAll))
+			.subscribe(notifications => {
+				this.unreadNotifications = notifications;
+				this.showBadge = this.unreadNotifications.length !== 0;
+			});
 	}
 
 	logout() {
@@ -45,7 +47,7 @@ export class ToolbarComponent implements OnInit {
 	}
 
 	setUnreadNotifications(): void {
-		console.log('karcsi')
+		this.userService.setNotificationsToRead(this.unreadNotifications).subscribe();
 	}
 
 	navigateToMessages(): void {

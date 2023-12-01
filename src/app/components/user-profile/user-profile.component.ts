@@ -83,8 +83,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 
 	setUserData(userId: string): void {
 		this.user$ = this.userService.getUserById(userId);
-		this.authService.currentUser$
-			.pipe(take(1), concatMap(user => {
+		this.authService.currentUser$.pipe(
+			concatMap(user => {
 				if (!user) return of(null);
 
 				this.posts$ = this.postService.getPosts$([userId], { include: true });
@@ -93,10 +93,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 				this.story$ = this.storyService.getStory(userId);
 
 				return of(user);
-			}))
-			.subscribe(user => {
+			})).subscribe(user => {
 				if (!user) return;
-
 
 				this.isCurrentUser = user.uid === userId;
 				this.currentUserId = user.uid;
@@ -105,14 +103,14 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 
 	addFollowersAndFollowingListeners(userId: string): void {
 		this.followers = this.followService.getFollowers(userId)
-			.pipe(take(1))
+			.pipe(takeUntil(this._unsubscribeAll))
 			.subscribe(followers => {
 				this.followerCount = followers.length;
 				this.isFollowing = followers.includes(this.currentUserId);
 			});
 
 		this.following = this.followService.getFollowing(userId)
-			.pipe(take(1))
+			.pipe(takeUntil(this._unsubscribeAll))
 			.subscribe(following => {
 				this.followingCount = following.length;
 			});
