@@ -1,8 +1,12 @@
+.profile {
+    overflow: auto;
+    height: calc(100vh - 100px);
+}
+
 .user-container {
     display: block;
     max-width: 350px;
     margin: auto;
-
     background: none;
     padding: 48px;
     border-radius: 16px;

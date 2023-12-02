@@ -42,6 +42,9 @@ export class PostService {
 	postsLoadedSubject: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>([]);
 	onPostsLoaded: Observable<IPost[]> = this.postsLoadedSubject.asObservable();
 
+	userPostsLoadedSubject: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>([]);
+	onUserPostsLoaded: Observable<IPost[]> = this.userPostsLoadedSubject.asObservable();
+
 	constructor(
 		private readonly userService: UserService,
 		private readonly firestore: Firestore,
@@ -79,7 +82,7 @@ export class PostService {
 
 	async loadPosts(lastKey?: Date): Promise<void> {
 		const userIds = await firstValueFrom(this.getUserIds());
-		const posts = await this.getPosts(userIds, false, 12, lastKey);
+		const posts = await this.getPosts(userIds, false, 6, lastKey);
 		this.postsLoadedSubject.next(posts);
 	}
 
@@ -87,6 +90,19 @@ export class PostService {
 		const userIds = await firstValueFrom(this.getUserIds());
 		const posts = await this.getPosts(userIds, true, 3, lastKey);
 		this.feedPostsLoadedSubject.next(posts);
+	}
+
+	async loadPostsForUser(userId: string, lastKey?: Date): Promise<void> {
+		const posts = await this.getPosts([userId], true, 3, lastKey);
+		this.userPostsLoadedSubject.next(posts);
+	}
+
+	getPostsCount$(userId: string): Observable<number> {
+		const ref = collection(this.firestore, 'posts');
+		const q = query(ref, where('userId', '==', userId));
+		return collectionData(q).pipe(
+			switchMap(data => of(data.length))
+		);
 	}
 
 	deletePost(postId: string): Promise<void> {

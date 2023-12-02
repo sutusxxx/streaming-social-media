@@ -9,6 +9,7 @@ import {
 	switchMap,
 	take,
 	takeUntil,
+	tap,
 	throwError
 } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
@@ -31,6 +32,7 @@ import { IStory } from 'src/app/interfaces/story.interface';
 import { StoryService } from '@services/story.service';
 import { StoryPreviewComponent } from '@components/story-preview/story-preview.component';
 import { Timestamp } from 'firebase/firestore';
+import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
 
 @Component({
 	selector: 'app-user-profile',
@@ -48,7 +50,10 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	followingCount: number = 0;
 
 	postCount: Observable<number> = of(0);
-	posts$: Observable<IPost[]> = of([]);
+	posts: IPost[] = [];
+	isLoading: boolean = false;
+
+	lastKey: Date | null = null;
 
 	followers: Subscription | null = null;
 	following: Subscription | null = null;
@@ -79,26 +84,47 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 				this.setUserData(userId);
 				this.addFollowersAndFollowingListeners(userId);
 			});
+		this.postService.onUserPostsLoaded
+			.pipe(takeUntil(this._unsubscribeAll), tap(() => this.isLoading = false))
+			.subscribe(posts => {
+				this.posts.push(...posts);
+			});
 	}
 
 	setUserData(userId: string): void {
 		this.user$ = this.userService.getUserById(userId);
-		this.authService.currentUser$.pipe(
-			concatMap(user => {
-				if (!user) return of(null);
+		this.loadPosts(userId);
+		this.postCount = this.postService.getPostsCount$(userId);
+		this.story$ = this.storyService.getStory(userId);
+		this.authService.currentUser$.subscribe(user => {
+			this.isCurrentUser = user?.uid === userId;
+			this.currentUserId = user?.uid || '';
+		});
+	}
 
-				// this.posts$ = this.postService.loadPosts([userId], { include: true });
-				this.postCount = this.posts$.pipe(map((posts) => posts.length));
+	onScroll(scrollPosition: string, userId: string) {
+		if (scrollPosition === SCROLL_POSITION_BOTTOM) {
+			this.isLoading = true;
+			this.loadPosts(userId);
+		}
+	}
 
-				this.story$ = this.storyService.getStory(userId);
+	async loadPosts(userId: string): Promise<void> {
+		if (this.lastKey) await this.loadNextBatch(userId, this.lastKey);
+		else await this.initPosts(userId);
 
-				return of(user);
-			})).subscribe(user => {
-				if (!user) return;
+		if (this.posts.length) {
+			this.lastKey = this.posts[this.posts.length - 1].timestamp;
+		}
+	}
 
-				this.isCurrentUser = user.uid === userId;
-				this.currentUserId = user.uid;
-			});
+	private async initPosts(userId: string): Promise<void> {
+		this.posts = [];
+		await this.postService.loadPostsForUser(userId);
+	}
+
+	private async loadNextBatch(userId: string, lastKey: Date): Promise<void> {
+		await this.postService.loadPostsForUser(userId, lastKey);
 	}
 
 	addFollowersAndFollowingListeners(userId: string): void {
@@ -182,6 +208,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	}
 
 	resetUserData(): void {
+		this.posts = [];
 		this.followers?.unsubscribe();
 		this.following?.unsubscribe();
 
