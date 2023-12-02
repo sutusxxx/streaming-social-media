@@ -87,7 +87,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 			concatMap(user => {
 				if (!user) return of(null);
 
-				this.posts$ = this.postService.getPosts$([userId], { include: true });
+				// this.posts$ = this.postService.loadPosts([userId], { include: true });
 				this.postCount = this.posts$.pipe(map((posts) => posts.length));
 
 				this.story$ = this.storyService.getStory(userId);

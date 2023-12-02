@@ -56,6 +56,9 @@ import { ExplorerComponent } from './components/explorer/explorer.component';
 import { StoryPreviewComponent } from './components/story-preview/story-preview.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PastTimePipe } from './pipes/past-time.pipe';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ScrollableDirective } from './directives/scrollable.directive';
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 
 @NgModule({
 	declarations: [
@@ -83,7 +86,9 @@ import { PastTimePipe } from './pipes/past-time.pipe';
 		PostGridComponent,
 		ExplorerComponent,
 		StoryPreviewComponent,
-  PastTimePipe
+		PastTimePipe,
+		ScrollableDirective,
+		LoadingSpinnerComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -111,6 +116,7 @@ import { PastTimePipe } from './pipes/past-time.pipe';
 		MatGridListModule,
 		MatBadgeModule,
 		MatProgressBarModule,
+		InfiniteScrollModule,
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
 		provideStorage(() => getStorage()),

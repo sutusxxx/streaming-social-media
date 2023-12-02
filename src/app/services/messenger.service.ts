@@ -4,7 +4,7 @@ import { User } from '../models';
 import { Observable, concatMap, map, take, throwError } from 'rxjs';
 import { UserService } from './user.service';
 import { IChat, IMessage } from '../interfaces';
-import { Timestamp, doc, orderBy, updateDoc } from 'firebase/firestore';
+import { Timestamp, doc, limit, orderBy, updateDoc } from 'firebase/firestore';
 
 @Injectable({
 	providedIn: 'root'

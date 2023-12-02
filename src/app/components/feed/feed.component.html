@@ -1,8 +1,10 @@
-<div class="post-list" (scroll)="onScrollLoadPosts()">
-    <ng-container *ngFor="let post of posts">
-        <app-post [data]="post"></app-post>
-        <mat-divider></mat-divider>
-    </ng-container>
-
+<div scrollable class="post-container" (scrollPosition)="onScroll($event)">
+    <div class="post-list">
+        <ng-container *ngFor="let post of posts; let last = last">
+            <app-post [data]="post"></app-post>
+            <mat-divider *ngIf="!last"></mat-divider>
+        </ng-container>
+        <loading-spinner *ngIf="isLoading"></loading-spinner>
+    </div>
 </div>
 <button (click)="addPost()" mat-fab class="post-btn"><mat-icon>add</mat-icon></button>

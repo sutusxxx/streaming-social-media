@@ -109,3 +109,8 @@
 .chat-bubble-container.sender>.chat-bubble>.chat-date {
     color: white;
 }
+
+::-webkit-scrollbar-track {
+    margin-left: 100px;
+    margin-right: 100px;
+}

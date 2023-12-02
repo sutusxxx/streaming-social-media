@@ -1,1 +1,4 @@
-<app-post-grid [cols]="3" [posts]="posts$ | async"></app-post-grid>
+<div scrollable class="explore-container" (scrollPosition)="onScroll($event)">
+    <app-post-grid [cols]="3" [posts]="posts"></app-post-grid>
+    <loading-spinner *ngIf="isLoading"></loading-spinner>
+</div>

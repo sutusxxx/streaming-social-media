@@ -40,9 +40,9 @@
             </div>
         </ng-template>
         <mat-divider></mat-divider>
-        <div class="chat-area">
+        <div class="chat-area" scrollable (scrollPosition)="onScoll($event)">
             <ng-container *ngIf="currentUser$ | async as currentUser">
-                <div *ngFor="let message of messages$ | async"
+                <div *ngFor="let message of (messages$ | async)?.slice()?.reverse()"
                     [ngClass]="{ 'sender': message.senderId === currentUser.uid }" class="chat-bubble-container">
                     <div class="chat-bubble">
                         {{ message.text }}

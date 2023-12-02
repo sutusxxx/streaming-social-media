@@ -23,6 +23,8 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 	chatListControl = new FormControl();
 	messageControl = new FormControl('');
 
+	isLoading: boolean = false;
+
 	currentUser$ = this.userService.currentUser$;
 	users$ = combineLatest([
 		this.currentUser$,
@@ -95,6 +97,11 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 			if (!this.endOfChat) return;
 			this.endOfChat.nativeElement.scrollIntoView({ behavior: 'smooth' });
 		}, 100)
+	}
+
+	onScoll(event: any): void {
+		console.log(event);
+		this.isLoading = true;
 	}
 
 	navigateToUserProfile(selectedChat: IChat): void {

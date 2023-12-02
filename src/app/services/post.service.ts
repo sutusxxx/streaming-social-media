@@ -1,4 +1,4 @@
-import { combineLatest, concatMap, from, Observable, of, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, concatMap, firstValueFrom, from, Observable, of, switchMap, take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Injectable } from '@angular/core';
@@ -11,11 +11,14 @@ import {
 	deleteDoc,
 	doc,
 	docData,
+	DocumentData,
 	Firestore,
 	getDocs,
 	limit,
 	orderBy,
+	Query,
 	query,
+	startAfter,
 	startAt,
 	Timestamp,
 	updateDoc,
@@ -26,16 +29,24 @@ import { IComment } from '../interfaces/comment.interface';
 import { IPost } from '../interfaces/post.interface';
 import { ImageUploadService } from './image-upload.service';
 import { UserService } from './user.service';
+import { FollowService } from './follow.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class PostService {
 
+	feedPostsLoadedSubject: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>([]);
+	onFeedPostsLoaded: Observable<IPost[]> = this.feedPostsLoadedSubject.asObservable();
+
+	postsLoadedSubject: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>([]);
+	onPostsLoaded: Observable<IPost[]> = this.postsLoadedSubject.asObservable();
+
 	constructor(
 		private readonly userService: UserService,
 		private readonly firestore: Firestore,
-		private readonly imageUploadService: ImageUploadService
+		private readonly imageUploadService: ImageUploadService,
+		private readonly followService: FollowService
 	) { }
 
 	createPost(image: File, description: string): Observable<any> {
@@ -66,45 +77,16 @@ export class PostService {
 		)
 	}
 
-	getPosts$(
-		userIds: string[],
-		options?: {
-			include?: boolean,
-			count?: number,
-		}
-	): Observable<IPost[]> {
-		const ref = collection(this.firestore, 'posts');
-		const ArrayOperator = options?.include ? 'in' : 'not-in';
-		const limitOption = options?.count ? limit(options.count) : limit(12);
-		const q = userIds.length
-			? query(ref, where('userId', ArrayOperator, userIds), limitOption,)
-			: query(ref, orderBy('timestamp', 'desc'), limitOption);
-
-		return collectionData(q, { idField: 'id' }) as Observable<IPost[]>;
+	async loadPosts(lastKey?: Date): Promise<void> {
+		const userIds = await firstValueFrom(this.getUserIds());
+		const posts = await this.getPosts(userIds, false, 12, lastKey);
+		this.postsLoadedSubject.next(posts);
 	}
 
-	async getPostsForUsers(
-		userIds: string[],
-		options?: {
-			count?: number,
-			startAt?: Date
-		}
-	): Promise<IPost[]> {
-		const ref = collection(this.firestore, 'posts');
-		const limitOption = options?.count
-			? limit(options.count)
-			: limit(12);
-		const q = options?.startAt
-			? query(ref, where('userId', 'in', userIds), startAt(options.startAt), limitOption, orderBy('timestamp', 'desc'))
-			: query(ref, where('userId', 'in', userIds), limitOption, orderBy('timestamp', 'desc'));
-		const snapshot = await getDocs(q);
-		const result: IPost[] = []
-		snapshot.docs.forEach(doc => {
-			const post: IPost = doc.data() as IPost;
-			post.id = doc.id;
-			result.push(post);
-		});
-		return result;
+	async loadFeedPosts(lastKey?: Date): Promise<void> {
+		const userIds = await firstValueFrom(this.getUserIds());
+		const posts = await this.getPosts(userIds, true, 3, lastKey);
+		this.feedPostsLoadedSubject.next(posts);
 	}
 
 	deletePost(postId: string): Promise<void> {
@@ -154,5 +136,43 @@ export class PostService {
 	getPost(postId: string): Observable<IPost> {
 		const ref = doc(this.firestore, 'posts', postId);
 		return docData(ref, { idField: 'id' }) as Observable<IPost>;
+	}
+
+	private getUserIds(): Observable<string[]> {
+		return this.userService.currentUser$.pipe(
+			switchMap(user => {
+				if (!user) return [];
+				return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
+			}),
+			concatMap(([currentUserId, userIds]) => {
+				return of(userIds.concat(currentUserId));
+			})
+		);
+	}
+
+	private async getPosts(userIds: string[], include: boolean, count: number, lastKey?: Date): Promise<IPost[]> {
+		const query = this.createQuery(userIds, include, count, lastKey);
+		const snapshot = await getDocs(query);
+		const result: IPost[] = []
+		snapshot.docs.forEach(doc => {
+			const post: IPost = doc.data() as IPost;
+			post.id = doc.id;
+			result.push(post);
+		});
+		return result;
+	}
+
+	private createQuery(userIds: string[], include: boolean, count: number, lastKey?: Date): Query<DocumentData> {
+		const ref = collection(this.firestore, 'posts');
+
+		if (include) {
+			return lastKey
+				? query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), startAfter(lastKey), limit(count))
+				: query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), limit(count));
+		} else {
+			return lastKey
+				? query(ref, where('userId', 'not-in', userIds), orderBy('userId', 'desc'), orderBy('timestamp', 'desc'), startAfter(lastKey), limit(count))
+				: query(ref, where('userId', 'not-in', userIds), orderBy('userId', 'desc'), orderBy('timestamp', 'desc'), limit(count));
+		}
 	}
 }

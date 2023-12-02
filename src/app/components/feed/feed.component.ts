@@ -1,13 +1,15 @@
-import { combineLatest, concatMap, firstValueFrom, from, Observable, of, switchMap, takeUntil, throwError } from 'rxjs';
+import { combineLatest, concatMap, finalize, firstValueFrom, from, Observable, of, switchMap, takeUntil, tap, throwError } from 'rxjs';
 import { IPost } from 'src/app/interfaces/post.interface';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BaseComponent } from '@components/base/base.component';
 import { CreatePostDialogComponent } from '@components/create-post-dialog/create-post-dialog.component';
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { PostService } from '@services/post.service';
+import { Router } from '@angular/router';
+import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
 
 @Component({
 	selector: 'app-feed',
@@ -17,18 +19,25 @@ import { PostService } from '@services/post.service';
 export class FeedComponent extends BaseComponent implements OnInit {
 	posts: IPost[] = [];
 	lastKey: Date | null = null;
-	totalCount: number = 0;
+
+	isLoading: boolean = false;
 
 	constructor(
 		public dialog: MatDialog,
-		private readonly postService: PostService,
-		private readonly authService: AuthService,
-		private readonly followService: FollowService
+		private readonly postService: PostService
 	) {
 		super();
 	}
 
 	ngOnInit(): void {
+		this.postService.onFeedPostsLoaded
+			.pipe(
+				takeUntil(this._unsubscribeAll),
+				tap(() => this.isLoading = false)
+			)
+			.subscribe(posts => {
+				this.posts.push(...posts);
+			});
 		this.loadPosts();
 	}
 
@@ -37,32 +46,27 @@ export class FeedComponent extends BaseComponent implements OnInit {
 	}
 
 	async loadPosts(): Promise<void> {
-		const userIds = await firstValueFrom(this.getUserIds());
+		if (this.lastKey) await this.loadNextBatch(this.lastKey);
+		else await this.initPosts();
 
-		if (this.lastKey)
-			this.posts = await this.postService.getPostsForUsers(userIds, { startAt: this.lastKey });
-		else
-			this.posts = await this.postService.getPostsForUsers(userIds);
-		this.lastKey = this.posts[this.posts.length - 1].timestamp;
-	}
-
-	async onScrollLoadPosts() {
-		console.log('scroll')
-		if (this.posts.length !== this.totalCount) {
-			await this.loadPosts();
+		if (this.posts.length) {
+			this.lastKey = this.posts[this.posts.length - 1].timestamp;
 		}
 	}
 
-	private getUserIds(): Observable<string[]> {
-		return this.authService.currentUser$.pipe(
-			takeUntil(this._unsubscribeAll),
-			switchMap(user => {
-				if (!user) return [];
-				return combineLatest([of(user.uid), this.followService.getFollowing(user.uid)]);
-			}),
-			concatMap(([currentUserId, userIds]) => {
-				return of(userIds.concat(currentUserId));
-			})
-		);
+	onScroll(scrollPosition: string) {
+		if (scrollPosition === SCROLL_POSITION_BOTTOM) {
+			this.isLoading = true;
+			this.loadPosts();
+		}
+	}
+
+	private async initPosts(): Promise<void> {
+		this.posts = [];
+		await this.postService.loadFeedPosts();
+	}
+
+	private async loadNextBatch(lastKey: Date): Promise<void> {
+		await this.postService.loadFeedPosts(lastKey);
 	}
 }
