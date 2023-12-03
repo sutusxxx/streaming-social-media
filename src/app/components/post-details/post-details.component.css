@@ -1,6 +1,7 @@
 .details {
-    background: #fefefe;
+    background: #f5f5f5;
     border-radius: 5px;
     display: flex;
     width: 100%;
+    padding: 10px;
 }

@@ -1,14 +1,14 @@
-import { concatMap, firstValueFrom, map, Observable, of, take, throwError } from 'rxjs';
+import { concatMap, firstValueFrom, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
 import { IPost } from 'src/app/interfaces/post.interface';
 import { User } from 'src/app/models';
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { CommentComponent } from '@components/comment/comment.component';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
+import { PostDetailsComponent } from '@components/post-details/post-details.component';
 
 @Component({
 	selector: 'app-post',
@@ -16,51 +16,57 @@ import { UserService } from '@services/user.service';
 	styleUrls: ['./post.component.css']
 })
 export class PostComponent implements OnInit {
-	@Input() data!: IPost;
+	@Input() post!: IPost;
+	@Input() showCommentPreview: boolean = false;
+
+	@Output() postChange: EventEmitter<IPost> = new EventEmitter<IPost>();
 
 	post$!: Observable<IPost>
+	commentCount$: Observable<number> = of(0);
 
 	liked: boolean = false;
 
 	constructor(
 		private readonly userService: UserService,
-		private readonly dialog: MatDialog,
 		private readonly postService: PostService,
-		private readonly router: Router
+		private readonly router: Router,
+		private readonly dialog: MatDialog
 	) { }
 
 	async ngOnInit(): Promise<void> {
 		this.liked = await this.isLikedByCurrentUser();
-		this.post$ = this.postService.getPost(this.data.id)
+		this.post$ = this.postService.getPost(this.post.id);
+		this.commentCount$ = this.postService.getCommentsCount$(this.post.id);
+
 	}
 
 	async isLikedByCurrentUser(): Promise<boolean> {
 		return firstValueFrom(this.userService.currentUser$.pipe(
 			map(user => {
-				if (!user || !this.data.likes) return false;
-				return this.data.likes?.includes(user?.uid);
+				if (!user || !this.post.likes) return false;
+				return this.post.likes?.includes(user?.uid);
 			})
 		));
 	}
 
 	addComment(): void {
-		// this.dialog.open(CommentComponent, { data: this.data?.id })
+		if (this.showCommentPreview)
+			this.dialog.open(PostDetailsComponent, { data: this.post });
 	}
 
 	toggleLike(event: any, post: IPost): void {
 		event.stopPropagation();
 
 		this.userService.currentUser$.pipe(
-			concatMap(user => {
+			switchMap(user => {
 				if (!user) return throwError(() => 'Not Authenticated!');
 
 				if (!this.liked) {
 					return this.postService.likePost(post.id, user.uid).pipe(
-						concatMap(() => {
+						tap(() => {
 							if (post.userId !== user.uid) {
-								return this.sendPostLikedNotification(user, post);
+								this.sendPostLikedNotification(user, post);
 							}
-							return of();
 						})
 					);
 				} else {

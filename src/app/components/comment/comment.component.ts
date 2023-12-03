@@ -1,10 +1,10 @@
 import { PATH } from 'src/app/constants/path.constant';
 
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostService } from '@services/post.service';
-import { take } from 'rxjs';
+import { Observable } from 'rxjs';
+import { IComment } from 'src/app/interfaces/comment.interface';
 
 @Component({
 	selector: 'app-comment',
@@ -15,7 +15,7 @@ export class CommentComponent implements OnInit {
 	@Input() postId: string = '';
 	commentControl = new FormControl('');
 
-	comments$ = this.postService.getPostComments$(this.postId);
+	comments$: Observable<IComment[]> | null = null;
 
 	readonly PATH = PATH;
 
@@ -24,6 +24,7 @@ export class CommentComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.comments$ = this.postService.getPostComments$(this.postId);
 	}
 
 	sendComment(): void {

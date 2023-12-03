@@ -59,6 +59,7 @@ import { PastTimePipe } from './pipes/past-time.pipe';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ScrollableDirective } from './directives/scrollable.directive';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { CommentPreviewComponent } from './components/comment-preview/comment-preview.component';
 
 @NgModule({
 	declarations: [
@@ -88,7 +89,8 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
 		StoryPreviewComponent,
 		PastTimePipe,
 		ScrollableDirective,
-		LoadingSpinnerComponent
+		LoadingSpinnerComponent,
+  CommentPreviewComponent
 	],
 	imports: [
 		AngularFireModule,

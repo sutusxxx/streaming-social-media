@@ -1,8 +1,7 @@
 <div scrollable class="post-container" (scrollPosition)="onScroll($event)">
     <div class="post-list">
         <ng-container *ngFor="let post of posts; let last = last">
-            <app-post [data]="post"></app-post>
-            <mat-divider *ngIf="!last"></mat-divider>
+            <app-post [post]="post" [showCommentPreview]="true"></app-post>
         </ng-container>
         <loading-spinner *ngIf="isLoading"></loading-spinner>
     </div>

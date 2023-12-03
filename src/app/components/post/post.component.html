@@ -17,5 +17,7 @@
             (click)="toggleLike($event, post)">favorite</mat-icon>
         {{ post.likes?.length ? post.likes?.length : 0 }}
         <mat-icon class="action-item" (click)="addComment()">chat_bubble_outline</mat-icon>
+        {{ commentCount$ | async }}
     </mat-card-actions>
+    <app-comment-preview *ngIf="showCommentPreview" [postId]="post.id"></app-comment-preview>
 </mat-card>

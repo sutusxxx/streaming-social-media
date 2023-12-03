@@ -1,14 +1,6 @@
 <div class="comment-dialog">
-    <div mat-dialog-title>
-        <p>Comments</p>
-    </div>
-    <mat-divider></mat-divider>
     <div class="comment-area">
-        <div class="comment-container" *ngFor="let comment of comments$ | async">
-            <div class="thumbnail">
-                <a class="user-profile" [routerLink]="[PATH.PROFILE]" [queryParams]="{ id: comment.creatorId }"
-                    mat-dialog-close><img [src]="comment.creatorPhoto"></a>
-            </div>
+        <div class="comment-container" *ngFor="let comment of (comments$ | async)?.reverse()">
             <div class="main">
                 <div class="header">
                     <span class="comment-creator">
@@ -16,14 +8,13 @@
                             {{ comment.creatorName }}
                         </a>
                     </span>
-                    <span>{{ comment.date | pastTime }}</span>
                 </div>
                 <p>{{ comment.text }}</p>
             </div>
         </div>
     </div>
     <div class="input-area">
-        <mat-form-field appearance="outline">
+        <mat-form-field>
             <input matInput placeholder="Add comment..." [formControl]="commentControl" (keydown.enter)="sendComment()">
             <button *ngIf="commentControl.value" mat-icon-button matSuffix (click)="sendComment()">
                 <mat-icon>send</mat-icon>

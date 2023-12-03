@@ -1,5 +1,5 @@
 <div class="details" *ngIf="currentUser$ | async as currentUser">
-    <app-post [data]="data"></app-post>
+    <app-post [post]="data"></app-post>
     <div *ngIf="currentUser.uid === data.userId">
         <button mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
@@ -9,5 +9,5 @@
         <button mat-menu-item>Edit</button>
         <button mat-menu-item (click)="deletePost(data.id)">Delete</button>
     </mat-menu>
+    <app-comment [postId]="data.id"></app-comment>
 </div>
-<app-comment [postId]="data.id"></app-comment>

@@ -13,9 +13,7 @@ export class PostGridComponent implements OnInit {
 	@Input() cols: number = 3;
 	@Input() posts: IPost[] | null = null;
 
-	constructor(
-		public dialog: MatDialog
-	) { }
+	constructor(public dialog: MatDialog) { }
 
 	ngOnInit(): void {
 	}

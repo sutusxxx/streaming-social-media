@@ -82,7 +82,7 @@ export class PostService {
 
 	async loadPosts(lastKey?: Date): Promise<void> {
 		const userIds = await firstValueFrom(this.getUserIds());
-		const posts = await this.getPosts(userIds, false, 6, lastKey);
+		const posts = await this.getPosts(userIds, false, 9, lastKey);
 		this.postsLoadedSubject.next(posts);
 	}
 
@@ -93,7 +93,7 @@ export class PostService {
 	}
 
 	async loadPostsForUser(userId: string, lastKey?: Date): Promise<void> {
-		const posts = await this.getPosts([userId], true, 3, lastKey);
+		const posts = await this.getPosts([userId], true, 6, lastKey);
 		this.userPostsLoadedSubject.next(posts);
 	}
 
@@ -147,6 +147,20 @@ export class PostService {
 		const queryAll = query(ref, orderBy('date', 'asc'));
 
 		return collectionData(queryAll) as Observable<IComment[]>;
+	}
+
+	getPostCommentPreview$(postId: string): Observable<IComment[]> {
+		const ref = collection(this.firestore, 'posts', postId, 'comments');
+		const queryAll = query(ref, orderBy('date', 'desc'), limit(2));
+
+		return collectionData(queryAll) as Observable<IComment[]>;
+	}
+
+	getCommentsCount$(postId: string): Observable<number> {
+		const ref = collection(this.firestore, 'posts', postId, 'comments');
+		return (collectionData(ref) as Observable<IComment[]>).pipe(
+			switchMap(data => of(data.length))
+		);
 	}
 
 	getPost(postId: string): Observable<IPost> {

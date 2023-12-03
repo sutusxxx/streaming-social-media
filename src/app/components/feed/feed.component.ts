@@ -37,6 +37,10 @@ export class FeedComponent extends BaseComponent implements OnInit {
 			)
 			.subscribe(posts => {
 				this.posts.push(...posts);
+
+				if (this.posts.length) {
+					this.lastKey = this.posts[this.posts.length - 1].timestamp;
+				}
 			});
 		this.loadPosts();
 	}
@@ -48,13 +52,11 @@ export class FeedComponent extends BaseComponent implements OnInit {
 	async loadPosts(): Promise<void> {
 		if (this.lastKey) await this.loadNextBatch(this.lastKey);
 		else await this.initPosts();
-
-		if (this.posts.length) {
-			this.lastKey = this.posts[this.posts.length - 1].timestamp;
-		}
 	}
 
 	onScroll(scrollPosition: string) {
+		if (this.isLoading) return;
+
 		if (scrollPosition === SCROLL_POSITION_BOTTOM) {
 			this.isLoading = true;
 			this.loadPosts();

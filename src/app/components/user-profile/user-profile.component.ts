@@ -88,6 +88,10 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 			.pipe(takeUntil(this._unsubscribeAll), tap(() => this.isLoading = false))
 			.subscribe(posts => {
 				this.posts.push(...posts);
+
+				if (this.posts.length) {
+					this.lastKey = this.posts[this.posts.length - 1].timestamp;
+				}
 			});
 	}
 
@@ -103,6 +107,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	}
 
 	onScroll(scrollPosition: string, userId: string) {
+		if (this.isLoading) return;
+
 		if (scrollPosition === SCROLL_POSITION_BOTTOM) {
 			this.isLoading = true;
 			this.loadPosts(userId);
@@ -112,10 +118,6 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	async loadPosts(userId: string): Promise<void> {
 		if (this.lastKey) await this.loadNextBatch(userId, this.lastKey);
 		else await this.initPosts(userId);
-
-		if (this.posts.length) {
-			this.lastKey = this.posts[this.posts.length - 1].timestamp;
-		}
 	}
 
 	private async initPosts(userId: string): Promise<void> {
