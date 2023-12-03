@@ -60,6 +60,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ScrollableDirective } from './directives/scrollable.directive';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { CommentPreviewComponent } from './components/comment-preview/comment-preview.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
 	declarations: [
@@ -90,7 +91,8 @@ import { CommentPreviewComponent } from './components/comment-preview/comment-pr
 		PastTimePipe,
 		ScrollableDirective,
 		LoadingSpinnerComponent,
-  CommentPreviewComponent
+  CommentPreviewComponent,
+  SettingsComponent
 	],
 	imports: [
 		AngularFireModule,

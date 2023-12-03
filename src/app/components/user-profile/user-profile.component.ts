@@ -2,6 +2,7 @@ import {
 	combineLatest,
 	concatMap,
 	from,
+	iif,
 	map,
 	Observable,
 	of,
@@ -85,14 +86,21 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 				this.addFollowersAndFollowingListeners(userId);
 			});
 		this.postService.onUserPostsLoaded
-			.pipe(takeUntil(this._unsubscribeAll), tap(() => this.isLoading = false))
+			.pipe(takeUntil(this._unsubscribeAll))
 			.subscribe(posts => {
 				this.posts.push(...posts);
 
 				if (this.posts.length) {
 					this.lastKey = this.posts[this.posts.length - 1].timestamp;
 				}
+				this.isLoading = false;
 			});
+		this.postService.onPostCreated
+			.pipe(takeUntil(this._unsubscribeAll))
+			.subscribe(() => this.reloadPosts());
+		this.postService.onPostDeleted
+			.pipe(takeUntil(this._unsubscribeAll))
+			.subscribe(postId => this.deletePost(postId));
 	}
 
 	setUserData(userId: string): void {
@@ -193,10 +201,12 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 
 		if (!this.currentUserId) return;
 
-		if (this.isFollowing) this.followService.follow(this.currentUserId, userId).pipe(
-			concatMap(() => this.sendFollowNotification(userId))
-		).subscribe();
-		else this.followService.unfollow(this.currentUserId, userId).subscribe();
+		const changeFollow = this.isFollowing
+			? this.followService.follow(this.currentUserId, userId)
+				.pipe(concatMap(() => this.sendFollowNotification(userId)))
+			: this.followService.unfollow(this.currentUserId, userId);
+		changeFollow
+
 	}
 
 	sendFollowNotification(userId: string): Observable<any> {
@@ -234,5 +244,19 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 
 	showPostDetails(post: IPost): void {
 		this.dialog.open(PostDetailsComponent, { data: post });
+	}
+
+
+	private reloadPosts(): void {
+		const userId: string = this.route.snapshot.queryParams['id'];
+		this.isLoading = true;
+		this.initPosts(userId);
+	}
+
+	private deletePost(postId: string): void {
+		const postIndex = this.posts.findIndex(post => post.id === postId);
+		if (postIndex < 0) return;
+
+		this.posts.splice(postIndex, 1);
 	}
 }

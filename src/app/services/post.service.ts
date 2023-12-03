@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, concatMap, firstValueFrom, from, Observable, of, switchMap, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, concatMap, firstValueFrom, from, Observable, of, Subject, switchMap, take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Injectable } from '@angular/core';
@@ -36,14 +36,20 @@ import { FollowService } from './follow.service';
 })
 export class PostService {
 
-	feedPostsLoadedSubject: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>([]);
+	feedPostsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
 	onFeedPostsLoaded: Observable<IPost[]> = this.feedPostsLoadedSubject.asObservable();
 
-	postsLoadedSubject: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>([]);
+	postsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
 	onPostsLoaded: Observable<IPost[]> = this.postsLoadedSubject.asObservable();
 
-	userPostsLoadedSubject: BehaviorSubject<IPost[]> = new BehaviorSubject<IPost[]>([]);
+	userPostsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
 	onUserPostsLoaded: Observable<IPost[]> = this.userPostsLoadedSubject.asObservable();
+
+	postCreatedSubject: Subject<void> = new Subject<void>();
+	onPostCreated: Observable<void> = this.postCreatedSubject.asObservable();
+
+	postDeletedSubject: Subject<string> = new Subject<string>();
+	onPostDeleted: Observable<string> = this.postDeletedSubject.asObservable();
 
 	constructor(
 		private readonly userService: UserService,
@@ -75,9 +81,9 @@ export class PostService {
 						displayName: user.displayName,
 						photoURL: user.photoURL ? user.photoURL : ''
 					}
-				});
+				}).then(() => this.postCreatedSubject.next());
 			})
-		)
+		);
 	}
 
 	async loadPosts(lastKey?: Date): Promise<void> {
@@ -105,9 +111,9 @@ export class PostService {
 		);
 	}
 
-	deletePost(postId: string): Promise<void> {
+	async deletePost(postId: string): Promise<void> {
 		const ref = doc(this.firestore, 'posts', postId);
-		return deleteDoc(ref);
+		return deleteDoc(ref).then(() => this.postDeletedSubject.next(postId));
 	}
 
 	likePost(postId: string, userId: string): Observable<any> {

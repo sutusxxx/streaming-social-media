@@ -57,4 +57,8 @@ export class ToolbarComponent extends BaseComponent implements OnInit {
 	navigateToUserProfile(userId: string): void {
 		this.router.navigate([PATH.PROFILE], { queryParams: { id: userId } });
 	}
+
+	navigateToSettings(): void {
+		this.router.navigate([PATH.SETTINGS]);
+	}
 }
