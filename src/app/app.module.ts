@@ -61,6 +61,7 @@ import { ScrollableDirective } from './directives/scrollable.directive';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { CommentPreviewComponent } from './components/comment-preview/comment-preview.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -91,8 +92,8 @@ import { SettingsComponent } from './components/settings/settings.component';
 		PastTimePipe,
 		ScrollableDirective,
 		LoadingSpinnerComponent,
-  CommentPreviewComponent,
-  SettingsComponent
+		CommentPreviewComponent,
+		SettingsComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -121,6 +122,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 		MatBadgeModule,
 		MatProgressBarModule,
 		InfiniteScrollModule,
+		TranslateModule.forRoot(),
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
 		provideStorage(() => getStorage()),

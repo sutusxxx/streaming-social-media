@@ -1,67 +1,68 @@
 <div class="form-container marginT-30">
-    <div class="title">Registration</div>
+    <div class="title">{{ 'registration' | translate }}</div>
     <form #form="ngForm" [formGroup]="registrationForm" (ngSubmit)="registration()">
         <mat-error *ngIf="registrationForm.errors?.['usernameOccupied']">
-            Username occupied.
+            {{ 'usernameOccupied' | translate }}
         </mat-error>
         <mat-form-field>
-            <input matInput placeholder="Username" formControlName="displayName">
+            <input matInput [placeholder]="'username' | translate" formControlName="displayName">
             <mat-error *ngIf="displayName?.errors?.['required']">
-                Required field
+                {{ 'requiredField' | translate }}
             </mat-error>
             <mat-error *ngIf="displayName?.errors?.['pattern']">
-                Name should be only letters and numbers.
+                {{ 'namePatternError' | translate }}
             </mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Email address" formControlName="email">
+            <input matInput [placeholder]="'emailAddress' | translate" formControlName="email">
             <mat-error *ngIf="email?.errors?.['required']">
-                Required field
+                {{ 'requiredField' | translate }}
             </mat-error>
             <mat-error *ngIf="email?.errors?.['email']">
-                Email format is not valid
+                {{ 'emailNotValid' | translate }}
             </mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Full name" formControlName="fullName">
+            <input matInput [placeholder]="'fullName' | translate" formControlName="fullName">
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Choose your gender</mat-label>
+            <mat-label>{{ 'chooseYourGender' | translate }}</mat-label>
             <mat-select>
                 <mat-option *ngFor="let gender of genders" [value]="gender">
-                    {{ gender }}
+                    {{ gender | translate }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Date of Birth</mat-label>
+            <mat-label>{{ 'dateOfBirth' | translate }}</mat-label>
             <input matInput [matDatepicker]="picker">
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]=picker></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Password" formControlName="password" type="password">
+            <input matInput [placeholder]="'password' | translate" formControlName="password" type="password">
             <mat-error *ngIf="password?.errors?.['required']">
-                Required field
+                {{ 'requiredField' | translate }}
             </mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Confirm password" formControlName="confirmPassword" type="password">
+            <input matInput [placeholder]="'confirmPassword' | translate" formControlName="confirmPassword"
+                type="password">
             <mat-error *ngIf="confirmPassword?.errors?.['required']">
-                Required field
+                {{ 'requiredField' | translate }}
             </mat-error>
         </mat-form-field>
         <mat-error *ngIf="form?.submitted && registrationForm?.errors?.['passwordsMismatch']">
-            The password and the confirm password is not the same
+            {{ 'passwordMismatchError' | translate }}
         </mat-error>
         <div class="center marginT-10">
             <button class="primary-btn" mat-raised-button type="submit">
-                Sign Up
+                {{ 'signUp' | translate }}
             </button>
         </div>
         <div class="center marginT-10">
-            <a class="link" [routerLink]="[PATH.LOGIN]">Back to login</a>
+            <a class="link" [routerLink]="[PATH.LOGIN]">{{ 'backToLogin' | translate }}</a>
         </div>
     </form>
 </div>

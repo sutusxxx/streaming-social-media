@@ -24,8 +24,8 @@ export class RegistrationComponent implements OnInit {
 	}, { validators: passwordValidator() });
 
 	genders: string[] = [
-		'Male',
-		'Female'
+		'male',
+		'female'
 	];
 
 	PATH = PATH;

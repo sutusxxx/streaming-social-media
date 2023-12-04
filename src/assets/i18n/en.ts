@@ -1,0 +1,31 @@
+export const english = {
+    lang: 'en',
+    data: {
+        passwordResetEmailSent: 'Password reset e-mail sent to',
+        login: 'Login',
+        forgotPassword: 'Forgot password',
+        signInWithGoogle: 'Sign In with Google',
+        signInWithFacebook: 'Sign In with Facebook',
+        registration: 'Registration',
+        passwordRequired: 'Password is required',
+        emailNotValid: 'Email format is not valid',
+        emailRequired: 'Email is required',
+        loginFailed: 'Login failed!',
+        welcome: 'Welcome',
+        emailAddress: 'e-mail address',
+        password: 'password',
+        usernameOccupied: 'Username occupied.',
+        requiredField: 'Required field',
+        namePatternError: 'Name should be only letters and numbers.',
+        chooseYourGender: 'Choose your gender',
+        username: 'username',
+        fullName: 'full name',
+        male: 'male',
+        female: 'female',
+        dateOfBirth: 'Date of Birth',
+        confirmPassword: 'Confirm password',
+        passwordMismatchError: 'The password and the confirm password is not the same',
+        signUp: 'Sign up',
+        backToLogin: 'Back to login'
+    }
+}

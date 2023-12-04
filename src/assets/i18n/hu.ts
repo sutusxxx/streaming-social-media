@@ -1,0 +1,31 @@
+export const hungarian = {
+    lang: 'hu',
+    data: {
+        passwordResetEmailSent: 'Jelszóváltoztató e-mail elküldve',
+        login: 'Bejelentkezés',
+        forgotPassword: 'Elfelejtett jelszó',
+        signInWithGoogle: 'Bejelentkezés Google fiókkal',
+        signInWithFacebook: 'Bejelentkezés Facebook fiókkal',
+        registration: 'Regisztráció',
+        passwordRequired: 'A jelszó megadása kötelező',
+        emailNotValid: 'Az e-mail cím formátuma nem megfelelő',
+        emailRequired: 'Az e-mail cím megadása kötelező',
+        loginFailed: 'Sikertelen bejelentkezés!',
+        welcome: 'Üdvözöljük',
+        emailAddress: 'e-mail cím',
+        password: 'jelszó',
+        usernameOccupied: 'A felhasználónév foglalt.',
+        requiredField: 'A mező kitöltése kötelező',
+        namePatternError: 'A felhasználónév csak betűket és számokat tartalmazhat.',
+        chooseYourGender: 'Neme',
+        username: 'felhasználónév',
+        fullName: 'teljes név',
+        male: 'férfi',
+        female: 'nő',
+        dateOfBirth: 'Születési Dátum',
+        confirmPassword: 'Jelszó megerősítése',
+        passwordMismatchError: 'A jelszó és a jelszó megerősítése különbözik',
+        signUp: 'Regisztráció',
+        backToLogin: 'Vissza a bejelentkezéshez'
+    }
+}

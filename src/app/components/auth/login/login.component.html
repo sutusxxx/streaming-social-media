@@ -1,49 +1,55 @@
 <div class="form-container marginT-30">
     <div *ngIf="isForgotPasswordEmailSent" class="info">
-        Password reset e-mail sent to {{ forgotPasswordEmail }}
+        {{ 'passwordResetEmailSent' | translate }} {{ forgotPasswordEmail }}
     </div>
-    <div class="title">Welcome!</div>
+    <div class="title">{{ 'welcome' | translate}}</div>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
         <div *ngIf="loginForm.errors?.['userNotFound']" class="error">
-            Login failed!
+            {{ 'loginFailed' | translate }}
         </div>
         <mat-form-field>
-            <input matInput placeholder="Email address" formControlName="email" type="email" autocomplete="off">
+            <input matInput [placeholder]="'emailAddress' | translate" formControlName="email" type="email"
+                autocomplete="off">
             <mat-error *ngIf="email?.errors?.['required']">
-                Email is required
+                {{ 'emailRequired' | translate }}
             </mat-error>
             <mat-error *ngIf="email?.errors?.['email']">
-                Email format is not valid
+                {{ 'emailNotValid' | translate }}
             </mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Password" formControlName="password"
+            <input matInput [placeholder]="'password' | translate" formControlName="password"
                 [type]="isPasswordVisible ? 'text' : 'password'">
             <button class="eye" mat-icon-button (mousedown)="togglePasswordVisibility()">
                 <mat-icon>{{ isPasswordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
             </button>
             <mat-error *ngIf="password?.errors?.['required']">
-                Password is required
+                {{ 'passwordRequired' | translate }}
             </mat-error>
         </mat-form-field>
         <div class="center marginT-10">
             <button class="primary-btn w100" mat-raised-button type="submit">
-                Login
+                {{ 'login' | translate }}
             </button>
         </div>
-        <span class="center marginT-5"><a class="link" (click)="openForgotPasswordDialog()">Forgot
-                password</a></span>
+        <span class="center marginT-5"><a class="link" (click)="openForgotPasswordDialog()">
+                {{ 'forgotPassword' | translate }}
+            </a></span>
         <div class="center marginT-10">
             <button class="w100" mat-button (click)="signInWithGoogle()">
-                <img class="icon" src="assets/images/google-icon.png"> Sign In with Google
+                <img class="icon" src="assets/images/google-icon.png">{{ 'signInWithGoogle' | translate }}
             </button>
         </div>
         <div class="center marginT-10">
             <button class="w100" mat-button (click)="signInWithFacebook()">
-                <img class="icon" src="assets/images/facebook-icon.png"> Sign In with Facebook
+                <img class="icon" src="assets/images/facebook-icon.png">{{ 'signInWithFacebook' | translate }}
             </button>
         </div>
 
-        <span class="center marginT-10"><a class="link" [routerLink]="[PATH.REGISTRATION]">Registration</a></span>
+        <span class="center marginT-10">
+            <a class="link" [routerLink]="[PATH.REGISTRATION]">
+                {{ 'registration' | translate }}
+            </a>
+        </span>
     </form>
 </div>
