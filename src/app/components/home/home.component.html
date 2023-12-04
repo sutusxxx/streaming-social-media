@@ -1,15 +1,15 @@
 <mat-tab-group mat-align-tabs="center" mat-stretch-tabs="false" animationDuration="0ms">
-    <mat-tab label="Streams">
+    <mat-tab [label]="'streams' | translate">
         <ng-template matTabContent>
             <app-stream-list></app-stream-list>
         </ng-template>
     </mat-tab>
-    <mat-tab label="Feeds">
+    <mat-tab [label]="'feeds' | translate">
         <ng-template matTabContent>
             <app-feed></app-feed>
         </ng-template>
     </mat-tab>
-    <mat-tab label="Explore">
+    <mat-tab [label]="'explore' | translate">
         <ng-template matTabContent>
             <app-explorer></app-explorer>
         </ng-template>

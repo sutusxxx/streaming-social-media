@@ -1,47 +1,48 @@
 <div class="form-container marginT-30" *ngIf="settingsForm">
     <form #form="ngForm" [formGroup]="settingsForm">
         <mat-form-field>
-            <input matInput placeholder="Username" [value]="username" readonly>
+            <input matInput [placeholder]="'username' | translate" [value]="username" readonly>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Email address" [value]="email" readonly>
+            <input matInput [placeholder]="'emailAddress' | translate" [value]="email" readonly>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Full name" formControlName="fullName">
+            <input matInput [placeholder]="'fullName' | translate" formControlName="fullName">
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Choose your gender</mat-label>
+            <mat-label>{{ 'chooseYourGender' | translate}}</mat-label>
             <mat-select>
                 <mat-option *ngFor="let gender of genders" [value]="gender">
-                    {{ gender }}
+                    {{ gender | translate }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Date of Birth</mat-label>
+            <mat-label>{{ 'dateOfBirth' | translate }}</mat-label>
             <input matInput [matDatepicker]="picker">
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]=picker></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Password" formControlName="password" type="password">
+            <input matInput [placeholder]="'password' | translate" formControlName="password" type="password">
             <mat-error *ngIf="password?.errors?.['required']">
-                Required field
+                {{ 'requiredField' | translate }}
             </mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input matInput placeholder="Confirm password" formControlName="confirmPassword" type="password">
+            <input matInput [placeholder]="'confirmPassword' | translate" formControlName="confirmPassword"
+                type="password">
             <mat-error *ngIf="confirmPassword?.errors?.['required']">
-                Required field
+                {{ 'requiredField' | translate }}
             </mat-error>
         </mat-form-field>
-        <mat-error *ngIf="form?.submitted    && settingsForm?.errors?.['passwordsMismatch']">
-            The password and the confirm password is not the same
+        <mat-error *ngIf="form?.submitted && settingsForm?.errors?.['passwordsMismatch']">
+            {{ 'passwordMismatchError' | translate }}
         </mat-error>
         <div class="center marginT-10">
             <button class="primary-btn" mat-raised-button type="submit">
-                Save
+                {{ 'save' | translate }}
             </button>
         </div>
 

@@ -18,8 +18,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 	username: string | null = null;
 
 	genders: string[] = [
-		'Male',
-		'Female'
+		'male',
+		'female'
 	];
 
 	PATH = PATH;

@@ -1,6 +1,7 @@
 <div class="search-container">
     <mat-icon>search</mat-icon>
-    <input class="search-input" type="text" placeholder="Search user" [matAutocomplete]="auto" (keyup)="search($event)">
+    <input class="search-input" type="text" [placeholder]="'searchUser' | translate" [matAutocomplete]="auto"
+        (keyup)="search($event)">
     <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let user of users | async" [value]="user.displayName" (click)="selectUser(user.uid)">
             {{ user.displayName }}

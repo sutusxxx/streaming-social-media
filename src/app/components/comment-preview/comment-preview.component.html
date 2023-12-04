@@ -15,7 +15,8 @@
     </div>
     <div class="input-area">
         <mat-form-field>
-            <input matInput placeholder="Add comment..." [formControl]="commentControl" (keydown.enter)="sendComment()">
+            <input matInput placeholder="{{ 'addComment' | translate}}..." [formControl]="commentControl"
+                (keydown.enter)="sendComment()">
             <button *ngIf="commentControl.value" mat-icon-button matSuffix (click)="sendComment()">
                 <mat-icon>send</mat-icon>
             </button>

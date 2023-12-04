@@ -8,8 +8,10 @@
                 <mat-icon>add</mat-icon>
             </button>
             <mat-menu #menu>
-                <button mat-menu-item (click)="PhotoInputField.click()">Change profile picture</button>
-                <button mat-menu-item (click)="StoryInputField.click()">Add Story</button>
+                <button mat-menu-item (click)="PhotoInputField.click()">
+                    {{ 'changeProfilePicture' | translate }}
+                </button>
+                <button mat-menu-item (click)="StoryInputField.click()">{{ 'addStory' | translate }}</button>
                 <input #PhotoInputField type="file" hidden (change)="uploadImage($event, user)">
                 <input #StoryInputField type="file" hidden (change)="addStory($event, user)">
             </mat-menu>
@@ -18,15 +20,15 @@
         <div class="counter-container marginT-10">
             <div class="counter">
                 <span class="counter-number" (click)="showFollowerDialog(user, 0)">{{ followerCount }}</span>
-                <div class="counter-label">Followers</div>
+                <div class="counter-label">{{ 'followers' | translate }}</div>
             </div>
             <div class="counter">
                 <span class="counter-number-small">{{ postCount | async }}</span>
-                <div class="counter-label">Posts</div>
+                <div class="counter-label">{{ 'posts' | translate }}</div>
             </div>
             <div class="counter">
                 <span class="counter-number" (click)="showFollowerDialog(user, 1)">{{ followingCount }}</span>
-                <div class="counter-label">Following</div>
+                <div class="counter-label">{{ 'following' | translate }}</div>
             </div>
         </div>
         <div *ngIf="!isCurrentUser" class="follow-button">
@@ -43,26 +45,25 @@
                 [disabled]="!isCurrentUser" (blur)="updateDescription($event, user)">
             </textarea>
         </div>
-        <div *ngIf="isCurrentUser" class="marginT-30">
-            <div class="button-container">
-                <button mat-button (click)="startLiveStream()" class="bold">
-                    GO LIVE <mat-icon color="warn">videocam</mat-icon>
-                </button>
-                <button mat-button (click)="addPost()">
-                    Create Post
-                </button>
-                <button mat-button>
-                    Edit profile
-                </button>
-            </div>
-        </div>
-
         <ng-template #followButton>
-            <button mat-button class="button-black" (click)="toggleFollow(user.uid)">Follow</button>
+            <button mat-button class="button-black" (click)="toggleFollow(user.uid)">{{ 'follow' | translate }}</button>
         </ng-template>
         <ng-template #unfollowButton>
-            <button mat-button class="button-blue" (click)="toggleFollow(user.uid)">Unfollow</button>
+            <button mat-button class="button-blue" (click)="toggleFollow(user.uid)">
+                {{ 'unfollow' | translate }}
+            </button>
         </ng-template>
+    </div>
+    <div *ngIf="isCurrentUser" class="button-container">
+        <button mat-button (click)="startLiveStream()" class="bold">
+            {{ 'goLive' | translate }} <mat-icon color="warn">videocam</mat-icon>
+        </button>
+        <button mat-button (click)="addPost()">
+            {{ 'createPost' | translate }}
+        </button>
+        <button mat-button>
+            {{ 'editProfile' | translate }}
+        </button>
     </div>
     <mat-divider></mat-divider>
     <app-post-grid [cols]="3" [posts]="posts"></app-post-grid>

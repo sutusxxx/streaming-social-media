@@ -1,5 +1,5 @@
 <div class="notification-header">
-    <h2>Notifications</h2>
+    <h2>{{ 'notifications' | translate }}</h2>
 </div>
 <div class="notifcation-container">
     <div class="notification-list" *ngIf="notifications && notifications.length; else noData">
@@ -12,6 +12,6 @@
         </div>
     </div>
     <ng-template #noData>
-        <p>Notifications are empty</p>
+        <p>{{ 'notificationsAreEmpty' | translate }}</p>
     </ng-template>
 </div>

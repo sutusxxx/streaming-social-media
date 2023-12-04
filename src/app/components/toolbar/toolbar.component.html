@@ -19,16 +19,16 @@
             </button>
         </button>
         <mat-menu #userMenu="matMenu">
-            <button mat-menu-item (click)="navigateToMessages()">Messages</button>
-            <button mat-menu-item (click)="navigateToUserProfile(user.uid)">Profile</button>
-            <button mat-menu-item (click)="navigateToSettings()">Settings</button>
-            <button mat-menu-item (click)="logout()">Logout</button>
+            <button mat-menu-item (click)="navigateToMessages()">{{ 'messages' | translate }}</button>
+            <button mat-menu-item (click)="navigateToUserProfile(user.uid)">{{ 'profile' | translate }}</button>
+            <button mat-menu-item (click)="navigateToSettings()">{{ 'settings' | translate }}</button>
+            <button mat-menu-item (click)="logout()">{{ 'logout' | translate }}</button>
         </mat-menu>
     </ng-container>
     <ng-template #loginButton>
         <button mat-button routerLink="login">
             <mat-icon>login</mat-icon>
-            Login
+            {{ 'login' | translate }}
         </button>
     </ng-template>
 </mat-toolbar>

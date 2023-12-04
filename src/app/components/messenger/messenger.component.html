@@ -2,7 +2,8 @@
     <div class="chat-list mat-elevation-z5">
         <div class="search-input">
             <mat-form-field>
-                <input matInput placeholder="Search" [formControl]="searchControl" [matAutocomplete]="users">
+                <input matInput [placeholder]="'search' | translate" [formControl]="searchControl"
+                    [matAutocomplete]="users">
             </mat-form-field>
             <mat-autocomplete #users="matAutocomplete">
                 <mat-option *ngFor="let user of users$ | async" (click)="createChat(user)">
@@ -36,7 +37,7 @@
         </div>
         <ng-template #noMessages>
             <div class="messages-header">
-                <h2>Messages</h2>
+                <h2>{{ 'messages' | translate }}</h2>
             </div>
         </ng-template>
         <mat-divider></mat-divider>
