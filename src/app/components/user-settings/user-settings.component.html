@@ -1,0 +1,42 @@
+<div class="user-settings-container marginT-30" *ngIf="settingsForm">
+    <div class="title">{{ 'userProfileSettings' | translate}}</div>
+    <form #form="ngForm" [formGroup]="settingsForm" class="user-settings-form">
+        <div class="readonly-field">
+            <div>{{ 'username' | translate }}: </div>
+            <div>{{ username }}</div>
+        </div>
+        <div class="readonly-field">
+            <div>{{ 'emailAddress' | translate }}: </div>
+            <div>{{ email }}</div>
+        </div>
+        <div class="field">
+            <label>{{ 'fullName' | translate }}:</label>
+            <input matInput [placeholder]="'fullName' | translate" formControlName="fullName">
+        </div>
+        <div class="field">
+            <label>{{ 'chooseYourGender' | translate}}:</label>
+            <mat-select>
+                <mat-option *ngFor="let gender of genders" [value]="gender">
+                    {{ gender | translate }}
+                </mat-option>
+            </mat-select>
+        </div>
+        <mat-form-field>
+            <mat-label>{{ 'dateOfBirth' | translate }}</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]=picker></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div class="center marginT-10">
+            <button class="primary-btn w100" mat-raised-button type="submit">
+                {{ 'save' | translate }}
+            </button>
+        </div>
+        <div class="center marginT-10">
+            <button class="w100" mat-button>
+                {{ 'back' | translate }}
+            </button>
+        </div>
+    </form>
+</div>

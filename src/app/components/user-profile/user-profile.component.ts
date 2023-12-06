@@ -246,6 +246,9 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		this.dialog.open(PostDetailsComponent, { data: post });
 	}
 
+	navigateToUserSettings(): void {
+		this.router.navigate([PATH.USER_SETTINGS]);
+	}
 
 	private reloadPosts(): void {
 		const userId: string = this.route.snapshot.queryParams['id'];

@@ -1,0 +1,48 @@
+.user-settings-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    justify-content: center;
+    margin: auto;
+    background: none;
+    padding: 48px;
+    border-radius: 16px;
+}
+
+.user-settings-container {
+    margin: 50px;
+}
+
+.readonly-field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.readonly-field>div:first-child {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 350;
+}
+
+.readonly-field>div:last-child {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 500;
+}
+
+.field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 350;
+}
+
+.field>input {
+    width: 50%;
+    height: 35px;
+    border: 1px solid rgb(198, 198, 198);
+    border-radius: 5px;
+    padding: 5px;
+}

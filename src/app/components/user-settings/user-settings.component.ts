@@ -8,11 +8,11 @@ import { passwordValidator } from 'src/app/validators/password-validator';
 import { takeUntil } from 'rxjs';
 
 @Component({
-	selector: 'app-settings',
-	templateUrl: './settings.component.html',
-	styleUrls: ['./settings.component.css']
+	selector: 'app-user-settings',
+	templateUrl: './user-settings.component.html',
+	styleUrls: ['./user-settings.component.css']
 })
-export class SettingsComponent extends BaseComponent implements OnInit {
+export class UserSettingsComponent extends BaseComponent implements OnInit {
 	settingsForm: FormGroup | null = null;
 	email: string | null = null;
 	username: string | null = null;
@@ -36,8 +36,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 			.subscribe(user => {
 				this.settingsForm = new FormGroup({
 					fullName: new FormControl(user?.fullName),
-					password: new FormControl('', Validators.required),
-					confirmPassword: new FormControl('', Validators.required),
 					gender: new FormControl(user?.gender),
 					dateOfBirth: new FormControl(user?.dateOfBirth)
 				}, { validators: passwordValidator() });

@@ -58,6 +58,8 @@ export const hungarian = {
         createPost: 'Bejegyzés létrehozása',
         editProfile: 'Profil szerkesztése',
         follow: 'Követés',
-        Unfollow: 'Követés leállítása'
+        unfollow: 'Követés leállítása',
+        userProfileSettings: 'Profil szerkesztése',
+        back: 'Vissza'
     }
 }

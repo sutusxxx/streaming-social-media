@@ -7,5 +7,6 @@ export const PATH = {
     PROFILE: '/profile',
     REGISTRATION: '/registration',
     ROOT: '',
-    SETTINGS: '/settings'
+    SETTINGS: '/settings',
+    USER_SETTINGS: '/user-settings'
 }

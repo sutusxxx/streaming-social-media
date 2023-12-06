@@ -60,8 +60,9 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ScrollableDirective } from './directives/scrollable.directive';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { CommentPreviewComponent } from './components/comment-preview/comment-preview.component';
-import { SettingsComponent } from './components/settings/settings.component';
+import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
 	declarations: [
@@ -93,7 +94,7 @@ import { TranslateModule } from '@ngx-translate/core';
 		ScrollableDirective,
 		LoadingSpinnerComponent,
 		CommentPreviewComponent,
-		SettingsComponent
+		UserSettingsComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -121,6 +122,7 @@ import { TranslateModule } from '@ngx-translate/core';
 		MatGridListModule,
 		MatBadgeModule,
 		MatProgressBarModule,
+		MatExpansionModule,
 		InfiniteScrollModule,
 		TranslateModule.forRoot(),
 		provideFirebaseApp(() => initializeApp(environment.firebase)),

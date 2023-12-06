@@ -58,6 +58,8 @@ export const english = {
         createPost: 'Create Post',
         editProfile: 'Edit profile',
         follow: 'Follow',
-        Unfollow: 'Unfollow'
+        unfollow: 'Unfollow',
+        userProfileSettings: 'User profile settings',
+        back: 'Back'
     }
 }
