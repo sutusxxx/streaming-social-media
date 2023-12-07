@@ -1,20 +1,21 @@
+import { Timestamp } from 'firebase/firestore';
 import {
 	combineLatest,
 	concatMap,
 	from,
-	iif,
 	map,
 	Observable,
 	of,
 	Subscription,
-	switchMap,
 	take,
 	takeUntil,
-	tap,
 	throwError
 } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
+import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
+import { MessageKey } from 'src/app/interfaces/notification.interface';
 import { IPost } from 'src/app/interfaces/post.interface';
+import { IStory } from 'src/app/interfaces/story.interface';
 import { User } from 'src/app/models';
 
 import { Component, OnInit } from '@angular/core';
@@ -24,16 +25,13 @@ import { BaseComponent } from '@components/base/base.component';
 import { CreatePostDialogComponent } from '@components/create-post-dialog/create-post-dialog.component';
 import { FollowerDialogComponent } from '@components/follower-dialog/follower-dialog.component';
 import { PostDetailsComponent } from '@components/post-details/post-details.component';
+import { StoryPreviewComponent } from '@components/story-preview/story-preview.component';
 import { AuthService } from '@services/auth.service';
 import { FollowService } from '@services/follow.service';
 import { ImageUploadService } from '@services/image-upload.service';
 import { PostService } from '@services/post.service';
-import { UserService } from '@services/user.service';
-import { IStory } from 'src/app/interfaces/story.interface';
 import { StoryService } from '@services/story.service';
-import { StoryPreviewComponent } from '@components/story-preview/story-preview.component';
-import { Timestamp } from 'firebase/firestore';
-import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-user-profile',
@@ -54,7 +52,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	posts: IPost[] = [];
 	isLoading: boolean = false;
 
-	lastKey: Date | null = null;
+	lastElement: IPost | null = null;
 
 	followers: Subscription | null = null;
 	following: Subscription | null = null;
@@ -91,7 +89,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 				this.posts.push(...posts);
 
 				if (this.posts.length) {
-					this.lastKey = this.posts[this.posts.length - 1].timestamp;
+					this.lastElement = this.posts[this.posts.length - 1];
 				}
 				this.isLoading = false;
 			});
@@ -124,7 +122,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	}
 
 	async loadPosts(userId: string): Promise<void> {
-		if (this.lastKey) await this.loadNextBatch(userId, this.lastKey);
+		if (this.lastElement) await this.loadNextBatch(userId, this.lastElement);
 		else await this.initPosts(userId);
 	}
 
@@ -133,8 +131,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		await this.postService.loadPostsForUser(userId);
 	}
 
-	private async loadNextBatch(userId: string, lastKey: Date): Promise<void> {
-		await this.postService.loadPostsForUser(userId, lastKey);
+	private async loadNextBatch(userId: string, lastElement: IPost): Promise<void> {
+		await this.postService.loadPostsForUser(userId, lastElement);
 	}
 
 	addFollowersAndFollowingListeners(userId: string): void {
@@ -213,8 +211,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		return this.userService.currentUser$.pipe(
 			concatMap(user => {
 				if (!user) return throwError(() => 'Not Authenticated!');
-				const notificationMessage = `${user.displayName} started following you!`;
-				return this.userService.notifyUser(userId, notificationMessage);
+				const sender = user.displayName || '';
+				return this.userService.notifyUser(userId, MessageKey.FOLLOW, sender);
 			})
 		);
 	}

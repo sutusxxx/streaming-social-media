@@ -60,6 +60,9 @@ export const hungarian = {
         follow: 'Követés',
         unfollow: 'Követés leállítása',
         userProfileSettings: 'Profil szerkesztése',
-        back: 'Vissza'
+        back: 'Vissza',
+        liveNotification: '<b>{{from}}</b> élő videót indított!',
+        likeNotification: '<b>{{from}}</b> kedvelte a bejegyzésed!',
+        followNotification: '<b>{{from}}</b> elkezdett követni!'
     }
 }

@@ -60,6 +60,9 @@ export const english = {
         follow: 'Follow',
         unfollow: 'Unfollow',
         userProfileSettings: 'User profile settings',
-        back: 'Back'
+        back: 'Back',
+        liveNotification: '<b>{{from}}</b> is LIVE!',
+        likeNotification: '<b>{{from}}</b> liked your post!',
+        followNotification: '<b>{{from}}</b> started following you!'
     }
 }

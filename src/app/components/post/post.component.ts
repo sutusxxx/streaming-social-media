@@ -1,14 +1,15 @@
-import { concatMap, firstValueFrom, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
+import { firstValueFrom, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { PATH } from 'src/app/constants/path.constant';
+import { MessageKey } from 'src/app/interfaces/notification.interface';
 import { IPost } from 'src/app/interfaces/post.interface';
 import { User } from 'src/app/models';
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { PostDetailsComponent } from '@components/post-details/post-details.component';
 import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
-import { PostDetailsComponent } from '@components/post-details/post-details.component';
 
 @Component({
 	selector: 'app-post',
@@ -79,8 +80,8 @@ export class PostComponent implements OnInit {
 	}
 
 	sendPostLikedNotification(currentUser: User, post: IPost): Observable<void> {
-		const notificationMessage = `${currentUser.displayName} liked your post.`;
-		return this.userService.notifyUser(post.userId, notificationMessage);
+		const sender = currentUser.displayName || '';
+		return this.userService.notifyUser(post.userId, MessageKey.LIKE, sender);
 	}
 
 	navigateToUserProfile(userId: string): void {

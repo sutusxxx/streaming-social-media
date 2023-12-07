@@ -4,8 +4,8 @@
 <div class="notifcation-container">
     <div class="notification-list" *ngIf="notifications && notifications.length; else noData">
         <div class="list-item" *ngFor="let notification of notifications; let last = last">
-            <p mat-line>
-                {{notification.message}}
+            <p mat-line [innerHTML]>
+                <span [innerHTML]="notification.messageKey | translate: { from: notification.from }"></span>
                 <span class="notification-date">{{ notification.date | pastTime }}</span>
             </p>
             <mat-divider *ngIf="!last"></mat-divider>
