@@ -7,6 +7,7 @@ import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 import { INotification } from 'src/app/interfaces/notification.interface';
 import { BaseComponent } from '@components/base/base.component';
+import { RouterHelper } from 'src/app/helpers/router.helper';
 
 @Component({
 	selector: 'app-toolbar',
@@ -55,7 +56,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit {
 	}
 
 	navigateToUserProfile(userId: string): void {
-		this.router.navigate([PATH.PROFILE], { queryParams: { id: userId } });
+		RouterHelper.navigateToUserProfile(userId, this.router);
 	}
 
 	navigateToSettings(): void {

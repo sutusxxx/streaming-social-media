@@ -1,0 +1,29 @@
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    justify-content: center;
+    margin: auto;
+    background: none;
+    padding: 48px;
+    border-radius: 16px;
+}
+
+.settings-container>mat-accordion {
+    width: 50%;
+}
+
+.settings {
+    margin: 50px 0;
+}
+
+.settings>label {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: large;
+}
+
+@media (max-width: 1000px) {
+    .settings-container>mat-accordion {
+        width: 100%;
+    }
+}

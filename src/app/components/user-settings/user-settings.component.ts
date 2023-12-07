@@ -6,6 +6,8 @@ import { PATH } from 'src/app/constants/path.constant';
 import { passwordValidator } from 'src/app/validators/password-validator';
 
 import { takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
+import { RouterHelper } from 'src/app/helpers/router.helper';
 
 @Component({
 	selector: 'app-user-settings',
@@ -14,6 +16,8 @@ import { takeUntil } from 'rxjs';
 })
 export class UserSettingsComponent extends BaseComponent implements OnInit {
 	settingsForm: FormGroup | null = null;
+
+	id: string | null = null;
 	email: string | null = null;
 	username: string | null = null;
 
@@ -25,7 +29,8 @@ export class UserSettingsComponent extends BaseComponent implements OnInit {
 	PATH = PATH;
 
 	constructor(
-		private readonly userService: UserService
+		private readonly userService: UserService,
+		private readonly router: Router
 	) {
 		super();
 	}
@@ -39,9 +44,14 @@ export class UserSettingsComponent extends BaseComponent implements OnInit {
 					gender: new FormControl(user?.gender),
 					dateOfBirth: new FormControl(user?.dateOfBirth)
 				}, { validators: passwordValidator() });
+				this.id = user?.uid || null;
 				this.email = user?.email || null;
 				this.username = user?.displayName || null;
 			});
+	}
+
+	navigateToUserProfile(): void {
+		if (this.id) RouterHelper.navigateToUserProfile(this.id, this.router);
 	}
 
 	get fullName() {

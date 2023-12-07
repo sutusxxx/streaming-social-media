@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
 import { SearchService } from '@services/search.service';
 import { Observable, Subject, combineLatest, takeUntil } from "rxjs";
+import { RouterHelper } from 'src/app/helpers/router.helper';
 import { User } from 'src/app/models';
 
 @Component({
@@ -39,6 +40,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
 	}
 
 	selectUser(userId: string): void {
-		this.router.navigate(['/profile'], { queryParams: { id: userId } });
+		RouterHelper.navigateToUserProfile(userId, this.router);
 	}
 }

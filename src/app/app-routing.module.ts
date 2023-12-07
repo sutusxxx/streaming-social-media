@@ -9,6 +9,7 @@ import { UserSettingsComponent } from '@components/user-settings/user-settings.c
 import { RoomComponent } from '@components/stream/room/room.component';
 import { ViewRoomComponent } from '@components/stream/view-room/view-room.component';
 import { UserProfileComponent } from '@components/user-profile/user-profile.component';
+import { SettingsComponent } from '@components/settings/settings.component';
 
 const redirectToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectToHome = () => redirectLoggedInTo(['home']);
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'registration', component: RegistrationComponent, ...canActivate(redirectToHome) },
   { path: 'profile', component: UserProfileComponent, ...canActivate(redirectToLogin) },
   { path: 'user-settings', component: UserSettingsComponent, ...canActivate(redirectToLogin) },
+  { path: 'settings', component: SettingsComponent, ...canActivate(redirectToLogin) },
   { path: 'messages', component: MessengerComponent, ...canActivate(redirectToLogin) },
   { path: 'broadcast', component: RoomComponent, ...canActivate(redirectToLogin) },
   { path: 'live', component: ViewRoomComponent, ...canActivate(redirectToLogin) },

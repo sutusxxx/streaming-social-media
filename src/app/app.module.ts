@@ -63,6 +63,8 @@ import { CommentPreviewComponent } from './components/comment-preview/comment-pr
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SettingsComponent } from './components/settings/settings.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
 	declarations: [
@@ -94,7 +96,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 		ScrollableDirective,
 		LoadingSpinnerComponent,
 		CommentPreviewComponent,
-		UserSettingsComponent
+		UserSettingsComponent,
+		SettingsComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -124,6 +127,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 		MatProgressBarModule,
 		MatExpansionModule,
 		InfiniteScrollModule,
+		MatSlideToggleModule,
 		TranslateModule.forRoot(),
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
