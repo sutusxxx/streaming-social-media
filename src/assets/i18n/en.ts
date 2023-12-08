@@ -63,6 +63,8 @@ export const english = {
         back: 'Back',
         liveNotification: '<b>{{from}}</b> is LIVE!',
         likeNotification: '<b>{{from}}</b> liked your post!',
-        followNotification: '<b>{{from}}</b> started following you!'
+        followNotification: '<b>{{from}}</b> started following you!',
+        en: 'English',
+        hu: 'Hungarian'
     }
 }

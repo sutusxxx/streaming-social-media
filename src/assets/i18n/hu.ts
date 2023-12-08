@@ -63,6 +63,8 @@ export const hungarian = {
         back: 'Vissza',
         liveNotification: '<b>{{from}}</b> élő videót indított!',
         likeNotification: '<b>{{from}}</b> kedvelte a bejegyzésed!',
-        followNotification: '<b>{{from}}</b> elkezdett követni!'
+        followNotification: '<b>{{from}}</b> elkezdett követni!',
+        en: 'Angol',
+        hu: 'Magyar'
     }
 }

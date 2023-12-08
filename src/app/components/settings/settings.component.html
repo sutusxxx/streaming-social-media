@@ -6,6 +6,16 @@
         </div>
     </div>
     <div class="settings">
+        <label>Nyelv:</label>
+        <div class="field">
+            <mat-select [(ngModel)]="selectedLanguage">
+                <mat-option *ngFor="let language of languages" [value]="language">
+                    {{ language | translate }}
+                </mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <div class="settings">
         <label>Jelszó módosítása:</label>
         <div class="field">
             <label>Jelenlegi jelszó:</label>
