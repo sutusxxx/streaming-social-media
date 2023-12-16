@@ -2,7 +2,7 @@
     <div *ngIf="isForgotPasswordEmailSent" class="info">
         {{ 'passwordResetEmailSent' | translate }} {{ forgotPasswordEmail }}
     </div>
-    <div class="title">{{ 'welcome' | translate}}</div>
+    <div class="title">{{ 'welcome' | translate}}!</div>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
         <div *ngIf="loginForm.errors?.['userNotFound']" class="error">
             {{ 'loginFailed' | translate }}
@@ -32,7 +32,7 @@
                 {{ 'login' | translate }}
             </button>
         </div>
-        <span class="center marginT-5"><a class="link" (click)="openForgotPasswordDialog()">
+        <span class="center marginT-10"><a class="link" (click)="openForgotPasswordDialog()">
                 {{ 'forgotPassword' | translate }}
             </a></span>
         <div class="center marginT-10">

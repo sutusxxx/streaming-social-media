@@ -5,10 +5,10 @@ import { NavigationStart, Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationLoaderService } from '@services/translation-loader.service';
-import { LanguageKeyEnum } from './enums/language-key.enum';
 
-import { hungarian } from '../assets/i18n/hu';
 import { english } from '../assets/i18n/en';
+import { hungarian } from '../assets/i18n/hu';
+import { LanguageKeyEnum } from './enums/language-key.enum';
 
 @Component({
 	selector: 'app-root',

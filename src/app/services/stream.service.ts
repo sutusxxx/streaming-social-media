@@ -1,39 +1,40 @@
 import {
-    collection,
-    CollectionReference,
-    doc,
-    DocumentData,
-    DocumentReference,
-    onSnapshot,
-    orderBy,
-    query,
-    setDoc,
-    Timestamp,
-    updateDoc
+	collection,
+	CollectionReference,
+	doc,
+	DocumentData,
+	DocumentReference,
+	onSnapshot,
+	orderBy,
+	query,
+	setDoc,
+	Timestamp,
+	updateDoc
 } from 'firebase/firestore';
 import {
-    catchError,
-    combineLatest,
-    concatMap,
-    EMPTY,
-    forkJoin,
-    Observable,
-    of,
-    take,
-    throwError
+	catchError,
+	combineLatest,
+	concatMap,
+	EMPTY,
+	forkJoin,
+	Observable,
+	of,
+	take,
+	throwError
 } from 'rxjs';
 import { servers } from 'src/app/configuration/server';
+import { MessageKey } from 'src/app/interfaces/notification.interface';
 import { IRoom } from 'src/app/interfaces/room.interface';
 import { User } from 'src/app/models';
 
 import { Injectable } from '@angular/core';
 import {
-    addDoc,
-    collectionData,
-    deleteDoc,
-    docData,
-    Firestore,
-    getDocs
+	addDoc,
+	collectionData,
+	deleteDoc,
+	docData,
+	Firestore,
+	getDocs
 } from '@angular/fire/firestore';
 import { FollowService } from '@services/follow.service';
 import { UserService } from '@services/user.service';
@@ -273,8 +274,8 @@ export class StreamService {
 			}),
 			concatMap(([user, followers]) => {
 				if (!followers || !followers.length) return EMPTY;
-				const notificationMessage = `${user.displayName} is LIVE!`
-				return forkJoin(followers.map((followerId: string) => this.userService.notifyUser(followerId, notificationMessage)))
+				const sender = user.displayName || '';
+				return forkJoin(followers.map((followerId: string) => this.userService.notifyUser(followerId, MessageKey.LIVE, sender)))
 			})
 		);
 	}

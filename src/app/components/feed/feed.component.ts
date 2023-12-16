@@ -1,15 +1,12 @@
-import { combineLatest, concatMap, finalize, firstValueFrom, from, Observable, of, switchMap, takeUntil, tap, throwError } from 'rxjs';
+import { takeUntil, tap } from 'rxjs';
+import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
 import { IPost } from 'src/app/interfaces/post.interface';
 
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BaseComponent } from '@components/base/base.component';
 import { CreatePostDialogComponent } from '@components/create-post-dialog/create-post-dialog.component';
-import { AuthService } from '@services/auth.service';
-import { FollowService } from '@services/follow.service';
 import { PostService } from '@services/post.service';
-import { Router } from '@angular/router';
-import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
 
 @Component({
 	selector: 'app-feed',
@@ -18,7 +15,7 @@ import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.consta
 })
 export class FeedComponent extends BaseComponent implements OnInit {
 	posts: IPost[] = [];
-	lastKey: Date | null = null;
+	lastElement: IPost | null = null;
 
 	isLoading: boolean = false;
 
@@ -39,7 +36,7 @@ export class FeedComponent extends BaseComponent implements OnInit {
 				this.posts.push(...posts);
 
 				if (this.posts.length) {
-					this.lastKey = this.posts[this.posts.length - 1].timestamp;
+					this.lastElement = this.posts[this.posts.length - 1];
 				}
 			});
 		this.loadPosts();
@@ -50,7 +47,7 @@ export class FeedComponent extends BaseComponent implements OnInit {
 	}
 
 	async loadPosts(): Promise<void> {
-		if (this.lastKey) await this.loadNextBatch(this.lastKey);
+		if (this.lastElement) await this.loadNextBatch(this.lastElement);
 		else await this.initPosts();
 	}
 
@@ -68,7 +65,7 @@ export class FeedComponent extends BaseComponent implements OnInit {
 		await this.postService.loadFeedPosts();
 	}
 
-	private async loadNextBatch(lastKey: Date): Promise<void> {
-		await this.postService.loadFeedPosts(lastKey);
+	private async loadNextBatch(lastElement: IPost): Promise<void> {
+		await this.postService.loadFeedPosts(lastElement);
 	}
 }

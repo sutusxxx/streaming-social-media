@@ -1,12 +1,10 @@
-import { Observable, combineLatest, concatMap, of, takeUntil, tap } from 'rxjs';
+import { takeUntil, tap } from 'rxjs';
+import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
 import { IPost } from 'src/app/interfaces/post.interface';
 
 import { Component, OnInit } from '@angular/core';
-import { FollowService } from '@services/follow.service';
-import { PostService } from '@services/post.service';
-import { UserService } from '@services/user.service';
-import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
 import { BaseComponent } from '@components/base/base.component';
+import { PostService } from '@services/post.service';
 
 @Component({
 	selector: 'app-explorer',
@@ -15,7 +13,7 @@ import { BaseComponent } from '@components/base/base.component';
 })
 export class ExplorerComponent extends BaseComponent implements OnInit {
 	posts: IPost[] = [];
-	lastKey: Date | null = null;
+	lastElement: IPost | null = null;
 
 	isLoading: boolean = false;
 
@@ -33,14 +31,14 @@ export class ExplorerComponent extends BaseComponent implements OnInit {
 				this.posts.push(...posts);
 
 				if (this.posts.length) {
-					this.lastKey = this.posts[this.posts.length - 1].timestamp;
+					this.lastElement = this.posts[this.posts.length - 1];
 				}
 			});
 		this.loadPosts();
 	}
 
 	async loadPosts(): Promise<void> {
-		if (this.lastKey) await this.loadNextBatch(this.lastKey);
+		if (this.lastElement) await this.loadNextBatch(this.lastElement);
 		else await this.initPosts();
 	}
 
@@ -58,7 +56,7 @@ export class ExplorerComponent extends BaseComponent implements OnInit {
 		await this.postService.loadPosts();
 	}
 
-	private async loadNextBatch(lastKey: Date): Promise<void> {
-		await this.postService.loadPosts(lastKey);
+	private async loadNextBatch(lastElement: IPost): Promise<void> {
+		await this.postService.loadPosts(lastElement);
 	}
 }

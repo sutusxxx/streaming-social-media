@@ -1,5 +1,6 @@
+import { limit, runTransaction } from 'firebase/firestore';
 import { catchError, concatMap, from, Observable, of, switchMap, throwError } from 'rxjs';
-import { INotification } from 'src/app/interfaces/notification.interface';
+import { INotification, MessageKey } from 'src/app/interfaces/notification.interface';
 
 import { Injectable } from '@angular/core';
 import {
@@ -26,7 +27,6 @@ import {
 import { IUser } from '../interfaces';
 import { User } from '../models';
 import { AuthService } from './auth.service';
-import { limit, runTransaction } from 'firebase/firestore';
 
 @Injectable({
     providedIn: 'root'
@@ -90,10 +90,11 @@ export class UserService {
         return collectionData(query(ref, where(documentId(), 'in', userIds))) as Observable<User[]>;
     }
 
-    notifyUser(userId: string, text: string): Observable<any> {
+    notifyUser(userId: string, messageKey: MessageKey, sender: string): Observable<any> {
         const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users', userId, 'notifications');
         return from(addDoc(ref, {
-            message: text,
+            from: sender,
+            messageKey,
             read: false,
             date: Timestamp.fromDate(new Date())
         }));

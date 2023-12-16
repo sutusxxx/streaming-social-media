@@ -1,5 +1,15 @@
 <div class="settings-container">
     <div class="settings">
+        <label>Nyelv:</label>
+        <div class="field">
+            <mat-select [(ngModel)]="selectedLanguage">
+                <mat-option *ngFor="let language of languages" [value]="language">
+                    {{ language | translate }}
+                </mat-option>
+            </mat-select>
+        </div>
+    </div>
+    <div class="settings">
         <form #form="ngForm" [formGroup]="passwordForm" (ngSubmit)="savePassword()">
             <div class="title">{{ 'changePasswordTitle' | translate }}:</div>
             <div class="field">

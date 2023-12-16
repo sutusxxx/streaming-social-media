@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '@services/auth.service';
+import { LanguageKeyEnum } from 'src/app/enums/language-key.enum';
 import { passwordValidator } from 'src/app/validators/password-validator';
 
 @Component({
@@ -14,9 +16,16 @@ export class SettingsComponent implements OnInit {
 		confirmPassword: new FormControl('', Validators.required)
 	}, { validators: passwordValidator() });
 
-	constructor(private readonly authService: AuthService) { }
+	selectedLanguage: LanguageKeyEnum | null = null;
+	languages: LanguageKeyEnum[] = [LanguageKeyEnum.EN, LanguageKeyEnum.HU]
+
+	constructor(
+		private readonly authService: AuthService,
+		private translateService: TranslateService
+	) { }
 
 	ngOnInit(): void {
+		this.selectedLanguage = this.translateService.getDefaultLang() as LanguageKeyEnum;
 	}
 
 	savePassword(): void {

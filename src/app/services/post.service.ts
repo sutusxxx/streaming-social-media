@@ -1,4 +1,13 @@
-import { BehaviorSubject, combineLatest, concatMap, firstValueFrom, from, Observable, of, Subject, switchMap, take } from 'rxjs';
+import {
+	combineLatest,
+	concatMap,
+	firstValueFrom,
+	from,
+	Observable,
+	of,
+	Subject,
+	switchMap
+} from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Injectable } from '@angular/core';
@@ -19,7 +28,6 @@ import {
 	Query,
 	query,
 	startAfter,
-	startAt,
 	Timestamp,
 	updateDoc,
 	where
@@ -27,9 +35,9 @@ import {
 
 import { IComment } from '../interfaces/comment.interface';
 import { IPost } from '../interfaces/post.interface';
+import { FollowService } from './follow.service';
 import { ImageUploadService } from './image-upload.service';
 import { UserService } from './user.service';
-import { FollowService } from './follow.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -86,20 +94,20 @@ export class PostService {
 		);
 	}
 
-	async loadPosts(lastKey?: Date): Promise<void> {
+	async loadPosts(lastElement?: IPost): Promise<void> {
 		const userIds = await firstValueFrom(this.getUserIds());
-		const posts = await this.getPosts(userIds, false, 12, lastKey);
+		const posts = await this.getPosts(userIds, false, 9, lastElement);
 		this.postsLoadedSubject.next(posts);
 	}
 
-	async loadFeedPosts(lastKey?: Date): Promise<void> {
+	async loadFeedPosts(lastElement?: IPost): Promise<void> {
 		const userIds = await firstValueFrom(this.getUserIds());
-		const posts = await this.getPosts(userIds, true, 3, lastKey);
+		const posts = await this.getPosts(userIds, true, 3, lastElement);
 		this.feedPostsLoadedSubject.next(posts);
 	}
 
-	async loadPostsForUser(userId: string, lastKey?: Date): Promise<void> {
-		const posts = await this.getPosts([userId], true, 6, lastKey);
+	async loadPostsForUser(userId: string, lastElement?: IPost): Promise<void> {
+		const posts = await this.getPosts([userId], true, 6, lastElement);
 		this.userPostsLoadedSubject.next(posts);
 	}
 
@@ -186,8 +194,8 @@ export class PostService {
 		);
 	}
 
-	private async getPosts(userIds: string[], include: boolean, count: number, lastKey?: Date): Promise<IPost[]> {
-		const query = this.createQuery(userIds, include, count, lastKey);
+	private async getPosts(userIds: string[], include: boolean, count: number, lastElement?: IPost): Promise<IPost[]> {
+		const query = this.createQuery(userIds, include, count, lastElement);
 		const snapshot = await getDocs(query);
 		const result: IPost[] = []
 		snapshot.docs.forEach(doc => {
@@ -198,16 +206,16 @@ export class PostService {
 		return result;
 	}
 
-	private createQuery(userIds: string[], include: boolean, count: number, lastKey?: Date): Query<DocumentData> {
+	private createQuery(userIds: string[], include: boolean, count: number, lastElement?: IPost): Query<DocumentData> {
 		const ref = collection(this.firestore, 'posts');
 
 		if (include) {
-			return lastKey
-				? query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), startAfter(lastKey), limit(count))
+			return lastElement
+				? query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), startAfter(lastElement.timestamp), limit(count))
 				: query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), limit(count));
 		} else {
-			return lastKey
-				? query(ref, where('userId', 'not-in', userIds), orderBy('userId', 'desc'), orderBy('timestamp', 'desc'), startAfter(lastKey), limit(count))
+			return lastElement
+				? query(ref, where('userId', 'not-in', userIds), orderBy('userId', 'desc'), orderBy('timestamp', 'desc'), startAfter(lastElement.userId, lastElement.timestamp), limit(count))
 				: query(ref, where('userId', 'not-in', userIds), orderBy('userId', 'desc'), orderBy('timestamp', 'desc'), limit(count));
 		}
 	}
