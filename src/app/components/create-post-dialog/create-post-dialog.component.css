@@ -25,3 +25,9 @@ textarea {
     border-radius: 1em;
     border: 1px dashed gray;
 }
+
+@media (max-width: 992px) {
+    textarea {
+        width: 200px;
+    }
+}
