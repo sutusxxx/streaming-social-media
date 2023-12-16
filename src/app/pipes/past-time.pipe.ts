@@ -1,10 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Timestamp } from 'firebase/firestore';
 
 @Pipe({
 	name: 'pastTime'
 })
 export class PastTimePipe implements PipeTransform {
+
+	constructor(private readonly translateService: TranslateService) {
+	}
 
 	transform(value: Timestamp | undefined): string | undefined {
 		if (!value) return;
@@ -26,12 +30,13 @@ export class PastTimePipe implements PipeTransform {
 				counter = Math.floor(seconds / intervals[interval]);
 
 				if (counter > 0) {
-					return `${counter}${interval.charAt(0)}`;
+					const translatedInterval = this.translateService.instant(interval);
+					return `${counter}${translatedInterval.charAt(0)}`;
 				}
 			}
 		}
 
-		return 'Just now';
+		return this.translateService.instant('justNow');
 	}
 
 }

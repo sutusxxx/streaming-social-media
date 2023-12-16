@@ -66,6 +66,14 @@ export const hungarian = {
 		likeNotification: '<b>{{from}}</b> kedvelte a bejegyzésed!',
 		followNotification: '<b>{{from}}</b> elkezdett követni!',
 		en: 'Angol',
-		hu: 'Magyar'
+		hu: 'Magyar',
+		language: 'Nyelv',
+		year: 'év',
+		month: 'hónap',
+		week: 'hét',
+		day: 'nap',
+		hour: 'óra',
+		minute: 'perc',
+		justNow: 'Épp most'
 	}
 }

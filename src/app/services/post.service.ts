@@ -96,7 +96,7 @@ export class PostService {
 
 	async loadPosts(lastElement?: IPost): Promise<void> {
 		const userIds = await firstValueFrom(this.getUserIds());
-		const posts = await this.getPosts(userIds, false, 9, lastElement);
+		const posts = await this.getPosts(userIds, false, 15, lastElement);
 		this.postsLoadedSubject.next(posts);
 	}
 

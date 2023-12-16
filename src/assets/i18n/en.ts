@@ -49,7 +49,7 @@ export const english = {
 		profile: 'Profile',
 		settings: 'Settings',
 		logout: 'Logout',
-		changeProfilePicture: 'ChangeProfilePicture',
+		changeProfilePicture: 'Change profile picture',
 		addStory: 'Add Story',
 		followers: 'Followers',
 		following: 'Following',
@@ -66,6 +66,14 @@ export const english = {
 		likeNotification: '<b>{{from}}</b> liked your post!',
 		followNotification: '<b>{{from}}</b> started following you!',
 		en: 'English',
-		hu: 'Hungarian'
+		hu: 'Hungarian',
+		language: 'Language',
+		year: 'year',
+		month: 'month',
+		week: 'week',
+		day: 'day',
+		hour: 'hour',
+		minute: 'min',
+		justNow: 'Just now'
 	}
 }

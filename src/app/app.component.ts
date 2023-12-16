@@ -9,6 +9,7 @@ import { TranslationLoaderService } from '@services/translation-loader.service';
 import { english } from '../assets/i18n/en';
 import { hungarian } from '../assets/i18n/hu';
 import { LanguageKeyEnum } from './enums/language-key.enum';
+import { StorageService } from '@services/storage.service';
 
 @Component({
 	selector: 'app-root',
@@ -19,13 +20,24 @@ export class AppComponent extends BaseComponent implements OnInit {
 	constructor(
 		private readonly router: Router,
 		private readonly translateService: TranslateService,
-		private readonly translationLoaderService: TranslationLoaderService
+		private readonly translationLoaderService: TranslationLoaderService,
+		private readonly storageService: StorageService
 	) {
 		super();
 		this.translateService.addLangs([LanguageKeyEnum.EN, LanguageKeyEnum.HU]);
 		this.translationLoaderService.loadTranslations(english, hungarian);
 		this.translateService.setDefaultLang(LanguageKeyEnum.HU);
-		this.setLanguageByNavigator();
+		this.setLanguage();
+	}
+
+	setLanguage(): void {
+		const storedLanguage = this.storageService.getItem('language');
+
+		if (storedLanguage) {
+			this.translateService.setDefaultLang(storedLanguage);
+		} else {
+			this.setLanguageByNavigator();
+		}
 	}
 
 	setLanguageByNavigator(): void {
