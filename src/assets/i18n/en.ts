@@ -60,6 +60,7 @@ export const english = {
         follow: 'Follow',
         unfollow: 'Unfollow',
         userProfileSettings: 'User profile settings',
-        back: 'Back'
+        back: 'Back',
+        changePasswordTitle: 'Change password'
     }
 }

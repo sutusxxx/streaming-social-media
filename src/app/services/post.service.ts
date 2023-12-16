@@ -88,7 +88,7 @@ export class PostService {
 
 	async loadPosts(lastKey?: Date): Promise<void> {
 		const userIds = await firstValueFrom(this.getUserIds());
-		const posts = await this.getPosts(userIds, false, 9, lastKey);
+		const posts = await this.getPosts(userIds, false, 12, lastKey);
 		this.postsLoadedSubject.next(posts);
 	}
 

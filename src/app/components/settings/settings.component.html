@@ -1,23 +1,32 @@
 <div class="settings-container">
     <div class="settings">
-        <label>Adatvédelmi beállítások:</label>
-        <div class="field">
-            <mat-slide-toggle>Privát profil</mat-slide-toggle>
-        </div>
-    </div>
-    <div class="settings">
-        <label>Jelszó módosítása:</label>
-        <div class="field">
-            <label>Jelenlegi jelszó:</label>
-            <input type="password">
-        </div>
-        <div class="field">
-            <label>Új jelszó:</label>
-            <input type="password">
-        </div>
-        <div class="field">
-            <label>Új jelszó megerősítése</label>
-            <input type="password">
-        </div>
+        <form #form="ngForm" [formGroup]="passwordForm" (ngSubmit)="savePassword()">
+            <div class="title">{{ 'changePasswordTitle' | translate }}:</div>
+            <div class="field">
+                <mat-form-field>
+                    <input matInput [placeholder]="'password' | translate" type="password" formControlName="password">
+                    <mat-error *ngIf="password?.errors?.['required']">
+                        {{ 'requiredField' | translate }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="field">
+                <mat-form-field>
+                    <input matInput [placeholder]="'confirmPassword' | translate" type="password"
+                        formControlName="confirmPassword">
+                    <mat-error *ngIf="password?.errors?.['required']">
+                        {{ 'requiredField' | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="form?.submitted && passwordForm?.errors?.['passwordsMismatch']">
+                        {{ 'passwordMismatchError' | translate }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="center marginT-10">
+                <button class="primary-btn" mat-raised-button type="submit">
+                    {{ 'save' | translate }}
+                </button>
+            </div>
+        </form>
     </div>
 </div>

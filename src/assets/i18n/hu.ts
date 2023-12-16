@@ -60,6 +60,7 @@ export const hungarian = {
         follow: 'Követés',
         unfollow: 'Követés leállítása',
         userProfileSettings: 'Profil szerkesztése',
-        back: 'Vissza'
+        back: 'Vissza',
+        changePasswordTitle: 'Jelszó módosítása',
     }
 }

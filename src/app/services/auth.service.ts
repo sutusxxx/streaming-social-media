@@ -1,4 +1,4 @@
-import { concatMap, from, Observable, of } from 'rxjs';
+import { concatMap, from, Observable, of, throwError } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import {
@@ -12,6 +12,7 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
     updateEmail,
+    updatePassword,
     updateProfile,
     UserCredential,
     UserInfo
@@ -49,6 +50,13 @@ export class AuthService {
                 return updateProfile(user, profileData);
             })
         );
+    }
+
+    updateUserPassword(newPassword: string): Observable<any> {
+        const user = this.auth.currentUser;
+        if (!user) return throwError(() => 'Not Authenticated!');
+
+        return from(updatePassword(user, newPassword));
     }
 
     resetPasswordByEmail(email: string): Observable<any> {

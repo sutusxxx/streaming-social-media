@@ -15,7 +15,7 @@
         </div>
         <div class="field">
             <label>{{ 'chooseYourGender' | translate}}:</label>
-            <mat-select>
+            <mat-select formControlName="gender">
                 <mat-option *ngFor="let gender of genders" [value]="gender">
                     {{ gender | translate }}
                 </mat-option>
@@ -23,13 +23,13 @@
         </div>
         <mat-form-field>
             <mat-label>{{ 'dateOfBirth' | translate }}</mat-label>
-            <input matInput [matDatepicker]="picker">
+            <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
             <mat-hint>MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]=picker></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <div class="center marginT-10">
-            <button class="primary-btn w100" mat-raised-button type="submit">
+            <button class="primary-btn w100" mat-raised-button (click)="saveUserSettings()">
                 {{ 'save' | translate }}
             </button>
         </div>

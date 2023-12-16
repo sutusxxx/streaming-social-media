@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseComponent } from '@components/base/base.component';
 import { UserService } from '@services/user.service';
 import { PATH } from 'src/app/constants/path.constant';
-import { passwordValidator } from 'src/app/validators/password-validator';
 
-import { takeUntil } from 'rxjs';
+import { EMPTY, switchMap, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { RouterHelper } from 'src/app/helpers/router.helper';
+import { User } from 'src/app/models';
 
 @Component({
 	selector: 'app-user-settings',
@@ -41,13 +41,30 @@ export class UserSettingsComponent extends BaseComponent implements OnInit {
 			.subscribe(user => {
 				this.settingsForm = new FormGroup({
 					fullName: new FormControl(user?.fullName),
-					gender: new FormControl(user?.gender),
-					dateOfBirth: new FormControl(user?.dateOfBirth)
-				}, { validators: passwordValidator() });
+					gender: new FormControl(user?.gender)
+				});
 				this.id = user?.uid || null;
 				this.email = user?.email || null;
 				this.username = user?.displayName || null;
 			});
+	}
+
+	saveUserSettings(): void {
+		this.userService.currentUser$
+			.pipe(
+				take(1),
+				switchMap(user => {
+					if (!user || !this.settingsForm) return EMPTY;
+					const userData = this.settingsForm.value;
+					const updatedUser = new User(user.uid, {
+						displayName: user.displayName,
+						email: user.email,
+						fullName: userData.fullName,
+						gender: userData.gender,
+						dateOfBirth: userData.dateOfBirth
+					});
+					return this.userService.saveUser(updatedUser);
+				})).subscribe(() => this.navigateToUserProfile());
 	}
 
 	navigateToUserProfile(): void {
