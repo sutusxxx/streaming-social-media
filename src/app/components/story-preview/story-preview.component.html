@@ -1,5 +1,9 @@
 <div mat-dialog-content class="dialog-container" *ngIf="data">
     <mat-progress-bar class="progress-bar" mode="determinate" [value]="progress" color="warn"></mat-progress-bar>
+    <div class="story-info">
+        <span>{{ user?.displayName }}</span>
+        <span>{{ data[currentIndex].date | pastTime }}</span>
+    </div>
     <img [src]="data[currentIndex].url" alt="Image" class="dialog-image">
     <div *ngIf="data.length > 1" class="navigation">
         <button class="prev" mat-icon-button (click)="prev()"><mat-icon>keyboard_arrow_left</mat-icon></button>

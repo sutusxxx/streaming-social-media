@@ -1,8 +1,10 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BaseComponent } from '@components/base/base.component';
+import { UserService } from '@services/user.service';
 import { interval, takeUntil } from 'rxjs';
 import { IStory } from 'src/app/interfaces/story.interface';
+import { User } from 'src/app/models';
 
 @Component({
 	selector: 'app-story-preview',
@@ -13,10 +15,11 @@ import { IStory } from 'src/app/interfaces/story.interface';
 export class StoryPreviewComponent extends BaseComponent implements OnInit {
 	currentIndex: number = 0;
 	progress: number = 0;
-
+	user: User | null = null;
 	constructor(
 		public dialogRef: MatDialogRef<StoryPreviewComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: IStory[]
+		@Inject(MAT_DIALOG_DATA) public data: IStory[],
+		private readonly userService: UserService
 	) {
 		super();
 	}
@@ -26,6 +29,11 @@ export class StoryPreviewComponent extends BaseComponent implements OnInit {
 			this.progress++;
 			if (this.progress === 100) this.next();
 		});
+		this.userService.getUserById(this.data[0].userId)
+			.pipe(takeUntil(this._unsubscribeAll))
+			.subscribe(user => {
+				this.user = user;
+			});
 	}
 
 	next(): void {
