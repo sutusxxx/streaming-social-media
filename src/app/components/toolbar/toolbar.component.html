@@ -1,7 +1,5 @@
 <mat-toolbar>
     <span class="main-title" [routerLink]="[PATH.HOME]">Social Media App</span>
-    <span class="column-50"></span>
-    <span class="column-30"></span>
     <app-search *ngIf="currentUser$ | async"></app-search>
     <ng-container *ngIf="currentUser$ | async as user; else loginButton">
         <button mat-icon-button class="notification-icon" [matMenuTriggerFor]="notifications"
@@ -14,7 +12,9 @@
         <button mat-button>
             <button mat-button [matMenuTriggerFor]="userMenu">
                 <img class="avatar" [src]="user.photoURL ? user.photoURL : 'assets/images/user-placeholder.jpg'">
-                {{ user.displayName }}
+                <span class="username">
+                    {{ user.displayName }}
+                </span>
                 <mat-icon>expand_more</mat-icon>
             </button>
         </button>

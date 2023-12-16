@@ -53,6 +53,8 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 		tap(() => this.scrollToBottom())
 	);
 
+	showMessages: boolean = false;
+
 	readonly PATH = PATH;
 
 	constructor(
@@ -100,11 +102,14 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 	}
 
 	onScoll(event: any): void {
-		console.log(event);
 		this.isLoading = true;
 	}
 
-	navigateToUserProfile(selectedChat: IChat): void {
+	selectChat(): void {
+		this.showMessages = true;
+	}
 
+	goBack(): void {
+		this.showMessages = false;
 	}
 }

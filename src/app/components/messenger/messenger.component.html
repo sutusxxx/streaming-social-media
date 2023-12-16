@@ -31,8 +31,76 @@
     </div>
     <div class="messages mat-elevation-z5">
         <div class="messages-header" *ngIf="selectedChat$ | async as selectedChat; else noMessages">
-            <img (click)="navigateToUserProfile(selectedChat)"
-                [src]="selectedChat.chatPic ? selectedChat.chatPic : 'assets/images/user-placeholder.jpg'">
+            <img [src]="selectedChat.chatPic ? selectedChat.chatPic : 'assets/images/user-placeholder.jpg'">
+            <h2>{{ selectedChat.chatName }}</h2>
+        </div>
+        <ng-template #noMessages>
+            <div class="messages-header">
+                <h2>{{ 'messages' | translate }}</h2>
+            </div>
+        </ng-template>
+        <mat-divider></mat-divider>
+        <div class="chat-area" scrollable (scrollPosition)="onScoll($event)">
+            <ng-container *ngIf="currentUser$ | async as currentUser">
+                <div *ngFor="let message of (messages$ | async)?.slice()?.reverse()"
+                    [ngClass]="{ 'sender': message.senderId === currentUser.uid }" class="chat-bubble-container">
+                    <div class="chat-bubble">
+                        {{ message.text }}
+                        <span class="chat-date">
+                            {{ message.date | date }}
+                        </span>
+                    </div>
+                </div>
+                <div #endOfChat></div>
+            </ng-container>
+        </div>
+        <div class="input-area">
+            <mat-form-field appearance="outline">
+                <input matInput placeholder="Aa" [formControl]="messageControl" (keydown.enter)="sendMessage()">
+                <button *ngIf="messageControl.value" mat-icon-button matSuffix (click)="sendMessage()">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div class="messenger-mobile">
+    <div class="chat-list-mobile" [ngClass]="{ 'hidden': showMessages }">
+        <div class="search-input">
+            <mat-form-field appearance="outline">
+                <input matInput [placeholder]="'search' | translate" [formControl]="searchControl"
+                    [matAutocomplete]="users">
+            </mat-form-field>
+            <mat-autocomplete #users="matAutocomplete">
+                <mat-option *ngFor="let user of users$ | async" (click)="createChat(user)">
+                    {{ user?.displayName }}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
+        <mat-selection-list [multiple]="false" [formControl]="chatListControl">
+            <mat-divider></mat-divider>
+            <mat-list-option *ngFor="let chat of chats$ | async" [value]="chat.id" (click)="selectChat()">
+                <img matListAvatar [src]="chat.chatPic ? chat.chatPic : 'assets/images/user-placeholder.jpg'">
+                <p mat-line class="chat-title">
+                    <span class="chat-name">
+                        {{ chat.chatName }}
+                    </span>
+                    <span class="chat-date">
+                        {{ chat.lastMessageDate | date }}
+                    </span>
+                </p>
+                <p class="last-message" mat-line>
+                    {{ chat.lastMessage }}
+                </p>
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+    <div class="messages-mobile" [ngClass]="{ 'hidden': !showMessages }">
+        <div class="messages-header" *ngIf="selectedChat$ | async as selectedChat; else noMessages">
+            <button mat-icon-button (click)="goBack()">
+                <mat-icon>arrow_back_ios</mat-icon>
+            </button>
+            <img [src]="selectedChat.chatPic ? selectedChat.chatPic : 'assets/images/user-placeholder.jpg'">
             <h2>{{ selectedChat.chatName }}</h2>
         </div>
         <ng-template #noMessages>

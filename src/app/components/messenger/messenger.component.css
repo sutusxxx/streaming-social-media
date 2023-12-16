@@ -3,11 +3,22 @@
     height: calc(100vh - 70px);
 }
 
+.messenger-mobile {
+    display: none;
+}
+
 .chat-list {
     width: 30%;
     margin: 16px;
     background: #e1e1e1;
     border-radius: 16px;
+}
+
+.chat-list-mobile {
+    width: 100%;
+    margin: 0 5px;
+    background: #f5f5f5;
+    border-radius: 5px;
 }
 
 .messages {
@@ -16,6 +27,17 @@
     border-radius: 16px;
     padding: 24px;
     background: rgba(255, 255, 255, 0.92);
+}
+
+.messages-mobile {
+    width: 100%;
+    margin: 5px;
+    border-radius: 5px;
+    background: #f5f5f5;
+}
+
+.hidden {
+    display: none;
 }
 
 .search-input {
@@ -113,4 +135,14 @@
 ::-webkit-scrollbar-track {
     margin-left: 100px;
     margin-right: 100px;
+}
+
+@media (max-width: 992px) {
+    .messenger {
+        display: none;
+    }
+
+    .messenger-mobile {
+        display: flex;
+    }
 }
