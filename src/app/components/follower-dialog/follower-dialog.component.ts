@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({
-	selector: 'app-follower-dialog',
+	selector: 'follower-dialog',
 	templateUrl: './follower-dialog.component.html',
 	styleUrls: ['./follower-dialog.component.css'],
 	encapsulation: ViewEncapsulation.None

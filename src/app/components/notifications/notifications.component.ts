@@ -3,7 +3,7 @@ import { INotification } from 'src/app/interfaces/notification.interface';
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'app-notifications',
+	selector: 'notifications',
 	templateUrl: './notifications.component.html',
 	styleUrls: ['./notifications.component.css']
 })

@@ -9,7 +9,7 @@ import { CreatePostDialogComponent } from '@components/create-post-dialog/create
 import { PostService } from '@services/post.service';
 
 @Component({
-	selector: 'app-feed',
+	selector: 'feed',
 	templateUrl: './feed.component.html',
 	styleUrls: ['./feed.component.css']
 })

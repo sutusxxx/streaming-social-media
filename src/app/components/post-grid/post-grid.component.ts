@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PostDetailsComponent } from '@components/post-details/post-details.component';
 
 @Component({
-	selector: 'app-post-grid',
+	selector: 'post-grid',
 	templateUrl: './post-grid.component.html',
 	styleUrls: ['./post-grid.component.css']
 })

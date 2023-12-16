@@ -10,7 +10,7 @@ import { RouterHelper } from 'src/app/helpers/router.helper';
 import { User } from 'src/app/models';
 
 @Component({
-	selector: 'app-user-settings',
+	selector: 'user-settings',
 	templateUrl: './user-settings.component.html',
 	styleUrls: ['./user-settings.component.css']
 })

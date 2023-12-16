@@ -10,7 +10,7 @@ import { BaseComponent } from '@components/base/base.component';
 import { RouterHelper } from 'src/app/helpers/router.helper';
 
 @Component({
-	selector: 'app-toolbar',
+	selector: 'toolbar',
 	templateUrl: './toolbar.component.html',
 	styleUrls: ['./toolbar.component.css']
 })

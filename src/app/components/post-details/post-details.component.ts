@@ -6,7 +6,7 @@ import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
 
 @Component({
-	selector: 'app-post-details',
+	selector: 'post-details',
 	templateUrl: './post-details.component.html',
 	styleUrls: ['./post-details.component.css'],
 	encapsulation: ViewEncapsulation.None

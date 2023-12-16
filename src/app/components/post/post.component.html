@@ -19,5 +19,5 @@
         <mat-icon class="action-item" (click)="addComment()">chat_bubble_outline</mat-icon>
         {{ commentCount$ | async }}
     </mat-card-actions>
-    <app-comment-preview *ngIf="showCommentPreview" [postId]="post.id"></app-comment-preview>
+    <comment-preview *ngIf="showCommentPreview" [postId]="post.id"></comment-preview>
 </mat-card>

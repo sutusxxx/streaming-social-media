@@ -7,7 +7,7 @@ import { RouterHelper } from 'src/app/helpers/router.helper';
 import { User } from 'src/app/models';
 
 @Component({
-	selector: 'app-search',
+	selector: 'search',
 	templateUrl: './search.component.html',
 	styleUrls: ['./search.component.css']
 })

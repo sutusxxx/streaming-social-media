@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { StreamService } from '@services/stream.service';
 
 @Component({
-	selector: 'app-view-room',
+	selector: 'view-room',
 	templateUrl: './view-room.component.html',
 	styleUrls: ['./view-room.component.css']
 })

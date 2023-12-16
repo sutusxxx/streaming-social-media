@@ -8,7 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 import { passwordValidator } from 'src/app/validators/password-validator';
 
 @Component({
-	selector: 'app-registration',
+	selector: 'registration',
 	templateUrl: './registration.component.html',
 	styleUrls: ['./registration.component.css']
 })

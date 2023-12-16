@@ -5,7 +5,7 @@ import { UserService } from '@services/user.service';
 import { take } from 'rxjs';
 
 @Component({
-	selector: 'app-create-post-dialog',
+	selector: 'create-post-dialog',
 	templateUrl: './create-post-dialog.component.html',
 	styleUrls: ['./create-post-dialog.component.css']
 })

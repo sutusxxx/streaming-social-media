@@ -7,7 +7,7 @@ import { BaseComponent } from '@components/base/base.component';
 import { PostService } from '@services/post.service';
 
 @Component({
-	selector: 'app-explorer',
+	selector: 'explorer',
 	templateUrl: './explorer.component.html',
 	styleUrls: ['./explorer.component.css']
 })

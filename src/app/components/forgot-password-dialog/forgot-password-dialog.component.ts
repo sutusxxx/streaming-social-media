@@ -6,7 +6,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '@services/auth.service';
 
 @Component({
-	selector: 'app-forgot-password-dialog',
+	selector: 'forgot-password-dialog',
 	templateUrl: './forgot-password-dialog.component.html',
 	styleUrls: ['./forgot-password-dialog.component.css']
 })

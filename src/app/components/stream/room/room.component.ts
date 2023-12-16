@@ -4,7 +4,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { StreamService } from '@services/stream.service';
 
 @Component({
-	selector: 'app-room',
+	selector: 'room',
 	templateUrl: './room.component.html',
 	styleUrls: ['./room.component.css']
 })

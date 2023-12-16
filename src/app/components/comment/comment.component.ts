@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { IComment } from 'src/app/interfaces/comment.interface';
 
 @Component({
-	selector: 'app-comment',
+	selector: 'comment',
 	templateUrl: './comment.component.html',
 	styleUrls: ['./comment.component.css']
 })

@@ -8,7 +8,7 @@ import { UserService } from '@services/user.service';
 import { takeUntil } from 'rxjs';
 
 @Component({
-    selector: 'app-live-chat',
+    selector: 'live-chat',
     templateUrl: './live-chat.component.html',
     styleUrls: ['./live-chat.component.css']
 })

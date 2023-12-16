@@ -7,7 +7,7 @@ import { LanguageKeyEnum } from 'src/app/enums/language-key.enum';
 import { passwordValidator } from 'src/app/validators/password-validator';
 
 @Component({
-	selector: 'app-settings',
+	selector: 'settings',
 	templateUrl: './settings.component.html',
 	styleUrls: ['./settings.component.css']
 })

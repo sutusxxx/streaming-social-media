@@ -10,7 +10,7 @@ import { ForgotPasswordDialogComponent } from '@components/forgot-password-dialo
 import { UserService } from '@services/user.service';
 
 @Component({
-	selector: 'app-login',
+	selector: 'login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.css']
 })

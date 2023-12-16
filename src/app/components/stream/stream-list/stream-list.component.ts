@@ -6,7 +6,7 @@ import { StreamService } from '@services/stream.service';
 import { UserService } from '@services/user.service';
 
 @Component({
-	selector: 'app-stream-list',
+	selector: 'stream-list',
 	templateUrl: './stream-list.component.html',
 	styleUrls: ['./stream-list.component.css']
 })

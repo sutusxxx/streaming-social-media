@@ -1,4 +1,4 @@
 <div scrollable class="explore-container" (scrollPosition)="onScroll($event)">
-    <app-post-grid [cols]="3" [posts]="posts"></app-post-grid>
+    <post-grid [cols]="3" [posts]="posts"></post-grid>
     <loading-spinner *ngIf="isLoading"></loading-spinner>
 </div>

@@ -34,7 +34,7 @@ import { StoryService } from '@services/story.service';
 import { UserService } from '@services/user.service';
 
 @Component({
-	selector: 'app-user-profile',
+	selector: 'user-profile',
 	templateUrl: './user-profile.component.html',
 	styleUrls: ['./user-profile.component.css']
 })

@@ -11,7 +11,7 @@ import { IChat } from 'src/app/interfaces';
 import { User } from 'src/app/models';
 
 @Component({
-	selector: 'app-messenger',
+	selector: 'messenger',
 	templateUrl: './messenger.component.html',
 	styleUrls: ['./messenger.component.css']
 })

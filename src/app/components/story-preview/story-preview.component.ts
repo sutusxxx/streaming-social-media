@@ -7,7 +7,7 @@ import { IStory } from 'src/app/interfaces/story.interface';
 import { User } from 'src/app/models';
 
 @Component({
-	selector: 'app-story-preview',
+	selector: 'story-preview',
 	templateUrl: './story-preview.component.html',
 	styleUrls: ['./story-preview.component.css'],
 	encapsulation: ViewEncapsulation.None

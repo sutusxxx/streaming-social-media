@@ -12,7 +12,7 @@ import { PostService } from '@services/post.service';
 import { UserService } from '@services/user.service';
 
 @Component({
-	selector: 'app-post',
+	selector: 'post',
 	templateUrl: './post.component.html',
 	styleUrls: ['./post.component.css']
 })
