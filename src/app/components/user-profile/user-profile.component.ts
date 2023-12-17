@@ -203,8 +203,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 			? this.followService.follow(this.currentUserId, userId)
 				.pipe(concatMap(() => this.sendFollowNotification(userId)))
 			: this.followService.unfollow(this.currentUserId, userId);
-		changeFollow
-
+		changeFollow.subscribe();
 	}
 
 	sendFollowNotification(userId: string): Observable<any> {

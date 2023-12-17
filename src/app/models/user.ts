@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { IUser } from "../interfaces";
 import { IStory } from "../interfaces/story.interface";
 
@@ -7,7 +8,7 @@ export class User implements IUser {
     displayName?: string;
     fullName?: string;
     gender?: string;
-    dateOfBirth?: Date;
+    dateOfBirth?: Date & Timestamp;
     photoURL?: string;
     story?: IStory;
     description?: string;
@@ -19,7 +20,7 @@ export class User implements IUser {
             displayName?: string,
             fullName?: string,
             gender?: string,
-            dateOfBirth?: Date,
+            dateOfBirth?: Date & Timestamp,
             photoURL?: string,
             story?: IStory,
             description?: string

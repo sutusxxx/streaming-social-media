@@ -36,12 +36,19 @@
             </ng-container>
         </div>
         <div class="user-info">
-            <span *ngIf="user.fullName" class="font-size-16 bold">
+            <div *ngIf="user.fullName" class="font-size-16 bold">
                 {{ user.fullName }}
-            </span>
+            </div>
+            <div *ngIf="user.dateOfBirth" class="font-size-16">
+                <span class="user-data">{{ 'dateOfBirth' | translate }}:</span> {{ user.dateOfBirth | date:'fullDate' }}
+            </div>
+            <div *ngIf="user.gender" class="font-size-16">
+                <span class="user-data">{{ 'gender' | translate }}:</span> {{ user.gender | translate }}
+            </div>
         </div>
+        <mat-divider></mat-divider>
         <div>
-            <textarea class="description" type="text" maxlength="60" [(ngModel)]="user.description"
+            <textarea class="description" type="text" maxlength="100" [(ngModel)]="user.description"
                 [disabled]="!isCurrentUser" (blur)="updateDescription($event, user)">
             </textarea>
         </div>

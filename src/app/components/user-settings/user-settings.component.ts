@@ -41,7 +41,8 @@ export class UserSettingsComponent extends BaseComponent implements OnInit {
 			.subscribe(user => {
 				this.settingsForm = new FormGroup({
 					fullName: new FormControl(user?.fullName),
-					gender: new FormControl(user?.gender)
+					gender: new FormControl(user?.gender),
+					dateOfBirth: new FormControl(user?.dateOfBirth)
 				});
 				this.id = user?.uid || null;
 				this.email = user?.email || null;

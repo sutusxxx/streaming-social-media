@@ -74,6 +74,7 @@ export const english = {
 		day: 'day',
 		hour: 'hour',
 		minute: 'min',
-		justNow: 'Just now'
+		justNow: 'Just now',
+		gender: 'Gender'
 	}
 }

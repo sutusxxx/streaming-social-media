@@ -74,6 +74,7 @@ export const hungarian = {
 		day: 'nap',
 		hour: 'óra',
 		minute: 'perc',
-		justNow: 'Épp most'
+		justNow: 'Épp most',
+		gender: 'Neme'
 	}
 }
