@@ -1,10 +1,19 @@
+import { doc, orderBy, Timestamp, updateDoc } from 'firebase/firestore';
+import { concatMap, map, Observable, take } from 'rxjs';
+
 import { Injectable } from '@angular/core';
-import { Firestore, collectionData, addDoc, collection, query, where } from '@angular/fire/firestore';
-import { User } from '../models';
-import { Observable, concatMap, map, take, throwError } from 'rxjs';
-import { UserService } from './user.service';
+import {
+	addDoc,
+	collection,
+	collectionData,
+	Firestore,
+	query,
+	where
+} from '@angular/fire/firestore';
+
 import { IChat, IMessage } from '../interfaces';
-import { Timestamp, doc, limit, orderBy, updateDoc } from 'firebase/firestore';
+import { User } from '../models';
+import { UserService } from './user.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -75,6 +84,18 @@ export class MessengerService {
 			})
 		);
 	}
+
+	// getCreatedChats(): Observable<IChat[]> {
+	// 	const ref = collection(this.firestore, 'chats');
+	// 	return this.userService.currentUser$.pipe(
+	// 		concatMap(currentUser => {
+	// 			const q = query(ref, where('userIds', 'array-contains', currentUser?.uid));
+	// 			return collectionData(q, { idField: 'id' }).pipe(
+	// 				map(chats => this.addChatNameAndPicture(currentUser?.uid ?? '', chats as IChat[]))
+	// 			);
+	// 		})
+	// 	);
+	// }
 
 	addChatNameAndPicture(currentUserId: string, chats: IChat[]): IChat[] {
 		chats.forEach(chat => {

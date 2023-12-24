@@ -1,14 +1,13 @@
+import { combineLatest, filter, map, of, startWith, switchMap, takeUntil, tap } from 'rxjs';
+import { PATH } from 'src/app/constants/path.constant';
+import { User } from 'src/app/models';
+
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
 import { MessengerService } from '@services/messenger.service';
 import { SearchService } from '@services/search.service';
 import { UserService } from '@services/user.service';
-import { combineLatest, filter, map, of, startWith, switchMap, takeUntil, tap } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
-import { IChat } from 'src/app/interfaces';
-import { User } from 'src/app/models';
 
 @Component({
 	selector: 'messenger',
@@ -60,8 +59,7 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 	constructor(
 		private readonly userService: UserService,
 		private readonly messengerService: MessengerService,
-		private readonly searchService: SearchService,
-		private readonly router: Router
+		private readonly searchService: SearchService
 	) {
 		super();
 	}
