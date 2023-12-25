@@ -1,11 +1,12 @@
+import { concatMap, switchMap, take, throwError } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+import { PATH } from 'src/app/shared/constants/path.constant';
+import { passwordValidator } from 'src/app/validators/password-validator';
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { concatMap, switchMap, take, throwError } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
-import { AuthService } from 'src/app/services/auth.service';
-import { UserService } from 'src/app/services/user.service';
-import { passwordValidator } from 'src/app/validators/password-validator';
 
 @Component({
 	selector: 'registration',

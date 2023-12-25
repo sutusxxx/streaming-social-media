@@ -1,10 +1,11 @@
+import { LanguageKeyEnum } from 'src/app/shared/enums/language-key.enum';
+import { passwordValidator } from 'src/app/validators/password-validator';
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '@services/auth.service';
 import { StorageService } from '@services/storage.service';
-import { LanguageKeyEnum } from 'src/app/enums/language-key.enum';
-import { passwordValidator } from 'src/app/validators/password-validator';
 
 @Component({
 	selector: 'settings',

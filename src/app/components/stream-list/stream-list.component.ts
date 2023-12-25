@@ -1,9 +1,8 @@
-import { PATH } from 'src/app/constants/path.constant';
+import { PATH } from 'src/app/shared/constants/path.constant';
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StreamService } from '@services/stream.service';
-import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'stream-list',
@@ -15,7 +14,6 @@ export class StreamListComponent implements OnInit {
 	rooms$ = this.streamService.getRooms();
 
 	constructor(
-		private readonly userService: UserService,
 		private readonly streamService: StreamService,
 		private router: Router
 	) { }

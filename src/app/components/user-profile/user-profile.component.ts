@@ -11,12 +11,12 @@ import {
 	takeUntil,
 	throwError
 } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
-import { SCROLL_POSITION_BOTTOM } from 'src/app/constants/scroll-position.constant';
 import { MessageKey } from 'src/app/interfaces/notification.interface';
 import { IPost } from 'src/app/interfaces/post.interface';
 import { IStory } from 'src/app/interfaces/story.interface';
 import { User } from 'src/app/models';
+import { PATH } from 'src/app/shared/constants/path.constant';
+import { SCROLL_POSITION_BOTTOM } from 'src/app/shared/constants/scroll-position.constant';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -112,7 +112,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		});
 	}
 
-	onScroll(scrollPosition: string, userId: string) {
+	onScroll(scrollPosition: any, userId: string) {
 		if (this.isLoading) return;
 
 		if (scrollPosition === SCROLL_POSITION_BOTTOM) {

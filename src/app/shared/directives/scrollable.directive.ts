@@ -1,4 +1,5 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+
 import { SCROLL_POSITION_BOTTOM, SCROLL_POSITION_TOP } from '../constants/scroll-position.constant';
 
 @Directive({

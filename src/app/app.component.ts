@@ -4,12 +4,12 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
 import { TranslateService } from '@ngx-translate/core';
+import { StorageService } from '@services/storage.service';
 import { TranslationLoaderService } from '@services/translation-loader.service';
 
 import { english } from '../assets/i18n/en';
 import { hungarian } from '../assets/i18n/hu';
-import { LanguageKeyEnum } from './enums/language-key.enum';
-import { StorageService } from '@services/storage.service';
+import { LanguageKeyEnum } from './shared/enums/language-key.enum';
 
 @Component({
 	selector: 'app-root',

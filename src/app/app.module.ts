@@ -1,3 +1,5 @@
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
 import { NgModule } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -15,89 +17,41 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoginComponent } from '@components/auth/login/login.component';
-import { RegistrationComponent } from '@components/auth/registration/registration.component';
+import { AuthModule } from '@components/auth/auth.module';
+import { CommentModule } from '@components/comment/coment.module';
+import { CreatePostDialogModule } from '@components/create-post-dialog/create-post-dialog.module';
+import { FollowerDialogModule } from '@components/follower-dialog/follower-dialog.module';
+import { HomeModule } from '@components/home/home.module';
+import { MessengerModule } from '@components/messenger/messenger.module';
+import { PostDetailsModule } from '@components/post-details/post-details.module';
+import { SettingsModule } from '@components/settings/settings.module';
+import { StoryPreviewModule } from '@components/story-preview/story-preview.module';
+import { StreamModule } from '@components/stream/stream.module';
+import { ToolbarModule } from '@components/toolbar/toolbar.module';
+import { UserProfileModule } from '@components/user-profile/user-profile.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CommentComponent } from './components/comment/comment.component';
-import { CreatePostDialogComponent } from './components/create-post-dialog/create-post-dialog.component';
-import { FeedComponent } from './components/feed/feed.component';
-import { FollowerDialogComponent } from './components/follower-dialog/follower-dialog.component';
-import { ForgotPasswordDialogComponent } from './components/forgot-password-dialog/forgot-password-dialog.component';
-import { HomeComponent } from './components/home/home.component';
-import { MessengerComponent } from './components/messenger/messenger.component';
-import { NotificationsComponent } from './components/notifications/notifications.component';
-import { PostComponent } from './components/post/post.component';
-import { SearchComponent } from './components/search/search.component';
-import { RoomComponent } from './components/stream/room/room.component';
-import { StreamListComponent } from './components/stream/stream-list/stream-list.component';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { DatePipe } from './pipes/date.pipe';
-import { ViewRoomComponent } from './components/stream/view-room/view-room.component';
-import { LiveChatComponent } from './components/stream/live-chat/live-chat.component';
-import { PostDetailsComponent } from './components/post-details/post-details.component';
-import { PostGridComponent } from './components/post-grid/post-grid.component';
-import { ExplorerComponent } from './components/explorer/explorer.component';
-import { StoryPreviewComponent } from './components/story-preview/story-preview.component';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { PastTimePipe } from './pipes/past-time.pipe';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { ScrollableDirective } from './directives/scrollable.directive';
-import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
-import { CommentPreviewComponent } from './components/comment-preview/comment-preview.component';
-import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { SettingsComponent } from './components/settings/settings.component';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
 	declarations: [
-		AppComponent,
-		LoginComponent,
-		RegistrationComponent,
-		DatePipe,
-		HomeComponent,
-		SearchComponent,
-		UserProfileComponent,
-		ToolbarComponent,
-		MessengerComponent,
-		FollowerDialogComponent,
-		RoomComponent,
-		StreamListComponent,
-		FeedComponent,
-		CreatePostDialogComponent,
-		PostComponent,
-		CommentComponent,
-		ForgotPasswordDialogComponent,
-		NotificationsComponent,
-		ViewRoomComponent,
-		LiveChatComponent,
-		PostDetailsComponent,
-		PostGridComponent,
-		ExplorerComponent,
-		StoryPreviewComponent,
-		PastTimePipe,
-		ScrollableDirective,
-		LoadingSpinnerComponent,
-		CommentPreviewComponent,
-		UserSettingsComponent,
-		SettingsComponent
+		AppComponent
 	],
 	imports: [
 		AngularFireModule,
@@ -106,7 +60,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 		BrowserAnimationsModule,
 		ReactiveFormsModule,
 		FormsModule,
-		MatToolbarModule,
 		MatIconModule,
 		MatButtonModule,
 		MatFormFieldModule,
@@ -128,6 +81,18 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 		MatExpansionModule,
 		InfiniteScrollModule,
 		MatSlideToggleModule,
+		AuthModule,
+		CommentModule,
+		CreatePostDialogModule,
+		HomeModule,
+		StoryPreviewModule,
+		ToolbarModule,
+		PostDetailsModule,
+		UserProfileModule,
+		FollowerDialogModule,
+		MessengerModule,
+		SettingsModule,
+		StreamModule,
 		TranslateModule.forRoot(),
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth()),
@@ -136,7 +101,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 		provideFirestore(() => getFirestore()),
 		provideMessaging(() => getMessaging()),
 	],
-	providers: [DatePipe],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,10 +1,10 @@
-import { PATH } from 'src/app/constants/path.constant';
+import { Observable } from 'rxjs';
+import { IComment } from 'src/app/interfaces/comment.interface';
+import { PATH } from 'src/app/shared/constants/path.constant';
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PostService } from '@services/post.service';
-import { Observable } from 'rxjs';
-import { IComment } from 'src/app/interfaces/comment.interface';
 
 @Component({
 	selector: 'comment',

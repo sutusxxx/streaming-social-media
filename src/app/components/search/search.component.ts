@@ -1,10 +1,11 @@
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { User } from 'src/app/models';
+import { RouterHelper } from 'src/app/shared/helpers/router.helper';
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
 import { SearchService } from '@services/search.service';
-import { Observable, Subject, combineLatest, takeUntil } from "rxjs";
-import { RouterHelper } from 'src/app/helpers/router.helper';
-import { User } from 'src/app/models';
 
 @Component({
 	selector: 'search',

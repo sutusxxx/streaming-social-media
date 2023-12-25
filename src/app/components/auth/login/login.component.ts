@@ -1,6 +1,6 @@
 import { catchError, concatMap, of, take } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
 import { AuthService } from 'src/app/services/auth.service';
+import { PATH } from 'src/app/shared/constants/path.constant';
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';

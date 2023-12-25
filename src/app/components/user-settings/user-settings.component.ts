@@ -1,13 +1,13 @@
+import { EMPTY, switchMap, take, takeUntil } from 'rxjs';
+import { User } from 'src/app/models';
+import { PATH } from 'src/app/shared/constants/path.constant';
+import { RouterHelper } from 'src/app/shared/helpers/router.helper';
+
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BaseComponent } from '@components/base/base.component';
 import { UserService } from '@services/user.service';
-import { PATH } from 'src/app/constants/path.constant';
-
-import { EMPTY, switchMap, take, takeUntil } from 'rxjs';
-import { Router } from '@angular/router';
-import { RouterHelper } from 'src/app/helpers/router.helper';
-import { User } from 'src/app/models';
 
 @Component({
 	selector: 'user-settings',

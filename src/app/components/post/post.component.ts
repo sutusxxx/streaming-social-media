@@ -1,8 +1,8 @@
 import { firstValueFrom, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
 import { MessageKey } from 'src/app/interfaces/notification.interface';
 import { IPost } from 'src/app/interfaces/post.interface';
 import { User } from 'src/app/models';
+import { PATH } from 'src/app/shared/constants/path.constant';
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';

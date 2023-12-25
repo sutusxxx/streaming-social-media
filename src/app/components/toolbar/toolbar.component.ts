@@ -1,13 +1,13 @@
-import { map, of, switchMap, take, takeUntil } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
+import { take, takeUntil } from 'rxjs';
+import { INotification } from 'src/app/interfaces/notification.interface';
+import { PATH } from 'src/app/shared/constants/path.constant';
+import { RouterHelper } from 'src/app/shared/helpers/router.helper';
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { BaseComponent } from '@components/base/base.component';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
-import { INotification } from 'src/app/interfaces/notification.interface';
-import { BaseComponent } from '@components/base/base.component';
-import { RouterHelper } from 'src/app/helpers/router.helper';
 
 @Component({
 	selector: 'toolbar',

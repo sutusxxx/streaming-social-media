@@ -1,6 +1,6 @@
 import { combineLatest, filter, map, of, startWith, switchMap, takeUntil, tap } from 'rxjs';
-import { PATH } from 'src/app/constants/path.constant';
 import { User } from 'src/app/models';
+import { PATH } from 'src/app/shared/constants/path.constant';
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
