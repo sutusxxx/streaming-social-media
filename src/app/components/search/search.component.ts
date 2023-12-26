@@ -1,6 +1,6 @@
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { User } from 'src/app/models';
 import { RouterHelper } from 'src/app/shared/helpers/router.helper';
+import { IUser } from 'src/app/shared/interfaces';
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ export class SearchComponent extends BaseComponent implements OnInit {
 	searching: Subject<string> = new Subject();
 	onSearch: Observable<string> = this.searching.asObservable();
 
-	users!: Observable<User[]>;
+	users!: Observable<IUser[]>;
 
 	constructor(
 		private readonly searchService: SearchService,

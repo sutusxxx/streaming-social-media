@@ -8,6 +8,7 @@ import {
 	Subject,
 	switchMap
 } from 'rxjs';
+import { CreatePost } from 'src/app/shared/models';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Injectable } from '@angular/core';
@@ -33,8 +34,8 @@ import {
 	where
 } from '@angular/fire/firestore';
 
-import { IComment } from '../interfaces/comment.interface';
-import { IPost } from '../interfaces/post.interface';
+import { IComment } from '../shared/interfaces/comment.interface';
+import { IPost } from '../shared/interfaces/post.interface';
 import { FollowService } from './follow.service';
 import { ImageUploadService } from './image-upload.service';
 import { UserService } from './user.service';
@@ -79,17 +80,16 @@ export class PostService {
 			}),
 			concatMap(([user, url]) => {
 				const ref = collection(this.firestore, 'posts');
-				return addDoc(ref, {
-					type: 'image',
+				const post = new CreatePost(
+					'image',
 					url,
 					description,
-					timestamp: Timestamp.fromDate(new Date()),
-					userId: user.uid,
-					user: {
-						displayName: user.displayName,
-						photoURL: user.photoURL ? user.photoURL : ''
-					}
-				}).then(() => this.postCreatedSubject.next());
+					Timestamp.fromDate(new Date()),
+					user.uid,
+					user.displayName ? user.displayName : '',
+					user.photoURL ? user.photoURL : ''
+				)
+				return addDoc(ref, { ...post }).then(() => this.postCreatedSubject.next());
 			})
 		);
 	}

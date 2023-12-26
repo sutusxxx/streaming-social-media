@@ -1,6 +1,6 @@
 import { limit, runTransaction } from 'firebase/firestore';
 import { catchError, concatMap, from, Observable, of, switchMap, throwError } from 'rxjs';
-import { INotification, MessageKey } from 'src/app/interfaces/notification.interface';
+import { INotification, MessageKey } from 'src/app/shared/interfaces/notification.interface';
 
 import { Injectable } from '@angular/core';
 import {
@@ -24,8 +24,8 @@ import {
     where
 } from '@angular/fire/firestore';
 
-import { IUser } from '../interfaces';
-import { User } from '../models';
+import { IUser } from '../shared/interfaces';
+import { User } from '../shared/models';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -78,16 +78,16 @@ export class UserService {
         return from(deleteDoc(ref));
     }
 
-    getUserById(userId: string): Observable<User> {
+    getUserById(userId: string): Observable<IUser> {
         const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', userId);
-        return docData(ref) as Observable<User>;
+        return docData(ref) as Observable<IUser>;
     }
 
-    getMultipleUsersById(userIds: string[]): Observable<User[]> {
+    getMultipleUsersById(userIds: string[]): Observable<IUser[]> {
         if (!userIds || !userIds.length) return of([]);
 
         const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
-        return collectionData(query(ref, where(documentId(), 'in', userIds))) as Observable<User[]>;
+        return collectionData(query(ref, where(documentId(), 'in', userIds))) as Observable<IUser[]>;
     }
 
     notifyUser(userId: string, messageKey: MessageKey, sender: string): Observable<any> {
@@ -140,7 +140,7 @@ export class UserService {
         );
     }
 
-    get currentUser$(): Observable<User | null> {
+    get currentUser$(): Observable<IUser | null> {
         return this.authService.currentUser$.pipe(
             switchMap(user => {
                 if (!user?.uid) {
@@ -148,13 +148,13 @@ export class UserService {
                 }
                 const ref = doc(this.firestore, 'users', user.uid);
 
-                return docData(ref) as Observable<User>
+                return docData(ref) as Observable<IUser>
             })
         );
     }
 
-    get users$(): Observable<User[]> {
+    get users$(): Observable<IUser[]> {
         const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
-        return collectionData(query(ref)) as Observable<User[]>;
+        return collectionData(query(ref)) as Observable<IUser[]>;
     }
 }

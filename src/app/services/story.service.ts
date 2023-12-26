@@ -1,25 +1,30 @@
+import { CollectionReference, DocumentData, Timestamp } from 'firebase/firestore';
+import { from, Observable, of, switchMap } from 'rxjs';
+import { IStory } from 'src/app/shared/interfaces';
+import { CreateStory } from 'src/app/shared/models';
+
 import { Injectable } from '@angular/core';
-import { CollectionReference, DocumentData, DocumentReference, Timestamp, and, doc, updateDoc } from 'firebase/firestore';
-import { Observable, filter, from, of, switchMap } from 'rxjs';
-import { IStory } from '../interfaces/story.interface';
-import { Firestore, addDoc, collection, collectionData, docData, orderBy, query, setDoc, where } from '@angular/fire/firestore';
+import {
+	addDoc,
+	collection,
+	collectionData,
+	Firestore,
+	orderBy,
+	query,
+	where
+} from '@angular/fire/firestore';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class StoryService {
-	constructor(
-		private readonly firestore: Firestore
-	) {
+
+	constructor(private readonly firestore: Firestore) {
 	}
 
 	addStory(userId: string, url: string): Observable<any> {
 		const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users', userId, 'stories');
-		const story: IStory = {
-			url,
-			date: Timestamp.fromDate(new Date()),
-			userId
-		};
+		const story = new CreateStory(url, Timestamp.fromDate(new Date()), userId);
 		return from(addDoc(ref, { ...story }));
 	}
 

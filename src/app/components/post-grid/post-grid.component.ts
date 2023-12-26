@@ -1,4 +1,4 @@
-import { IPost } from 'src/app/interfaces/post.interface';
+import { IPost } from 'src/app/shared/interfaces/post.interface';
 
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';

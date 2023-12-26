@@ -1,5 +1,4 @@
-import { Timestamp } from "@angular/fire/firestore";
-import { User } from "../models";
+import { Timestamp } from '@angular/fire/firestore';
 
 export interface IPost {
     id: string;

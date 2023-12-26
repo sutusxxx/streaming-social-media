@@ -1,6 +1,6 @@
 import { takeUntil, tap } from 'rxjs';
-import { IPost } from 'src/app/interfaces/post.interface';
 import { SCROLL_POSITION_BOTTOM } from 'src/app/shared/constants/scroll-position.constant';
+import { IPost } from 'src/app/shared/interfaces/post.interface';
 
 import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '@components/base/base.component';

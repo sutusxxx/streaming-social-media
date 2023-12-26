@@ -1,7 +1,7 @@
 import { EMPTY, switchMap, take, takeUntil } from 'rxjs';
-import { User } from 'src/app/models';
 import { PATH } from 'src/app/shared/constants/path.constant';
 import { RouterHelper } from 'src/app/shared/helpers/router.helper';
+import { User } from 'src/app/shared/models';
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -58,8 +58,6 @@ export class UserSettingsComponent extends BaseComponent implements OnInit {
 					if (!user || !this.settingsForm) return EMPTY;
 					const userData = this.settingsForm.value;
 					const updatedUser = new User(user.uid, {
-						displayName: user.displayName,
-						email: user.email,
 						fullName: userData.fullName,
 						gender: userData.gender,
 						dateOfBirth: userData.dateOfBirth

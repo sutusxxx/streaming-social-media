@@ -11,12 +11,13 @@ import {
 	takeUntil,
 	throwError
 } from 'rxjs';
-import { MessageKey } from 'src/app/interfaces/notification.interface';
-import { IPost } from 'src/app/interfaces/post.interface';
-import { IStory } from 'src/app/interfaces/story.interface';
-import { User } from 'src/app/models';
 import { PATH } from 'src/app/shared/constants/path.constant';
 import { SCROLL_POSITION_BOTTOM } from 'src/app/shared/constants/scroll-position.constant';
+import { IUser } from 'src/app/shared/interfaces';
+import { MessageKey } from 'src/app/shared/interfaces/notification.interface';
+import { IPost } from 'src/app/shared/interfaces/post.interface';
+import { IStory } from 'src/app/shared/interfaces/story.interface';
+import { User } from 'src/app/shared/models';
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,7 +40,7 @@ import { UserService } from '@services/user.service';
 	styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent extends BaseComponent implements OnInit {
-	user$!: Observable<User | null>;
+	user$!: Observable<IUser | null>;
 	currentUserId: string = '';
 
 	isCurrentUser: boolean = false;
@@ -150,7 +151,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 			});
 	}
 
-	uploadImage(event: any, user: User): void {
+	uploadImage(event: any, user: IUser): void {
 		this.imageUploadService.uploadImage(event.target.files[0], `images/profile/${user.uid}`).pipe(
 			take(1),
 			concatMap(photoURL => {
@@ -160,7 +161,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		).subscribe();
 	}
 
-	addStory(event: any, user: User): void {
+	addStory(event: any, user: IUser): void {
 		const timestamp = Timestamp.fromDate(new Date());
 		this.imageUploadService.uploadImage(event.target.files[0], `images/story/${user.uid}/${timestamp.toMillis()}`).pipe(
 			take(1),
@@ -174,13 +175,13 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		this.dialog.open(StoryPreviewComponent, { data: story });
 	}
 
-	updateDescription(event: any, user: User): void {
+	updateDescription(event: any, user: IUser): void {
 		const description = user.description?.trim();
 		const userToUpdate = new User(user.uid, { description });
 		this.userService.saveUser(userToUpdate).subscribe();
 	}
 
-	showFollowerDialog(user: User, activeTab: number): void {
+	showFollowerDialog(user: IUser, activeTab: number): void {
 		combineLatest([
 			this.followService.getFollowers(user.uid),
 			this.followService.getFollowing(user.uid)

@@ -3,6 +3,7 @@ import { ScrollableDirective } from 'src/app/shared/directives/scrollable.direct
 import { DatePipe } from 'src/app/shared/pipes/date.pipe';
 import { PastTimePipe } from 'src/app/shared/pipes/past-time.pipe';
 
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -38,6 +39,10 @@ import { TranslateModule } from '@ngx-translate/core';
         ScrollableDirective
     ],
     imports: [
+        CommonModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
         ReactiveFormsModule,
         FormsModule,
         MatToolbarModule,
@@ -65,6 +70,7 @@ import { TranslateModule } from '@ngx-translate/core';
         LoadingSpinnerModule
     ],
     exports: [
+        CommonModule,
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,

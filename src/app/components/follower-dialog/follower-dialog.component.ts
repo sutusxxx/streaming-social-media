@@ -1,5 +1,5 @@
-import { IFollowDetails } from 'src/app/interfaces';
 import { PATH } from 'src/app/shared/constants/path.constant';
+import { IFollowDetails } from 'src/app/shared/interfaces';
 
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';

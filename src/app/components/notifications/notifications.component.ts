@@ -1,4 +1,4 @@
-import { INotification } from 'src/app/interfaces/notification.interface';
+import { INotification } from 'src/app/shared/interfaces/notification.interface';
 
 import { Component, Input, OnInit } from '@angular/core';
 

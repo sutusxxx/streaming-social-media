@@ -11,8 +11,7 @@ import {
 	where
 } from '@angular/fire/firestore';
 
-import { IChat, IMessage } from '../interfaces';
-import { User } from '../models';
+import { IChat, IMessage, IUser } from '../shared/interfaces';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -26,7 +25,7 @@ export class MessengerService {
 	) {
 	}
 
-	createChat(user: User): Observable<string> {
+	createChat(user: IUser): Observable<string> {
 		const ref = collection(this.firestore, 'chats');
 		return this.userService.currentUser$.pipe(
 			take(1),

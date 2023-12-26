@@ -1,4 +1,4 @@
-import { IStory } from "./story.interface";
+import { Timestamp } from 'firebase/firestore';
 
 export interface IUser {
     uid: string;
@@ -6,8 +6,7 @@ export interface IUser {
     displayName?: string;
     fullName?: string;
     gender?: string;
-    dateOfBirth?: Date;
+    dateOfBirth?: Date & Timestamp;
     photoURL?: string;
-    story?: IStory;
     description?: string;
 }

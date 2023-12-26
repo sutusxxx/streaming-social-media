@@ -11,7 +11,7 @@ import {
 	setDoc
 } from '@angular/fire/firestore';
 
-import { IFollowDetails } from '../interfaces';
+import { IFollowDetails } from '../shared/interfaces';
 import { UserService } from './user.service';
 
 @Injectable({

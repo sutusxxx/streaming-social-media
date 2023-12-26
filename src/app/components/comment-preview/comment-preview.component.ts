@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { IComment } from 'src/app/interfaces/comment.interface';
 import { PATH } from 'src/app/shared/constants/path.constant';
+import { IComment } from 'src/app/shared/interfaces/comment.interface';
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';

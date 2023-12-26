@@ -1,6 +1,6 @@
 import { combineLatest, filter, map, of, startWith, switchMap, takeUntil, tap } from 'rxjs';
-import { User } from 'src/app/models';
 import { PATH } from 'src/app/shared/constants/path.constant';
+import { IUser } from 'src/app/shared/interfaces';
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -67,7 +67,7 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	createChat(user: User): void {
+	createChat(user: IUser): void {
 		this.messengerService.isExistingChat(user.uid).pipe(
 			takeUntil(this._unsubscribeAll),
 			switchMap(chatId => {

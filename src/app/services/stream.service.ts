@@ -23,9 +23,9 @@ import {
 	throwError
 } from 'rxjs';
 import { servers } from 'src/app/configuration/server';
-import { MessageKey } from 'src/app/interfaces/notification.interface';
-import { IRoom } from 'src/app/interfaces/room.interface';
-import { User } from 'src/app/models';
+import { IUser } from 'src/app/shared/interfaces';
+import { MessageKey } from 'src/app/shared/interfaces/notification.interface';
+import { IRoom } from 'src/app/shared/interfaces/room.interface';
 
 import { Injectable } from '@angular/core';
 import {
@@ -245,7 +245,7 @@ export class StreamService {
 	getChat(): Observable<any[]> {
 		if (!this.roomId) return of([]);
 		const ref = collection(this.firestore, 'rooms', this.roomId, 'chat');
-		const queryAll = query(ref, orderBy('date', 'asc'));
+		const queryAll = query(ref, orderBy('date', 'desc'));
 		return collectionData(queryAll) as Observable<any[]>;
 	}
 
@@ -301,7 +301,7 @@ export class StreamService {
 		});
 	}
 
-	private async addRoom(user: User): Promise<string> {
+	private async addRoom(user: IUser): Promise<string> {
 		const host = {
 			id: user.uid,
 			name: user.displayName,

@@ -1,6 +1,6 @@
-import { Timestamp } from "firebase/firestore";
-import { IUser } from "../interfaces";
-import { IStory } from "../interfaces/story.interface";
+import { Timestamp } from 'firebase/firestore';
+
+import { IUser } from '../interfaces';
 
 export class User implements IUser {
     uid: string;
@@ -10,7 +10,6 @@ export class User implements IUser {
     gender?: string;
     dateOfBirth?: Date & Timestamp;
     photoURL?: string;
-    story?: IStory;
     description?: string;
 
     constructor(
@@ -22,7 +21,6 @@ export class User implements IUser {
             gender?: string,
             dateOfBirth?: Date & Timestamp,
             photoURL?: string,
-            story?: IStory,
             description?: string
         }
     ) {
@@ -35,7 +33,6 @@ export class User implements IUser {
             if (parameters.gender) this.gender = parameters.gender;
             if (parameters.dateOfBirth) this.dateOfBirth = parameters.dateOfBirth;
             if (parameters.photoURL) this.photoURL = parameters.photoURL;
-            if (parameters.story) this.story = parameters.story;
             if (parameters.description) this.description = parameters.description;
 
         }

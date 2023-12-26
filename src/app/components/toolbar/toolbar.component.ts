@@ -1,7 +1,7 @@
 import { take, takeUntil } from 'rxjs';
-import { INotification } from 'src/app/interfaces/notification.interface';
 import { PATH } from 'src/app/shared/constants/path.constant';
 import { RouterHelper } from 'src/app/shared/helpers/router.helper';
+import { INotification } from 'src/app/shared/interfaces/notification.interface';
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';

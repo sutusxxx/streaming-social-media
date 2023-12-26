@@ -1,8 +1,8 @@
 import { firstValueFrom, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { MessageKey } from 'src/app/interfaces/notification.interface';
-import { IPost } from 'src/app/interfaces/post.interface';
-import { User } from 'src/app/models';
 import { PATH } from 'src/app/shared/constants/path.constant';
+import { IUser } from 'src/app/shared/interfaces';
+import { MessageKey } from 'src/app/shared/interfaces/notification.interface';
+import { IPost } from 'src/app/shared/interfaces/post.interface';
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -79,7 +79,7 @@ export class PostComponent implements OnInit {
 		});
 	}
 
-	sendPostLikedNotification(currentUser: User, post: IPost): Observable<void> {
+	sendPostLikedNotification(currentUser: IUser, post: IPost): Observable<void> {
 		const sender = currentUser.displayName || '';
 		return this.userService.notifyUser(post.userId, MessageKey.LIKE, sender);
 	}
