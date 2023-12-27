@@ -1,5 +1,15 @@
 import { limit, runTransaction } from 'firebase/firestore';
-import { catchError, concatMap, from, Observable, of, switchMap, throwError } from 'rxjs';
+import {
+    catchError,
+    concatMap,
+    EMPTY,
+    from,
+    Observable,
+    of,
+    switchMap,
+    take,
+    throwError
+} from 'rxjs';
 import { INotification, MessageKey } from 'src/app/shared/interfaces/notification.interface';
 
 import { Injectable } from '@angular/core';
@@ -38,17 +48,15 @@ export class UserService {
         private authService: AuthService
     ) { }
 
-    createUser(user: IUser): Observable<void> {
+    createUser(user: User): Observable<void> {
         const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', user.uid);
-        return from(setDoc(ref, user));
+        return from(setDoc(ref, { ...user }));
     }
 
-    createUserIfNotExists(user: IUser): Observable<void> {
+    createUserIfNotExists(user: User): Observable<void> {
         return this.getUserById(user.uid).pipe(
-            concatMap(user => {
-                if (!user) return this.createUser(user);
-                return of();
-            })
+            concatMap(
+                user => (!user) ? this.createUser(user) : EMPTY)
         );
     }
 
@@ -64,6 +72,7 @@ export class UserService {
     checkUsernameAvailability(username: string): Observable<boolean> {
         const ref: CollectionReference<DocumentData> = collection(this.firestore, 'users');
         return collectionData(query(ref, where('displayName', '==', username))).pipe(
+            take(1),
             switchMap(users => of(!users || !users.length))
         );
     }
@@ -73,9 +82,14 @@ export class UserService {
         return from(updateDoc(ref, { ...user }));
     }
 
-    deleteProfile(userId: string): Observable<void> {
-        const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', userId);
-        return from(deleteDoc(ref));
+    deleteProfile(): Observable<void> {
+        return this.currentUser$.pipe(
+            switchMap(user => {
+                if (!user) return EMPTY;
+                const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', user.uid);
+                return from(deleteDoc(ref));
+            })
+        );
     }
 
     getUserById(userId: string): Observable<IUser> {
@@ -100,12 +114,12 @@ export class UserService {
         }));
     }
 
-    setNotificationsToRead(notificatons: INotification[]): Observable<void> {
+    setNotificationsToRead(notifications: INotification[]): Observable<void> {
         return this.currentUser$.pipe(
             switchMap(user => {
                 if (!user) return of();
                 return from(runTransaction(this.firestore, async transaction => {
-                    for (const notification of notificatons) {
+                    for (const notification of notifications) {
                         notification.read = true;
 
                         const ref = doc(this.firestore, 'users', user.uid, 'notifications', notification.id);

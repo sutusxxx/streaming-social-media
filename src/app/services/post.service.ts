@@ -211,12 +211,31 @@ export class PostService {
 
 		if (include) {
 			return lastElement
-				? query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), startAfter(lastElement.timestamp), limit(count))
+				? query(
+					ref,
+					where('userId', 'in', userIds),
+					orderBy('timestamp', 'desc'),
+					startAfter(lastElement.timestamp),
+					limit(count)
+				)
 				: query(ref, where('userId', 'in', userIds), orderBy('timestamp', 'desc'), limit(count));
 		} else {
 			return lastElement
-				? query(ref, where('userId', 'not-in', userIds), orderBy('userId', 'desc'), orderBy('timestamp', 'desc'), startAfter(lastElement.userId, lastElement.timestamp), limit(count))
-				: query(ref, where('userId', 'not-in', userIds), orderBy('userId', 'desc'), orderBy('timestamp', 'desc'), limit(count));
+				? query(
+					ref,
+					where('userId', 'not-in', userIds),
+					orderBy('userId', 'desc'),
+					orderBy('timestamp', 'desc'),
+					startAfter(lastElement.userId, lastElement.timestamp),
+					limit(count)
+				)
+				: query(
+					ref,
+					where('userId', 'not-in', userIds),
+					orderBy('userId', 'desc'),
+					orderBy('timestamp', 'desc'),
+					limit(count)
+				);
 		}
 	}
 }

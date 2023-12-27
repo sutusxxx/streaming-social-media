@@ -26,7 +26,6 @@ export class ScrollableDirective {
 				this.scrollPosition.emit(SCROLL_POSITION_TOP);
 			}
 		} catch (error) {
-
 		}
 	}
 }

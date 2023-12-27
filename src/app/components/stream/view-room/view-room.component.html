@@ -2,7 +2,7 @@
     <div class="column-30">
     </div>
     <div class="column-50">
-        <video #remoteVideoElement autoplay playsinline></video>
+        <video id="videoElement" #remoteVideoElement autoplay playsinline></video>
     </div>
     <div class="column-10"></div>
     <live-chat [messages]="messages$ | async"></live-chat>

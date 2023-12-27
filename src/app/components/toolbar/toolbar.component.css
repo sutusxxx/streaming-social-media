@@ -35,6 +35,22 @@ mat-toolbar {
     height: 40px;
 }
 
+.languages {
+    display: flex;
+}
+
+.lang-btn {
+    width: 100%;
+    min-width: 0 !important;
+    padding: 0 !important;
+}
+
+.icon {
+    height: 13px;
+    width: 20px;
+    margin-right: 5px;
+}
+
 @media (max-width: 992px) {
     .main-title {
         display: none;

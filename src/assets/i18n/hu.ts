@@ -75,6 +75,10 @@ export const hungarian = {
 		hour: 'óra',
 		minute: 'perc',
 		justNow: 'Épp most',
-		gender: 'Neme'
+		gender: 'Neme',
+		deleteAccount: 'Profil törlése',
+		confirmAccountDeletion: 'Biztosan törölni kívánja a felhasználói profilját? Ez a folyamat visszafordíthatatlan!',
+		cancel: 'Mégse',
+		confirm: 'Megerősít'
 	}
 }

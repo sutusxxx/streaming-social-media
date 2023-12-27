@@ -99,7 +99,7 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 		}, 100)
 	}
 
-	onScoll(event: any): void {
+	onScroll(event: any): void {
 		this.isLoading = true;
 	}
 

@@ -1,0 +1,11 @@
+<div class="confirmation-dialog">
+    <div class="title" mat-dialog-title>{{ 'deleteAccount' | translate }}</div>
+    <div class="content" mat-dialog-content>
+        <p>{{ 'confirmAccountDeletion' | translate }}</p>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="flex center" mat-dialog-actions>
+        <button mat-raised-button [mat-dialog-close]="false">{{ 'cancel' | translate }}</button>
+        <button color="warn" mat-raised-button [mat-dialog-close]="true">{{ 'confirm' | translate }}</button>
+    </div>
+</div>

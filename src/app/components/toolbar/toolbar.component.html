@@ -1,7 +1,7 @@
 <mat-toolbar>
     <span class="main-title" [routerLink]="[PATH.HOME]">Social Media App</span>
-    <search *ngIf="currentUser$ | async"></search>
     <ng-container *ngIf="currentUser$ | async as user; else loginButton">
+        <search></search>
         <button mat-icon-button class="notification-icon" [matMenuTriggerFor]="notifications"
             (click)="setUnreadNotifications()">
             <mat-icon [matBadge]="unreadNotifications.length" [matBadgeHidden]="!showBadge">notifications</mat-icon>
@@ -26,6 +26,14 @@
         </mat-menu>
     </ng-container>
     <ng-template #loginButton>
+        <div class="languages">
+            <button class="lang-btn" mat-button (click)="setLanguage(LanguageKeyEnum.EN)">
+                <img class="icon" src="assets/images/english.png">
+            </button>
+            <button class="lang-btn" mat-button (click)="setLanguage(LanguageKeyEnum.HU)">
+                <img class="icon" src="assets/images/hungary.png">
+            </button>
+        </div>
         <button mat-button routerLink="login">
             <mat-icon>login</mat-icon>
             {{ 'login' | translate }}

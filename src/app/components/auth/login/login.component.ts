@@ -1,6 +1,8 @@
-import { catchError, concatMap, of, take } from 'rxjs';
+import { UserCredential } from 'firebase/auth';
+import { catchError, concatMap, Observable, of, take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { PATH } from 'src/app/shared/constants/path.constant';
+import { User } from 'src/app/shared/models';
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -57,13 +59,9 @@ export class LoginComponent implements OnInit {
 	signInWithGoogle(): void {
 		this.authService.signInWithGoogle().pipe(
 			take(1),
-			concatMap(async userData => {
-				const user = userData.user;
-				if (!user.email) throw Error('Something went wrong!');
-
-				const displayName = await this.userService.generateUsername(user.displayName ?? undefined);
-				return this.userService.createUserIfNotExists({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
-			})
+			concatMap(async userData =>
+				await this.saveUserIfNotExists(userData)
+			)
 		).subscribe(() => {
 			this.router.navigate(['home']);
 		});
@@ -72,16 +70,26 @@ export class LoginComponent implements OnInit {
 	signInWithFacebook(): void {
 		this.authService.signInWithFacebook().pipe(
 			take(1),
-			concatMap(async userData => {
-				const user = userData.user;
-				if (!user.email) throw Error('Something went wrong!');
-
-				const displayName = await this.userService.generateUsername(user.displayName ?? undefined);
-				return this.userService.createUserIfNotExists({ uid: user.uid, displayName, fullName: user.displayName ?? '', email: user.email, photoURL: user.photoURL ?? '' });
-			})
+			concatMap(async userData =>
+				await this.saveUserIfNotExists(userData)
+			)
 		).subscribe(() => {
 			this.router.navigate(['home']);
 		});
+	}
+
+	async saveUserIfNotExists(userData: UserCredential): Promise<Observable<void>> {
+		const user = userData.user;
+		if (!user.email) throw Error('Something went wrong!');
+
+		const displayName = await this.userService.generateUsername(user.displayName ?? undefined);
+		const createUser = new User(user.uid, {
+			displayName,
+			fullName: user.displayName ?? '',
+			email: user.email,
+			photoURL: user.photoURL ?? ''
+		});
+		return this.userService.createUserIfNotExists(createUser);
 	}
 
 	openForgotPasswordDialog(): void {

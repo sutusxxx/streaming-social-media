@@ -1,6 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
 import {
-	combineLatest,
 	concatMap,
 	from,
 	map,
@@ -46,8 +45,8 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	isCurrentUser: boolean = false;
 	isFollowing: boolean = false;
 
-	followerCount: number = 0;
-	followingCount: number = 0;
+	followerIds: string[] = [];
+	followingIds: string[] = [];
 
 	postCount: Observable<number> = of(0);
 	posts: IPost[] = [];
@@ -117,12 +116,12 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		if (this.isLoading) return;
 
 		if (scrollPosition === SCROLL_POSITION_BOTTOM) {
-			this.isLoading = true;
 			this.loadPosts(userId);
 		}
 	}
 
 	async loadPosts(userId: string): Promise<void> {
+		this.isLoading = true;
 		if (this.lastElement) await this.loadNextBatch(userId, this.lastElement);
 		else await this.initPosts(userId);
 	}
@@ -140,14 +139,14 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 		this.followers = this.followService.getFollowers(userId)
 			.pipe(takeUntil(this._unsubscribeAll))
 			.subscribe(followers => {
-				this.followerCount = followers.length;
+				this.followerIds = followers;
 				this.isFollowing = followers.includes(this.currentUserId);
 			});
 
 		this.following = this.followService.getFollowing(userId)
 			.pipe(takeUntil(this._unsubscribeAll))
 			.subscribe(following => {
-				this.followingCount = following.length;
+				this.followingIds = following;
 			});
 	}
 
@@ -182,15 +181,7 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 	}
 
 	showFollowerDialog(user: IUser, activeTab: number): void {
-		combineLatest([
-			this.followService.getFollowers(user.uid),
-			this.followService.getFollowing(user.uid)
-		]).pipe(
-			takeUntil(this._unsubscribeAll),
-			concatMap(([followerIds, followingIds]) =>
-				this.followService.getDetails(followerIds, followingIds)
-			)
-		).subscribe(details => {
+		this.followService.getDetails(this.followerIds, this.followingIds).subscribe(details => {
 			this.dialog.open(FollowerDialogComponent, { data: { details, activeTab }, height: '600px' });
 		});
 	}
@@ -219,11 +210,13 @@ export class UserProfileComponent extends BaseComponent implements OnInit {
 
 	resetUserData(): void {
 		this.posts = [];
+		this.lastElement = null;
+
 		this.followers?.unsubscribe();
 		this.following?.unsubscribe();
 
-		this.followerCount = 0;
-		this.followingCount = 0;
+		this.followerIds = [];
+		this.followingIds = [];
 	}
 
 	startLiveStream(): void {

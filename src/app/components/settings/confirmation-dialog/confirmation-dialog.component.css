@@ -1,0 +1,16 @@
+.confirmation-dialog {
+    background: #fefefe;
+    border-radius: 5px;
+    height: 100%;
+    width: 100%;
+}
+
+.title {
+    padding: 10px;
+    font-size: 18px;
+}
+
+.content {
+    margin: 15px;
+    font-size: 16px;
+}

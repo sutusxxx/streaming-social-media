@@ -96,9 +96,6 @@ export class StreamService {
 				this.addLocalTracks();
 
 				this.roomId = await this.addRoom(currentUser);
-				this.peerConnection.ontrack = (e) => {
-
-				}
 				this.addIceCandidateEventListener('offerCandidates', this.roomId);
 
 				await this.saveRoomData(this.roomId);

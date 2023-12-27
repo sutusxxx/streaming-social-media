@@ -1,7 +1,8 @@
-import { concatMap, switchMap, take, throwError } from 'rxjs';
+import { concatMap, switchMap, throwError } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { PATH } from 'src/app/shared/constants/path.constant';
+import { User, UserRegistration } from 'src/app/shared/models';
 import { passwordValidator } from 'src/app/validators/password-validator';
 
 import { Component, OnInit } from '@angular/core';
@@ -43,22 +44,20 @@ export class RegistrationComponent implements OnInit {
 	registration(): void {
 		if (!this.registrationForm.valid) return;
 
-		const { displayName, email, password, } = this.registrationForm.value;
-
-		this.userService.checkUsernameAvailability(displayName).pipe(
-			take(1),
+		const registration = new UserRegistration(this.registrationForm.value);
+		this.userService.checkUsernameAvailability(registration.displayName).pipe(
 			concatMap(validity => {
 				if (!validity) {
 					this.registrationForm.setErrors({ 'usernameOccupied': true });
-					return throwError(() => 'username occupied');
+					return throwError(() => 'Username occupied!');
 				}
-				return this.authService.registration(email, password);
+				return this.authService.registration(registration.email, registration.password);
 			}),
-			switchMap(({ user: { uid } }) => this.userService.createUser({ uid, email, displayName: displayName.toLowerCase() })))
-			.subscribe(() => {
-				this.router.navigate(['/home']);
-			});
-
+			switchMap(({ user: { uid } }) => {
+				const user = User.fromRegistration(uid, registration);
+				return this.userService.createUser(user);
+			}))
+			.subscribe(() => this.router.navigate(['/home']));
 	}
 
 	get displayName() {

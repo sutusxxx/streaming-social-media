@@ -6,7 +6,6 @@
         </button>
     </div>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item>{{ 'edit' | translate }}</button>
         <button mat-menu-item (click)="deletePost(data.id)">{{ 'delete' | translate }}</button>
     </mat-menu>
     <comment [postId]="data.id"></comment>

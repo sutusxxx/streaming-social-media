@@ -75,6 +75,10 @@ export const english = {
 		hour: 'hour',
 		minute: 'min',
 		justNow: 'Just now',
-		gender: 'Gender'
+		gender: 'Gender',
+		deleteAccount: 'Delete Account',
+		confirmAccountDeletion: 'Are you sure you want to delete your user account? This process is irreversible!',
+		cancel: 'Cancel',
+		confirm: 'Confirm'
 	}
 }

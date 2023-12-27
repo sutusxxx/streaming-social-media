@@ -110,7 +110,7 @@ export class MessengerService {
 
 	getChatMessages$(chatId: string): Observable<IMessage[]> {
 		const ref = collection(this.firestore, 'chats', chatId, 'messages');
-		const queryAll = query(ref, orderBy('date', 'asc'));
+		const queryAll = query(ref, orderBy('date', 'desc'));
 
 		return collectionData(queryAll) as Observable<IMessage[]>;
 	}

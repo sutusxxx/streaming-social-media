@@ -2,14 +2,7 @@ import { deleteField, DocumentReference } from 'firebase/firestore';
 import { catchError, combineLatest, from, map, Observable, take, throwError } from 'rxjs';
 
 import { Injectable } from '@angular/core';
-import {
-	doc,
-	docData,
-	DocumentData,
-	Firestore,
-	runTransaction,
-	setDoc
-} from '@angular/fire/firestore';
+import { doc, docData, DocumentData, Firestore, runTransaction } from '@angular/fire/firestore';
 
 import { IFollowDetails } from '../shared/interfaces';
 import { UserService } from './user.service';
@@ -27,7 +20,7 @@ export class FollowService {
 	getFollowers(userId: string): Observable<string[]> {
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `followers/${userId}`);
 		return (docData(ref) as Observable<any>)
-			.pipe(take(1), map(values => {
+			.pipe(map(values => {
 				if (!values) return [];
 				return Object.keys(values)
 			}));
@@ -36,7 +29,7 @@ export class FollowService {
 	getFollowing(userId: string): Observable<string[]> {
 		const ref: DocumentReference<DocumentData> = doc(this.firestore, `following/${userId}`);
 		return (docData(ref) as Observable<any>)
-			.pipe(take(1), map(values => {
+			.pipe(map(values => {
 				if (!values) return [];
 				return Object.keys(values)
 			}));
@@ -79,16 +72,5 @@ export class FollowService {
 		})).pipe(
 			catchError(error => throwError(() => console.log(error)))
 		);
-
-	}
-
-	private saveFollowing(followerId: string, followedId: string): Promise<any> {
-		const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', followerId);
-		return setDoc(ref, { following: [followedId] }, { merge: true });
-	}
-
-	private saveFollowed(followerId: string, followedId: string): Promise<any> {
-		const ref: DocumentReference<DocumentData> = doc(this.firestore, 'users', followedId);
-		return setDoc(ref, { followers: [followerId] }, { merge: true });
 	}
 }

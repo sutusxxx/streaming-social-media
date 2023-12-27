@@ -109,7 +109,7 @@
             </div>
         </ng-template>
         <mat-divider></mat-divider>
-        <div class="chat-area" scrollable (scrollPosition)="onScoll($event)">
+        <div class="chat-area" scrollable (scrollPosition)="onScroll($event)">
             <ng-container *ngIf="currentUser$ | async as currentUser">
                 <div *ngFor="let message of (messages$ | async)?.slice()?.reverse()"
                     [ngClass]="{ 'sender': message.senderId === currentUser.uid }" class="chat-bubble-container">

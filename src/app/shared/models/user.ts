@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import { UserRegistration } from 'src/app/shared/models/user-registration';
 
 import { IUser } from '../interfaces';
 
@@ -36,5 +37,23 @@ export class User implements IUser {
             if (parameters.description) this.description = parameters.description;
 
         }
+    }
+
+    static fromRegistration(uid: string, reg: UserRegistration): User {
+        const user = new User(uid);
+        user.displayName = reg.displayName;
+        user.email = reg.email;
+
+        if (reg.gender) {
+            user.gender = reg.gender;
+        }
+        if (reg.fullName) {
+            user.fullName = reg.fullName;
+        }
+        if (reg.dateOfBirth) {
+            user.dateOfBirth = reg.dateOfBirth;
+        }
+
+        return user;
     }
 }
