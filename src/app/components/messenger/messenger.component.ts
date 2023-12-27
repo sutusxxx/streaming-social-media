@@ -85,7 +85,7 @@ export class MessengerComponent extends BaseComponent implements OnInit {
 
 		if (!message || !selectedChatId) return;
 
-		this.messengerService.addChatMessage(selectedChatId, message).subscribe(
+		this.messengerService.addNewMessage(selectedChatId, message).subscribe(
 			() => this.scrollToBottom()
 		);
 

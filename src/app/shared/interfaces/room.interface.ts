@@ -3,6 +3,6 @@ import { IOffer } from 'src/app/shared/interfaces/offer.interface';
 
 export interface IRoom {
     id: string;
-    host: IHost
+    host: IHost;
     offer: IOffer;
 }

@@ -1,5 +1,6 @@
 import { doc, orderBy, Timestamp, updateDoc } from 'firebase/firestore';
-import { concatMap, map, Observable, take } from 'rxjs';
+import { concatMap, map, Observable, take, throwError } from 'rxjs';
+import { CreateMessage } from 'src/app/shared/models';
 
 import { Injectable } from '@angular/core';
 import {
@@ -46,18 +47,18 @@ export class MessengerService {
 		);
 	}
 
-	addChatMessage(chatId: string, message: string): Observable<any> {
+	addNewMessage(chatId: string, messageText: string): Observable<any> {
 		const ref = collection(this.firestore, 'chats', chatId, 'messages');
 		const chatRef = doc(this.firestore, 'chats', chatId);
 		const date = Timestamp.fromDate(new Date());
 		return this.userService.currentUser$.pipe(
 			take(1),
-			concatMap(currentUser => addDoc(ref, {
-				text: message,
-				senderId: currentUser?.uid,
-				date: date
-			})),
-			concatMap(() => updateDoc(chatRef, { lastMessage: message, lastMessageDate: date }))
+			concatMap(currentUser => {
+				if (!currentUser) return throwError(() => 'Not Authenticated');
+				const message = new CreateMessage(messageText, currentUser?.uid, date);
+				return addDoc(ref, { ...message });
+			}),
+			concatMap(() => updateDoc(chatRef, { lastMessage: messageText, lastMessageDate: date }))
 		);
 	}
 
