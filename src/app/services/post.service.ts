@@ -45,20 +45,20 @@ import { UserService } from './user.service';
 })
 export class PostService {
 
-	feedPostsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
-	onFeedPostsLoaded: Observable<IPost[]> = this.feedPostsLoadedSubject.asObservable();
+	private feedPostsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
+	readonly onFeedPostsLoaded: Observable<IPost[]> = this.feedPostsLoadedSubject.asObservable();
 
-	postsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
-	onPostsLoaded: Observable<IPost[]> = this.postsLoadedSubject.asObservable();
+	private postsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
+	readonly onPostsLoaded: Observable<IPost[]> = this.postsLoadedSubject.asObservable();
 
-	userPostsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
-	onUserPostsLoaded: Observable<IPost[]> = this.userPostsLoadedSubject.asObservable();
+	private userPostsLoadedSubject: Subject<IPost[]> = new Subject<IPost[]>();
+	readonly onUserPostsLoaded: Observable<IPost[]> = this.userPostsLoadedSubject.asObservable();
 
-	postCreatedSubject: Subject<void> = new Subject<void>();
-	onPostCreated: Observable<void> = this.postCreatedSubject.asObservable();
+	private postCreatedSubject: Subject<void> = new Subject<void>();
+	readonly onPostCreated: Observable<void> = this.postCreatedSubject.asObservable();
 
-	postDeletedSubject: Subject<string> = new Subject<string>();
-	onPostDeleted: Observable<string> = this.postDeletedSubject.asObservable();
+	private postDeletedSubject: Subject<string> = new Subject<string>();
+	readonly onPostDeleted: Observable<string> = this.postDeletedSubject.asObservable();
 
 	constructor(
 		private readonly userService: UserService,
@@ -67,31 +67,29 @@ export class PostService {
 		private readonly followService: FollowService
 	) { }
 
-	createPost(image: File, description: string): Observable<any> {
-		return this.userService.currentUser$.pipe(
-			concatMap(currentUser => {
-				if (!currentUser) throw Error('Not Authenticated');
+	createPost(image: File, description: string): void {
+		this.userService.currentUser$.pipe(concatMap(currentUser => {
+			if (!currentUser) throw Error('Not Authenticated');
 
-				const postId = currentUser.uid + '-' + uuidv4();
-				return combineLatest([
-					of(currentUser),
-					this.imageUploadService.uploadImage(image, `posts/images/${postId}`)
-				]);
-			}),
-			concatMap(([user, url]) => {
-				const ref = collection(this.firestore, 'posts');
-				const post = new CreatePost(
-					'image',
-					url,
-					description,
-					Timestamp.fromDate(new Date()),
-					user.uid,
-					user.displayName ? user.displayName : '',
-					user.photoURL ? user.photoURL : ''
-				)
-				return addDoc(ref, { ...post }).then(() => this.postCreatedSubject.next());
-			})
-		);
+			const postId = currentUser.uid + '-' + uuidv4();
+			return combineLatest([
+				of(currentUser),
+				this.imageUploadService.uploadImage(image, `posts/images/${postId}`)
+			]);
+		})).subscribe(async ([user, url]) => {
+			const ref = collection(this.firestore, 'posts');
+			const post = new CreatePost(
+				'image',
+				url,
+				description,
+				Timestamp.fromDate(new Date()),
+				user.uid,
+				user.displayName ? user.displayName : '',
+				user.photoURL ? user.photoURL : ''
+			)
+			await addDoc(ref, { ...post });
+			this.postCreatedSubject.next();
+		});
 	}
 
 	async loadPosts(lastElement?: IPost): Promise<void> {
@@ -140,20 +138,18 @@ export class PostService {
 		}));
 	}
 
-	addComment(postId: string, comment: string): Observable<any> {
+	addComment(postId: string, comment: string): void {
 		const ref = collection(this.firestore, 'posts', postId, 'comments');
-		return this.userService.currentUser$.pipe(
-			concatMap(currentUser =>
-				addDoc(
-					ref, {
-					text: comment,
-					creatorId: currentUser?.uid,
-					creatorName: currentUser?.displayName,
-					creatorPhoto: currentUser?.photoURL,
-					date: Timestamp.fromDate(new Date())
-				})
-			)
-		);
+		this.userService.currentUser$.subscribe(currentUser =>
+			addDoc(
+				ref, {
+				text: comment,
+				creatorId: currentUser?.uid,
+				creatorName: currentUser?.displayName,
+				creatorPhoto: currentUser?.photoURL ?? '',
+				date: Timestamp.fromDate(new Date())
+			})
+		)
 	}
 
 	getPostComments$(postId: string): Observable<IComment[]> {

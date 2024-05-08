@@ -69,8 +69,8 @@ export class SettingsComponent implements OnInit {
 	}
 
 	private deleteAccount(): void {
-		this.authService.deleteAccount().pipe(
-			switchMap(() => this.userService.deleteProfile())
+		this.userService.deleteProfile().pipe(
+			switchMap(() => this.authService.deleteAccount())
 		).subscribe(() => this.router.navigate([PATH.LOGIN]));
 	}
 

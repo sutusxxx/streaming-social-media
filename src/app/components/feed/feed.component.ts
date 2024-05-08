@@ -1,4 +1,4 @@
-import { takeUntil, tap } from 'rxjs';
+import { finalize, takeUntil, tap } from 'rxjs';
 import { SCROLL_POSITION_BOTTOM } from 'src/app/shared/constants/scroll-position.constant';
 import { IPost } from 'src/app/shared/interfaces/post.interface';
 
@@ -30,7 +30,7 @@ export class FeedComponent extends BaseComponent implements OnInit {
 		this.postService.onFeedPostsLoaded
 			.pipe(
 				takeUntil(this._unsubscribeAll),
-				tap(() => this.isLoading = false)
+				finalize(() => this.isLoading = false)
 			)
 			.subscribe(posts => {
 				this.posts.push(...posts);

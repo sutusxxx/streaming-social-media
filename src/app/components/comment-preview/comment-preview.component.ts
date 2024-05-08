@@ -31,8 +31,7 @@ export class CommentPreviewComponent implements OnInit {
     const comment = this.commentControl.value;
     if (!comment) return;
 
-    this.postService.addComment(this.postId, comment)
-      .subscribe();
+    this.postService.addComment(this.postId, comment);
     this.commentControl.setValue('');
   }
 }

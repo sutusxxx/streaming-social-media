@@ -3,7 +3,7 @@
         {{ 'passwordResetEmailSent' | translate }} {{ forgotPasswordEmail }}
     </div>
     <div class="title">{{ 'welcome' | translate}}!</div>
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <form [formGroup]="loginForm">
         <div *ngIf="loginForm.errors?.['userNotFound']" class="error">
             {{ 'loginFailed' | translate }}
         </div>
@@ -20,7 +20,7 @@
         <mat-form-field>
             <input matInput [placeholder]="'password' | translate" formControlName="password"
                 [type]="isPasswordVisible ? 'text' : 'password'">
-            <button class="eye" mat-icon-button (mousedown)="togglePasswordVisibility()">
+            <button class="eye" mat-icon-button (mousedown)="togglePasswordVisibility($event)">
                 <mat-icon>{{ isPasswordVisible ? 'visibility' : 'visibility_off' }}</mat-icon>
             </button>
             <mat-error *ngIf="password?.errors?.['required']">
@@ -28,7 +28,7 @@
             </mat-error>
         </mat-form-field>
         <div class="center marginT-10">
-            <button class="primary-btn w100" mat-raised-button type="submit">
+            <button class="primary-btn w100" mat-raised-button type="submit" (click)="login()">
                 {{ 'login' | translate }}
             </button>
         </div>

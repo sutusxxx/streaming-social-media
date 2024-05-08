@@ -102,7 +102,8 @@ export class LoginComponent implements OnInit {
 		});
 	}
 
-	togglePasswordVisibility(): void {
+	togglePasswordVisibility(event: Event): void {
+		event.stopPropagation();
 		this.isPasswordVisible = !this.isPasswordVisible;
 	}
 
