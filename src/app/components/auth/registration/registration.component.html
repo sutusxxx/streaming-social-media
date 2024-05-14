@@ -1,68 +1,70 @@
-<div class="form-container marginT-30">
-    <div class="title">{{ 'registration' | translate }}</div>
-    <form #form="ngForm" [formGroup]="registrationForm" (ngSubmit)="registration()">
-        <mat-error *ngIf="registrationForm.errors?.['usernameOccupied']">
-            {{ 'usernameOccupied' | translate }}
-        </mat-error>
-        <mat-form-field>
-            <input matInput [placeholder]="'username' | translate" formControlName="displayName">
-            <mat-error *ngIf="displayName?.errors?.['required']">
-                {{ 'requiredField' | translate }}
+<section id="registration">
+    <div class="form-container marginT-30">
+        <div class="title">{{ 'registration' | translate }}</div>
+        <form #form="ngForm" [formGroup]="registrationForm" (ngSubmit)="registration()">
+            <mat-error *ngIf="registrationForm.errors?.['usernameOccupied']">
+                {{ 'usernameOccupied' | translate }}
             </mat-error>
-            <mat-error *ngIf="displayName?.errors?.['pattern']">
-                {{ 'namePatternError' | translate }}
+            <mat-form-field>
+                <input matInput [placeholder]="'username' | translate" formControlName="displayName">
+                <mat-error *ngIf="displayName?.errors?.['required']">
+                    {{ 'requiredField' | translate }}
+                </mat-error>
+                <mat-error *ngIf="displayName?.errors?.['pattern']">
+                    {{ 'namePatternError' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [placeholder]="'emailAddress' | translate" formControlName="email">
+                <mat-error *ngIf="email?.errors?.['required']">
+                    {{ 'requiredField' | translate }}
+                </mat-error>
+                <mat-error *ngIf="email?.errors?.['email']">
+                    {{ 'emailNotValid' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [placeholder]="'fullName' | translate" formControlName="fullName">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'chooseYourGender' | translate }}</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let gender of genders" [value]="gender">
+                        {{ gender | translate }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'dateOfBirth' | translate }}</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]=picker></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [placeholder]="'password' | translate" formControlName="password" type="password">
+                <mat-error *ngIf="password?.errors?.['required']">
+                    {{ 'requiredField' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [placeholder]="'confirmPassword' | translate" formControlName="confirmPassword"
+                    type="password">
+                <mat-error *ngIf="confirmPassword?.errors?.['required']">
+                    {{ 'requiredField' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-error *ngIf="form?.submitted && registrationForm?.errors?.['passwordsMismatch']">
+                {{ 'passwordMismatchError' | translate }}
             </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput [placeholder]="'emailAddress' | translate" formControlName="email">
-            <mat-error *ngIf="email?.errors?.['required']">
-                {{ 'requiredField' | translate }}
-            </mat-error>
-            <mat-error *ngIf="email?.errors?.['email']">
-                {{ 'emailNotValid' | translate }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput [placeholder]="'fullName' | translate" formControlName="fullName">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'chooseYourGender' | translate }}</mat-label>
-            <mat-select>
-                <mat-option *ngFor="let gender of genders" [value]="gender">
-                    {{ gender | translate }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>{{ 'dateOfBirth' | translate }}</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]=picker></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput [placeholder]="'password' | translate" formControlName="password" type="password">
-            <mat-error *ngIf="password?.errors?.['required']">
-                {{ 'requiredField' | translate }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput [placeholder]="'confirmPassword' | translate" formControlName="confirmPassword"
-                type="password">
-            <mat-error *ngIf="confirmPassword?.errors?.['required']">
-                {{ 'requiredField' | translate }}
-            </mat-error>
-        </mat-form-field>
-        <mat-error *ngIf="form?.submitted && registrationForm?.errors?.['passwordsMismatch']">
-            {{ 'passwordMismatchError' | translate }}
-        </mat-error>
-        <div class="center marginT-10">
-            <button class="primary-btn" mat-raised-button type="submit">
-                {{ 'signUp' | translate }}
-            </button>
-        </div>
-        <div class="center marginT-10">
-            <a class="link" [routerLink]="[PATH.LOGIN]">{{ 'backToLogin' | translate }}</a>
-        </div>
-    </form>
-</div>
+            <div class="center marginT-10">
+                <button class="primary-btn" mat-raised-button type="submit">
+                    {{ 'signUp' | translate }}
+                </button>
+            </div>
+            <div class="center marginT-10">
+                <a class="link" [routerLink]="[PATH.LOGIN]">{{ 'backToLogin' | translate }}</a>
+            </div>
+        </form>
+    </div>
+</section>
